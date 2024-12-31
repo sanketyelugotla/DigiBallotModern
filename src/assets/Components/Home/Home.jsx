@@ -66,6 +66,19 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-        </div>
+            <div className="angels">
+                <div>
+                    <img src="./pics/angel.jpg" alt="angel.jpg" />
+                    <h3>Registered Voters</h3>
+                    <h1>2 M</h1>
+                </div>
+                <div className="black"></div>
+                <div>
+                    <img className="lg" src="./pics/waiter.png" alt="waiter.png" />
+                    <h3>Elections Conducted</h3>
+                    <h1>10 +</h1>
+                </div>
+            </div>
+        </div >
     )
 }
