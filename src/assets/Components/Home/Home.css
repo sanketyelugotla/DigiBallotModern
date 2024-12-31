@@ -70,13 +70,16 @@ li {
     display: flex;
     justify-content: center;
 
-    .box {
-        padding: 25px;
+    .right-box {
         margin-right: 50px;
+    }
+
+    .box {
+        padding: 30px;
         box-shadow: 0 0 10px 3px #c5cfdb;
         border-radius: 30px;
-        height: 300px;
-        width: 370px;
+        height: 350px;
+        width: 380px;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -85,15 +88,20 @@ li {
 
     img {
         margin: 0;
-        margin-top: -80px;
-        scale: 45%;
+        margin-top: 10px;
+        height: 125px;
+    }
+
+    .lg {
+        height: 150px;
+        margin-top: -10px;
     }
 
     p {
         /* font-family: "roboto"; */
         font-weight: 500;
-        margin-top: -30px;
+        margin-top: 20px;
         margin-bottom: 20px;
-        font-size: 18px;
+        font-size: 16px;
     }
 }

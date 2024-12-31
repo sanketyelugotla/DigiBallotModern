@@ -43,22 +43,22 @@ export default function Home() {
             <div className="options">
                 <h1>Your Vote, Your Voice: Login to Participate</h1>
                 <div className="boxes">
-                    <div className="box">
+                    <div className="box right-box">
                         <img src="./pics/voteMachine.png" alt="voteMachine" />
                         <p>
                             Log in to cast your vote and participate in the election
                         </p>
                         <Button variant="light">Voter Login</Button>
                     </div>
-                    <div className="box">
-                        <img src="./pics/voteMachine.png" alt="voteMachine" />
+                    <div className="box right-box">
+                        <img className="lg" src="./pics/profile.png" alt="voteMachine" />
                         <p>
                             Log in to manage your profile and election details
                         </p>
                         <Button variant="light">Candidate Login</Button>
                     </div>
                     <div className="box">
-                        <img src="./pics/voteMachine.png" alt="voteMachine" />
+                        <img className="lg" src="./pics/admin_profile.png" alt="voteMachine" />
                         <p>
                             Log in to manage elections and monitor voting activity
                         </p>

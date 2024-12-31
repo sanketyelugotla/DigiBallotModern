@@ -48,6 +48,8 @@ header {
 
     button {
         margin-left: 55%;
+        height: 45px;
+        padding: 0 50px;
     }
 
     button:hover {
