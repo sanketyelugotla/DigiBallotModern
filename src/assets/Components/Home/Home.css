@@ -2,6 +2,10 @@
     --themeBlue: #1E3A8A;
 }
 
+.space {
+    padding-top: 90px;
+}
+
 .homebg {
     height: 482px;
     display: flex;

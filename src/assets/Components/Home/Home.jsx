@@ -3,7 +3,7 @@ import Button from "../Button/Button"
 
 export default function Home() {
     return (
-        <>
+        <div className="space">
             <div className="homebg">
                 <p>Empowering Democracy <br />
                     With <span>India's</span> Online Voting <br />
@@ -66,6 +66,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     )
 }
