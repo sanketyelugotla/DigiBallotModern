@@ -1,0 +1,19 @@
+:root {
+    --themeBlue: #1E3A8A;
+}
+
+footer {
+    margin-top: 20px;
+    height: 400px;
+    background-color: var(--themeBlue);
+    display: flex;
+}
+
+.logo {
+    width: fit-content;
+    font-family: 'Nico Moji';
+    font-weight: 400;
+    font-size: 40px;
+    color: white;
+    margin-right: 15%;
+}

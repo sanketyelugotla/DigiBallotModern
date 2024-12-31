@@ -1,0 +1,54 @@
+:root {
+    --themeLightBlue: #2449af;
+    --themeBlue: #1E3A8A;
+}
+
+button {
+    border: 1px solid #6B7280;
+    /* box-shadow: 0px 1px 2px; */
+    background-color: var(--themeBlue);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: 700;
+    padding: 11px 40px;
+    border-radius: 12px;
+    line-height: 24px;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+button:focus {
+    outline: none;
+}
+
+button:hover {
+    background-color: white;
+    color: var(--themeBlue);
+}
+
+button.button-sm {
+    padding: 7px 11px;
+    font-size: 12px;
+}
+
+button.button-lg {
+    font-size: 16px;
+    padding: 15px 45px;
+}
+
+button.button-light {
+    background-color: white;
+    color: black;
+    /* border: 1.5px solid var(--themeBlue); */
+    box-shadow: 0 0 10px 3px #c5cfdb;
+    font-weight: 600;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+button.button-light:hover {
+    background-color: var(--themeBlue);
+    transform: scale(1.1);
+    color: white;
+}

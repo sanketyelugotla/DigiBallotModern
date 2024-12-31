@@ -1,0 +1,59 @@
+:root {
+    --themeBlue: #1E3A8A;
+}
+
+header {
+    display: flex;
+    justify-content: space-around;
+}
+
+nav {
+    flex: 1;
+}
+
+header nav {
+    list-style: none;
+    display: flex;
+    height: 80px;
+    /* width: max-content; */
+    align-items: center;
+
+    button {
+        margin-left: 7%;
+    }
+
+    li,
+    .logo {
+        padding: 10px;
+        margin-right: 6%;
+        border-radius: 7px;
+        /* text-transform: uppercase; */
+        height: fit-content;
+        font-weight: 500;
+        font-size: 19px;
+    }
+
+    .link {
+        color: var(--themeBlue)
+    }
+
+    .logo {
+        width: fit-content;
+        font-family: 'Nico Moji';
+        font-weight: 400;
+        font-size: 40px;
+        color: var(--themeBlue);
+        margin-left: 4%;
+        margin-right: 15%;
+    }
+
+    input {
+        color: rgb(129, 129, 118);
+        font-size: 15px;
+        padding: 10px 20px;
+        height: 30px;
+        width: 600px;
+        border: 1px solid black;
+        border-radius: 20px;
+    }
+}
