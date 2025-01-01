@@ -46,6 +46,16 @@ footer {
         font-weight: 300;
         color: #c3c3c3;
         margin-bottom: 10px;
+        transition: transform 0.5s ease, color 0.5s ease;
+    }
+
+    p:hover {
+        transform: scale(1.05);
+        color: white;
+    }
+
+    .social-icon:hover {
+        transform: scale(1.2);
     }
 }
 

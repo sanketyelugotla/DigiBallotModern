@@ -13,7 +13,6 @@
 
     background: linear-gradient(45deg, #f9c149, white, #a8f5a2);
 
-
     p {
         margin-left: 12.5%;
         font-size: 44px;
@@ -145,4 +144,16 @@ li {
     h3 {
         font-family: "Montserrat";
     }
+}
+
+
+.collapsible {
+    overflow: hidden;
+    height: 0;
+    transition: height 1s, padding 1s ease;
+}
+
+.collapsible.open {
+    height: auto;
+    padding: 10px;
 }

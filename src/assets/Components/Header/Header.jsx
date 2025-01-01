@@ -13,7 +13,7 @@ export default function Header() {
 
     return (
         <header>
-            <span className="logo">Digi Ballot</span>
+            <span className="logo">DigiBallot</span>
             <ul className="nav-list">
                 <li>Home</li>
                 <li>Candidates</li>

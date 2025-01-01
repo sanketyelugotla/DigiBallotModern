@@ -8,7 +8,7 @@ export default function Footer() {
     return (
         <footer>
             <div className="foot-sec">
-                <span className="logo">Digi Ballot</span>
+                <span className="logo">DigiBallot</span>
                 <div>
                     <h2>Quick Links</h2>
                     <div>
