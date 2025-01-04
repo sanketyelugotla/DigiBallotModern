@@ -1,5 +1,7 @@
 import "./Home.css"
 import Button from "../../Button/Button"
+import Login from "../Login/Login";
+
 import { useState, useRef } from "react"
 
 export default function Home() {

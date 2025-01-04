@@ -1,26 +1,18 @@
-import { useState } from "react";
-import Button from "../Button/Button.jsx";
 import "./Header.css";
+import Button from "../Button/Button";
 
-export default function Header() {
-    const [logged, setLogged] = useState(false);
-
-    const comp = logged ? (
-        <li className="link">Constituency</li>
-    ) : (
-        <Button variant="light">Login</Button>
-    );
-
+export default function Header({ onLoginClick }) {
     return (
-        <header>
+        <header className="header">
             <span className="logo">DigiBallot</span>
             <ul className="nav-list">
                 <li>Home</li>
                 <li>Candidates</li>
                 <li>FAQ</li>
                 <li>Contact</li>
-                {/* <input type="text" /> */}
-                {comp}
+                <Button variant="light" onClick={onLoginClick}>
+                    Login
+                </Button>
             </ul>
         </header>
     );
