@@ -1,5 +1,5 @@
 import "./Home.css"
-import Button from "../Button/Button"
+import Button from "../../Button/Button"
 import { useState, useRef } from "react"
 
 export default function Home() {

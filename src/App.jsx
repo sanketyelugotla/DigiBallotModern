@@ -1,6 +1,6 @@
 import Header from "./assets/Components/Header/Header"
-import Logged from "./assets/Components/Logged/Logged"
-import Home from "./assets/Components/Home/Home"
+import Logged from "./assets/Components/Pages/Logged/Logged"
+import Home from "./assets/Components/Pages/Home/Home"
 import Footer from "./assets/Components/Footer/Footer"
 
 export default function App() {

@@ -1,5 +1,5 @@
 import "./Logged.css"
-import Button from "../Button/Button"
+import Button from "../../Button/Button"
 
 export default function Logged() {
     return (
