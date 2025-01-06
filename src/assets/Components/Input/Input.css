@@ -1,0 +1,104 @@
+:root {
+    --themeBlue: #1e3a8a;
+}
+
+.loginForm {
+    height: 450px;
+    width: 440px;
+    padding: 20px;
+    background-color: #2559AA;
+    border-radius: 20px;
+    box-shadow: 0 0 100px 2px #122761;
+}
+
+.formHeader {
+    font-family: Volkhov;
+    text-transform: capitalize;
+    font-weight: 800;
+    font-size: 35px;
+    text-align: center;
+    margin: 10% 0;
+    color: white;
+}
+
+.inputField {
+    position: relative;
+    display: flex;
+    width: 100%;
+    height: 55px;
+    margin-top: 20px;
+}
+
+.inputField input {
+    width: 100%;
+    height: 100%;
+    padding: 0 45px;
+    color: white;
+    font-size: 14px;
+    border: 1px solid white;
+    border-radius: 15px;
+    outline: none;
+    background-color: #2559AA;
+    border-radius: 7px;
+    margin: 0 28px;
+    /* box-shadow: -px -8px 8px -4px #9d9999; */
+
+    position: relative;
+    z-index: 1;
+}
+
+.inputField label {
+    font-family: Montserrat;
+    padding: 0 25px 0 15px;
+    position: absolute;
+    top: -9px;
+    font-size: 11px;
+    position: absolute;
+    left: 45px;
+    color: white;
+    background-color: #2559AA;
+    transition: 0.4s;
+    letter-spacing: 1px;
+    z-index: 2;
+}
+
+.inputField input:focus~label {
+    font-size: 13px;
+}
+
+.formButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    height: 55px;
+    border-radius: 50px;
+    border: none;
+    background-color: #2559AA;
+    box-shadow: inset 0 -5px 10px 2px #6da5ff;
+    color: white;
+    font-weight: bold;
+    margin: 30px 0 0 10%;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.formButton:hover {
+    color: white;
+    background-color: #2559AA;
+    box-shadow: inset 0 -5px 10px 2px #1c3050;
+}
+
+.link {
+    margin: 12px 30px 0 0;
+    font-size: 11px;
+    text-align: right;
+
+    a {
+        text-transform: capitalize;
+        text-decoration: none;
+        color: #cacaca;
+        cursor: pointer;
+    }
+}
