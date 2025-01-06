@@ -6,7 +6,7 @@ import SignupSide from "./SignupSide";
 export default function Login({ onClose }) {
     const [isClosing, setIsClosing] = useState(false);
     const [isOpening, setIsOpening] = useState(false);
-    const [isleft, setIsLeft] = useState(false)
+    const [isleft, setIsLeft] = useState(true)
 
     function changeSide() {
         setIsLeft(!isleft)
@@ -29,17 +29,9 @@ export default function Login({ onClose }) {
         }, 300);
     };
 
-    const picRight =
-        <>
-            <LoginSide changeSide={changeSide} />
-            <img src="./pics/voteMe.png" alt="voteMe" />
-        </>
+    const login = <LoginSide changeSide={changeSide} isleft={isleft} />
 
-    const picLeft =
-        <>
-            <img src="./pics/voteMe.png" className="rightPic" alt="voteMe" />
-            <SignupSide changeSide={changeSide} />
-        </>
+    const signup = <SignupSide changeSide={changeSide} isleft={isleft} />
 
     const name1 = `login-overlay ${isOpening ? "" : "hidden"} ${isClosing ? "hidden" : ""}`
 
@@ -51,7 +43,15 @@ export default function Login({ onClose }) {
                 {/* <button className="close-btn" onClick={handleClose}>
                     ✖
                 </button> */}
-                {isleft ? picLeft : picRight}
+                <div className={`loginHalf ${isleft ? "" : "signupActive"}`}>
+                    <div className={`logContainer ${isleft ? "fade-in" : "fade-out"}`}>
+                        <LoginSide changeSide={changeSide} />
+                    </div>
+                    <div className={`logContainer ${isleft ? "fade-out" : "fade-in"}`}>
+                        <SignupSide changeSide={changeSide} />
+                    </div>
+                </div>
+                <img src="./pics/voteMe.png" className={`${isleft ? "" : "signupActive"}`} alt="voteMe" />
             </div>
         </div>
     );
