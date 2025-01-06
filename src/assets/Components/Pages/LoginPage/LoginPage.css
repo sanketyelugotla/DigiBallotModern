@@ -49,6 +49,11 @@
         height: 800px;
         width: 550px;
         border-radius: 0 var(--fixedRadius) var(--fixedRadius) 0;
+        transition: 0.5s;
+    }
+
+    .rightPic {
+        border-radius: var(--fixedRadius) 0 0 var(--fixedRadius) 0;
     }
 }
 
@@ -75,6 +80,7 @@
     justify-content: space-evenly;
     align-items: center;
     border-radius: var(--fixedRadius) 0 0 var(--fixedRadius);
+    transition: 0.5s;
 
     .createAccount {
         font-size: 13px;
@@ -85,4 +91,8 @@
             cursor: pointer;
         }
     }
+}
+
+.loginHalf .rightPic {
+    border-radius: 0 var(--fixedRadius) var(--fixedRadius) 0;
 }

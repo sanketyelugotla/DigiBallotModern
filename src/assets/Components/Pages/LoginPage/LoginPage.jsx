@@ -1,27 +1,45 @@
 import { useState, useEffect } from "react";
 import "./LoginPage.css";
-import Input from "../../Input/Index"
+import LoginSide from "./LoginSide";
+import SignupSide from "./SignupSide";
 
 export default function Login({ onClose }) {
     const [isClosing, setIsClosing] = useState(false);
     const [isOpening, setIsOpening] = useState(false);
+    const [isleft, setIsLeft] = useState(false)
+
+    function changeSide() {
+        setIsLeft(!isleft)
+    }
 
     useEffect(() => {
-        setTimeout(() => setIsOpening(true), 10); // Trigger opening animation after rendering
+        setTimeout(() => setIsOpening(true), 10);
     }, []);
 
     const handleOverlayClick = (e) => {
         if (e.target.classList.contains("login-overlay")) {
-            handleClose(); // Close only if clicking outside the modal
+            handleClose();
         }
     };
 
     const handleClose = () => {
-        setIsClosing(true); // Trigger closing animation
+        setIsClosing(true);
         setTimeout(() => {
-            onClose(); // Call parent `onClose` after animation ends
-        }, 300); // Match CSS transition duration
+            onClose();
+        }, 300);
     };
+
+    const picRight =
+        <>
+            <LoginSide changeSide={changeSide} />
+            <img src="./pics/voteMe.png" alt="voteMe" />
+        </>
+
+    const picLeft =
+        <>
+            <img src="./pics/voteMe.png" className="rightPic" alt="voteMe" />
+            <SignupSide changeSide={changeSide} />
+        </>
 
     const name1 = `login-overlay ${isOpening ? "" : "hidden"} ${isClosing ? "hidden" : ""}`
 
@@ -33,24 +51,7 @@ export default function Login({ onClose }) {
                 {/* <button className="close-btn" onClick={handleClose}>
                     ✖
                 </button> */}
-                <div className="loginHalf">
-                    <h2 className="topLogin">Log in to shape the future!!!</h2>
-                    <Input.Div>
-                        <Input.Header>Login</Input.Header>
-                        <Input.Form action="" method="post" >
-                            <Input type="text" label="Voter Id" />
-                            <Input type="password" label="Password" />
-                            <div className="link">
-                                <a href="#">Forgot password?</a>
-                            </div>
-                            <Input.Submit>Login</Input.Submit>
-                        </Input.Form>
-                    </ Input.Div>
-                    <p className="createAccount">Create an account? <span>Sign Up</span></p>
-                </div>
-                <div>
-                    <img src="./pics/voteMe.png" alt="voteMe" />
-                </div>
+                {isleft ? picLeft : picRight}
             </div>
         </div>
     );
