@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
 import LoginSide from "./LoginSide";
 import SignupSide from "./SignupSide";
@@ -7,6 +8,13 @@ export default function Login({ onClose }) {
     const [isClosing, setIsClosing] = useState(false);
     const [isOpening, setIsOpening] = useState(false);
     const [isleft, setIsLeft] = useState(true)
+
+    const navigate = useNavigate();
+
+    function handleLogin() {
+        // e.preventDefault();
+        navigate("/userDashboard")
+    }
 
     function changeSide() {
         setIsLeft(!isleft)
@@ -29,10 +37,6 @@ export default function Login({ onClose }) {
         }, 300);
     };
 
-    const login = <LoginSide changeSide={changeSide} isleft={isleft} />
-
-    const signup = <SignupSide changeSide={changeSide} isleft={isleft} />
-
     const name1 = `login-overlay ${isOpening ? "" : "hidden"} ${isClosing ? "hidden" : ""}`
 
     const name2 = `login-modal ${isOpening ? "" : "hidden"} ${isClosing ? "hidden" : ""}`
@@ -45,10 +49,10 @@ export default function Login({ onClose }) {
                 </button> */}
                 <div className={`loginHalf ${isleft ? "" : "signupActive"}`}>
                     <div className={`logContainer ${isleft ? "fade-in" : "fade-out"}`}>
-                        <LoginSide changeSide={changeSide} />
+                        <LoginSide changeSide={changeSide} handleLogin={handleLogin} />
                     </div>
                     <div className={`logContainer ${isleft ? "fade-out" : "fade-in"}`}>
-                        <SignupSide changeSide={changeSide} />
+                        <SignupSide changeSide={changeSide} handleLogin={handleLogin} />
                     </div>
                 </div>
                 <img src="./pics/voteMe.png" className={`${isleft ? "" : "signupActive"}`} alt="voteMe" />

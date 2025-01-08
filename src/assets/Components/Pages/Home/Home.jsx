@@ -22,7 +22,7 @@ export default function Home() {
     };
 
     return (
-        <div className="space">
+        <>
             <div className="homebg">
                 <p>Empowering Democracy <br />
                     With <span>India's</span> Online Voting <br />
@@ -87,6 +87,6 @@ export default function Home() {
                     <h1>10 +</h1>
                 </div>
             </div>
-        </div >
+        </>
     )
 }

@@ -1,12 +1,12 @@
 import Input from "../../Input/Index"
 
-export default function LoginSide({ changeSide, isLeft }) {
+export default function LoginSide({ changeSide, handleLogin }) {
     return (
         <>
             <h2 className="topLogin">Log in to shape the future!!!</h2>
             <Input.Div>
                 <Input.Header>Login</Input.Header>
-                <Input.Form action="" method="post" >
+                <Input.Form onSubmit={handleLogin} action="" method="post" >
                     <Input type="text" label="Voter Id" />
                     <Input type="password" label="Password" />
                     <div className="link">

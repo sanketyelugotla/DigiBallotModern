@@ -1,6 +1,6 @@
-export default function InputForm({ children, action, method }) {
+export default function InputForm({ children, ...rest }) {
     return (
-        <form action={action} method={method}>
+        <form {...rest}>
             {children}
         </form>
     )
