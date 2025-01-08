@@ -19,8 +19,8 @@ export default function App() {
       <Header onLoginClick={toggleLoginModal} />
       <div className="space">
         <Routes>
-          <Route exact path="/" element={<Home />} />
-          <Route exact path="/userDashboard" element={<Logged />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/userDashboard" element={<Logged />} />
         </Routes>
       </div>
       <Footer />

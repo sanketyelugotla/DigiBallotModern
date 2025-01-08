@@ -11,10 +11,30 @@ export default function Login({ onClose }) {
 
     const navigate = useNavigate();
 
-    function handleLogin() {
-        // e.preventDefault();
-        navigate("/userDashboard")
-    }
+    // function handleLogin() {
+    //     // e.preventDefault();
+    //     console.log("function handling");
+    //     navigate("/userDashboard");
+    // }
+
+    const handleLogin = (event) => {
+        event.preventDefault(); // Prevent default form submission behavior
+
+        // Perform login logic here, e.g., validate user credentials
+        const formData = new FormData(event.target);
+        const voterId = formData.get("voterId");
+        const password = formData.get("password");
+
+        // Mock login validation (replace this with your actual logic)
+        if (voterId && password) {
+            console.log("Login successful for Voter ID:", voterId);
+            navigate("/userDashboard"); // Navigate to the user dashboard
+        } else {
+            alert("Please provide valid credentials.");
+        }
+
+        handleOverlayClick();
+    };
 
     function changeSide() {
         setIsLeft(!isleft)
@@ -26,6 +46,7 @@ export default function Login({ onClose }) {
 
     const handleOverlayClick = (e) => {
         if (e.target.classList.contains("login-overlay")) {
+            console.log("inoked");
             handleClose();
         }
     };
