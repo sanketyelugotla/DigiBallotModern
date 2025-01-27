@@ -1,5 +1,8 @@
-export default function Submit({ children }) {
+import classNames from "classnames"
+
+export default function Submit({ children, className, ...rest }) {
+    const allClasses = classNames("formButton", className)
     return (
-        <button className="formButton">{children}</button>
+        <button className={allClasses} {...rest}>{children}</button>
     )
 }
