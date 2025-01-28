@@ -1,0 +1,35 @@
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    /* Ensures it takes up the full width */
+    margin: 0;
+    /* No margin to prevent unwanted space */
+    padding: 0;
+    /* No padding to avoid extra space */
+}
+
+.scroll-item {
+    padding: 20px;
+    /* Padding for inner content */
+    display: inline-block;
+    /* Ensures the div takes only the required space */
+    width: auto;
+    /* Width based on content */
+}
+
+.line {
+    opacity: 0;
+    /* Initially hidden */
+    transform: translateX(50px);
+    /* Starts off-screen (right) */
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.line.visible {
+    opacity: 1;
+    /* Fully visible */
+    transform: translateX(0);
+    /* Moves to its original position */
+}

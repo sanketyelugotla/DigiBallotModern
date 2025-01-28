@@ -3,6 +3,8 @@
 }
 
 footer {
+    position: relative;
+    z-index: 7;
     margin-top: 20px;
     display: flex;
     flex-direction: column;
@@ -17,6 +19,7 @@ footer {
 }
 
 .foot-sec {
+    z-index: 7;
     margin-top: 20px;
     display: flex;
     justify-content: space-evenly;

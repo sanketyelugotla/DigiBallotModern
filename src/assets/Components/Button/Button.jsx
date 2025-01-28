@@ -1,10 +1,8 @@
 import "./Button.css"
+import classNames from "classnames"
 
 export default function Button({ children, className, size, variant, ...rest }) {
-
-    let sizeClass = size && `button-${size}`
-    let variantClass = variant && `button-${variant}`
-    const allClasses = `${sizeClass} ${variantClass} ${className}`
+    const allClasses = classNames(size && `button-${size}`, variant && `button-${variant}`)
     return (
         <button className={allClasses} {...rest}>{children}</button>
     )

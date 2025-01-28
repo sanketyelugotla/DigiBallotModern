@@ -1,9 +1,13 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import Input from "../../Input/Index"
 import { useNavigate } from "react-router-dom";
+import { loggedContext } from "../../ContextProvider/ContextProvider";
+import { stateContext } from "../../ContextProvider/ContextProvider";
 
 
 export default function LoginSide({ changeSide, handleClose }) {
+    const {presentState, setPresentState} = useContext(stateContext);
+    const {isLogged, setIsLogged} = useContext(loggedContext);
     const [fomrData, setFormData] = useState({
         id: "",
         password: ""
@@ -23,7 +27,10 @@ export default function LoginSide({ changeSide, handleClose }) {
         const { id, password } = fomrData;
         if (id === "sanket" && password === "sanket123") {
             handleClose();
-            navigate("/userDashboard")
+            navigate("/userDashboard");
+            setPresentState("dashboard");
+            setIsLogged(true);
+            console.log(presentState);   
         }
         else {
             setIsWrong(true);

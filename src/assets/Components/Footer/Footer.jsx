@@ -6,7 +6,7 @@ import { FaYoutube } from "react-icons/fa";
 
 export default function Footer() {
     return (
-        <footer>
+        <footer id="footer">
             <div className="foot-sec">
                 <span className="logo">DigiBallot</span>
                 <div>
