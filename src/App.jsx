@@ -5,8 +5,9 @@ import Footer from "./assets/Components/Footer/Footer";
 import Login from "./assets/Components/Pages/LoginPage/LoginPage";
 import Logged from "./assets/Components/Pages/Logged/Logged";
 import Instructions from "./assets/Components/Pages/Instructions/Intructions";
+import Vote from "./assets/Components/Pages/Vote/Vote";
 
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom"
+import { Routes, Route, Link } from "react-router-dom"
 
 export default function App() {
     const [isLoginOpen, setLoginOpen] = useState(false);
@@ -21,6 +22,7 @@ export default function App() {
                     <Route path="/" element={<Home />} />
                     <Route path="/userDashboard" element={<Logged />} />
                     <Route path="/instructions" element={<Instructions />} />
+                    <Route path="/vote" element={<Vote />} />
                 </Routes>
             </div>
             <Footer />

@@ -19,7 +19,6 @@ export default function Login({ onClose }) {
 
     const handleOverlayClick = (e) => {
         if (e.target.classList.contains("login-overlay")) {
-            console.log("inoked");
             handleClose();
         }
     };
