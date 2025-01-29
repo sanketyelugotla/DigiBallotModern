@@ -1,5 +1,10 @@
 const data = [
     {
+        name: "Kudumula Surya",
+        party: "Jana Balam",
+        img: "./pics/sun.jpeg"
+    },
+    {
         name: "Konidala Pawan Kalyan",
         party: "Janaseena Party",
         img: "./pics/jsp.png"
