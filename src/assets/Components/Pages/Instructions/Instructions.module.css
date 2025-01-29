@@ -1,0 +1,70 @@
+.full {
+    display: flex;
+    justify-content: center;
+}
+
+.whole {
+    width: 70%;
+    font-family: "Poppins-Regular";
+}
+
+.p {
+    font-size: 15px;
+}
+
+.ul {
+    margin: 1vh 0 0 4vh;
+
+    li {
+        font-size: 17px;
+    }
+}
+
+.h3 {
+    font-size: 24px;
+    font-family: "Poppins-Medium";
+}
+
+.h4 {
+    font-size: 20px;
+    font-family: "Poppins-Medium";
+}
+
+.field {
+    padding-left: 5vh;
+    margin-top: 30px;
+}
+
+.banner {
+    margin-top: 30px;
+    font-family: Volkhov;
+    font-size: 36px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--themeBlue);
+    height: 80px;
+}
+
+.check {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    button {
+        margin-top: 20px;
+    }
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    input[type="checkbox"] {
+        height: 15px;
+        width: 15px;
+        accent-color: var(--themeBlue);
+    }
+}

@@ -22,7 +22,7 @@
     align-items: center;
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
-    z-index: 2;
+    z-index: 20;
 }
 
 .login-overlay.hidden {
