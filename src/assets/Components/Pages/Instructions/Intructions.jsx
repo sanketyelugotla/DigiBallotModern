@@ -1,5 +1,5 @@
 import React from 'react'
-import styleInstructions from "./instructions.module.css"
+import styleInstructions from "./Instructions.module.css"
 
 export default function Intructions() {
   return (
