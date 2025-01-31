@@ -29,20 +29,20 @@ export default function CandidateDetails() {
             <div className="carousel">
                 {data.slice(0, 5).map((item, index) => {
                     const position = (index - selectedIndex + 5) % 5;
-
                     return (
-                        <div
-                            key={item.name}
-                            className={`member-circle position-${position}`}
-                            onClick={() => check(position)}
-                        >
-                            <img src={item.img} alt={item.name}></img>
-                            <p>{item.name}</p>
-                        </div>
+                        <>
+                            <div
+                                key={item.name}
+                                className={`member-circle position-${position}`}
+                                onClick={() => check(position)}
+                            >
+                                <img src={item.img} alt={item.name}></img>
+                            </div>
+                        </>
                     );
                 })}
             </div>
             <button onClick={() => handleShift("left")}>Right</button>
-        </div>
+        </div >
     );
 }
