@@ -12,7 +12,7 @@ export default function ContextProvider({ children }) {
     <loggedContext.Provider value={{ isLogged, setIsLogged }}>
       <stateContext.Provider value={{ presentState, setPresentState }}>
         <partiesContext.Provider value={{ selectedParty, setSelectedParty }}>
-          {children}
+            {children}
         </partiesContext.Provider>
       </stateContext.Provider>
     </loggedContext.Provider>

@@ -31,7 +31,7 @@
     }
 
     .col {
-        padding: 12px;
+        padding: 13px;
         border: 1px solid #ddd;
 
         img {
@@ -60,4 +60,33 @@
 #qwe {
     font-size: 20px;
     padding: 12px 60px;
+}
+
+/* Vote Div */
+
+.voteDiv {
+    font-family: "Poppins-Regular";
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+
+    p {
+        font-size: 16px;
+    }
+
+    span {
+        font-family: "Poppins-Bold";
+        color: var(--themeBlue);
+    }
+
+    .buttonsDiv {
+        margin-top: 20px;
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-evenly;
+    }
 }

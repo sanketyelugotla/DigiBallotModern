@@ -1,15 +1,22 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import data from "../../../Data/Candidates"
 import styleVote from "./Vote.module.css"
 import Button from '../../Button/Button'
 import { partiesContext } from '../../ContextProvider/ContextProvider'
+import ConfirmVote from './ConfirmVote'
 
 export default function Vote() {
     const { selectedParty, setSelectedParty } = useContext(partiesContext);
-
+    const [isOpen, setIsOpen] = useState(false);
     function selectButton(event) {
         const { name } = event.target;
-        setSelectedParty({ name });
+        if (selectedParty.name != name)
+            setSelectedParty({ name });
+        else setSelectedParty("");
+    }
+
+    function handleVote() {
+        setIsOpen(!isOpen);
     }
 
     return (
@@ -40,7 +47,7 @@ export default function Vote() {
                                         onClick={selectButton}
                                         active={selectedParty.name === item.party}
                                     >
-                                        Select
+                                        {selectedParty.name === item.party ? "Deselect" : " Select "}
                                     </Button>
                                 </center>
                             </td>
@@ -48,8 +55,17 @@ export default function Vote() {
                     ))}
                 </tbody>
             </table>
+            {isOpen &&
+                <ConfirmVote onClose={handleVote} />
+            }
             <p className={styleVote.note}>**Double check your choice and make your vote count!</p>
-            <Button variant="dark" id={styleVote.qwe}>Vote</Button>
+            <Button
+                variant="dark"
+                id={styleVote.qwe}
+                onClick={handleVote}
+            >
+                Vote
+            </Button>
         </div>
     )
 }
