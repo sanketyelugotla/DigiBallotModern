@@ -15,8 +15,8 @@
 
 .member-circle {
     position: absolute;
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     overflow: hidden;
     transition: all 0.5s ease-in-out;
@@ -37,7 +37,7 @@ img {
 .position-0 {
     left: 10%;
     transform: scale(0.8);
-    opacity: 0.5;
+    opacity: 0.7;
 }
 
 .position-1 {
@@ -62,5 +62,5 @@ img {
 .position-4 {
     left: 90%;
     transform: scale(0.8);
-    opacity: 0.5;
+    opacity: 0.7;
 }

@@ -15,20 +15,26 @@ export default function CandidateDetails() {
         });
     };
 
+    function check(position) {
+        if (position == 1 || position == 0) {
+            handleShift("left");
+        } else if (position == 3 || position == 4) {
+            handleShift("right")
+        }
+    }
+
     return (
         <div className="carousel-container">
+            <button onClick={() => handleShift("right")}>Left</button>
             <div className="carousel">
                 {data.slice(0, 5).map((item, index) => {
-                    // Position calculation for circular index
-                    const position = (index - selectedIndex + 5) % 5; // Ensure position is within 0-4 range
+                    const position = (index - selectedIndex + 5) % 5;
 
                     return (
                         <div
                             key={item.name}
                             className={`member-circle position-${position}`}
-                            onClick={() =>
-                                handleShift(position === 0 ? "left" : position === 4 ? "right" : null)
-                            }
+                            onClick={() => check(position)}
                         >
                             <img src={item.img} alt={item.name}></img>
                             <p>{item.name}</p>
@@ -36,8 +42,7 @@ export default function CandidateDetails() {
                     );
                 })}
             </div>
-            <button onClick={() => handleShift("left")}>Left</button>
-            <button onClick={() => handleShift("right")}>Right</button>
+            <button onClick={() => handleShift("left")}>Right</button>
         </div>
     );
 }
