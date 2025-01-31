@@ -36,7 +36,7 @@ export default function Vote() {
                             <td className={styleVote.col}>{item.name}</td>
                             <td className={styleVote.col}>{item.party}</td>
                             <td className={styleVote.col}>
-                                <center><img src={item.img} alt="" /></center>
+                                <center><img src={item.party_img} alt="" /></center>
                             </td>
                             <td className={styleVote.col}>
                                 <center>

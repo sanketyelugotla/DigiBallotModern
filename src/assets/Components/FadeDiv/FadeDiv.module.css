@@ -1,4 +1,7 @@
 .fadeDiv {
+    position: absolute;
+    width: 100%;
+    left: 0;
     transition: all 0.5s ease;
 }
 
@@ -14,3 +17,11 @@
     z-index: 1;
     pointer-events: none;
 }
+
+/* .vis {
+    display: block;
+}
+
+.hide {
+    display: none;
+} */

@@ -1,0 +1,37 @@
+.carousel-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 400px;
+    overflow: hidden;
+}
+
+.carousel {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 600px;
+}
+
+.member-circle {
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
+    cursor: pointer;
+}
+
+.member-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Positioning logic */
+.position-0 { left: 10%; transform: scale(0.8); opacity: 0.5; }
+.position-1 { left: 25%; transform: scale(1); opacity: 0.8; }
+.position-2 { left: 50%; transform: scale(1.5); opacity: 1; } /* Center */
+.position-3 { left: 75%; transform: scale(1); opacity: 0.8; }
+.position-4 { left: 90%; transform: scale(0.8); opacity: 0.5; }

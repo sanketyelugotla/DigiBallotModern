@@ -28,7 +28,7 @@ export default function LoginSide({ changeSide, handleClose }) {
         if (id === "sanket" && password === "sanket123") {
             handleClose();
             navigate("/userDashboard");
-            setPresentState("dashboard");
+            setPresentState("userDashboard");
             setIsLogged(true);
             console.log(presentState);   
         }

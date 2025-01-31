@@ -1,18 +1,16 @@
-import style from "./Logged.module.css";
+import style from "./UserDashboard.module.css";
 import Button from "../../Button/Button";
 import { loggedContext } from "../../ContextProvider/ContextProvider";
 import { useContext } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { stateContext } from "../../ContextProvider/ContextProvider";
-
-
 
 export default function Logged() {
     const { presentState } = useContext(stateContext);
 
-    // if (!isLogged) {
-    //     return <Navigate to="/" replace />;
-    // }
+    if (presentState != "userDashboard") {
+        return <Navigate to="/" replace />;
+    }
 
     return (
         <div>
@@ -26,21 +24,33 @@ export default function Logged() {
                         <p>
                             Your voice shapes the nation. <br /> Ready to vote?
                         </p>
-                        <Button variant="light">Vote Now</Button>
+                        <Link to="/vote">
+                            <Button variant="light">
+                                Vote Now
+                            </Button>
+                        </Link>
                     </div>
                     <div className="box right-box">
                         <img className="lg" src="./pics/profile.png" alt="voteMachine" />
                         <p>
                             Know about Candidates and their manifests
                         </p>
-                        <Button variant="light">Candidate Details</Button>
+                        <Link to="/candidateDetails">
+                            <Button variant="light">
+                                Candidate Details
+                            </Button>
+                        </Link>
                     </div>
                     <div className="box">
                         <img className="lg" src="./pics/admin_profile.png" alt="voteMachine" />
                         <p>
                             See the live results of the election.
                         </p>
-                        <Button variant="light">View Results</Button>
+                        <Link>
+                            <Button variant="light">
+                                View Results
+                            </Button>
+                        </Link>
                     </div>
                 </div>
             </div>

@@ -3,6 +3,7 @@ import HoverDiv from '../../HoverDiv/HoverDiv'
 import styleVote from "./Vote.module.css"
 import Button from '../../Button/Button'
 import FadeDiv from '../../FadeDiv/FadeDiv'
+import { Link } from 'react-router-dom'
 
 export default function ConfirmVote({ onClose }) {
     const [isOpted, setIsopted] = useState(false);
@@ -14,43 +15,43 @@ export default function ConfirmVote({ onClose }) {
         <HoverDiv onClose={onClose} variant="voteBox">
             {({ handleClose }) => (
                 <div className={styleVote.voteDiv}>
-                    {!isOpted &&
-                        <FadeDiv fade_out={isOpted} onChange={handleIsopted}>
-                            {({ handleChange }) => (
-                                <>
-                                    <p>
-                                        "You have selected
-                                        <span> 'Sanket Yelugotla' </span>
-                                        from
-                                        <span> 'Janasena party'. </span>
-                                        Do you confirm your vote?"
-                                    </p>
-                                    <div className={styleVote.buttonsDiv}>
-                                        <Button
-                                            hover="danger"
-                                            onClick={handleClose}
-                                        >
-                                            Back
-                                        </Button>
-                                        <Button onClick={handleChange} hover="success">Confirm</Button>
-                                    </div>
-                                </>
-                            )}
-                        </FadeDiv>}
-                    {isOpted &&
-                        <FadeDiv fade_in={isOpted} fade_out={!isOpted} onChange={handleIsopted}>
-                            {({ handleChange }) => (
-                                <>
-                                    <p>
-                                        "Thank you for voting! Your vote has been successfully recorded." <br />
-                                        ID: 123465798
-                                    </p>
-                                    <div className={styleVote.buttonsDiv}>
+                    <FadeDiv fade_out={isOpted} onChange={handleIsopted}>
+                        {({ handleChange }) => (
+                            <>
+                                <p>
+                                    "You have selected
+                                    <span> 'Sanket Yelugotla' </span>
+                                    from <br />
+                                    <span> 'Janasena party'. </span>
+                                    Do you confirm your vote?"
+                                </p>
+                                <div className={styleVote.buttonsDiv}>
+                                    <Button
+                                        hover="danger"
+                                        onClick={handleClose}
+                                    >
+                                        Back
+                                    </Button>
+                                    <Button onClick={handleChange} hover="success">Confirm</Button>
+                                </div>
+                            </>
+                        )}
+                    </FadeDiv>
+                    <FadeDiv fade_in={isOpted} fade_out={!isOpted} onChange={handleIsopted}>
+                        {({ handleChange }) => (
+                            <>
+                                <p>
+                                    "Thank you for voting! Your vote has been successfully recorded." <br />
+                                    ID: 123465798
+                                </p>
+                                <div className={styleVote.buttonsDiv}>
+                                    <Link to="/userDashboard" replace>
                                         <Button onClick={handleChange} hover="success">Done</Button>
-                                    </div>
-                                </>
-                            )}
-                        </FadeDiv>}
+                                    </Link>
+                                </div>
+                            </>
+                        )}
+                    </FadeDiv>
                 </div>
             )}
         </HoverDiv>

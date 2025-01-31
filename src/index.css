@@ -88,3 +88,7 @@ body {
 .blueButton:hover {
   filter: hue-rotate(-20deg);
 }
+
+a {
+  text-decoration: none;
+}
