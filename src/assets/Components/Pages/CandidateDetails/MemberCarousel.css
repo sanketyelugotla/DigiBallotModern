@@ -2,7 +2,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 400px;
+    height: 30vh;
     overflow: hidden;
 }
 
@@ -10,13 +10,13 @@
     position: relative;
     display: flex;
     align-items: center;
-    width: 900px;
+    width: 67vw;
 }
 
 .member-circle {
     position: absolute;
-    width: 120px;
-    height: 120px;
+    width: 16vh;
+    height: 16vh;
     border-radius: 50%;
     overflow: hidden;
     transition: all 0.5s ease-in-out;
@@ -30,7 +30,25 @@
 }
 
 img {
-    width: 150px;
+    width: 15vh;
+}
+
+.small_img_div {
+    position: relative;
+    background-color: white;
+    border-radius: 50%;
+    padding: 0.5vh;
+    top: 10vh;
+    left: 65vh;
+    height: 11vh;
+    width: 11vh;
+}
+
+#small_img {
+    height: 10vh;
+    width: 10vh;
+    border-radius: 50%;
+    z-index: 10;
 }
 
 /* Positioning logic */
@@ -65,11 +83,41 @@ img {
     opacity: 0.7;
 }
 
-.text-overlay {
+.member-circle:not(.position-0):not(.position-1):not(.position-2):not(.position-3):not(.position-4) {
+    display: none;
+}
+
+.candidateDetailsContainer {
+    margin-top: 6vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    h2 {
+        font-size: 30px;
+        font-family: Poppins-Regular;
+    }
+}
+
+.selected-info {
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 70%;
     color: black;
-    width: 100%;
     text-align: center;
     font-size: 14px;
     padding: 5px;
-    z-index: 100;
+
+    #tab {
+        margin-top: 3vh;
+    }
+
+    h2 {
+        font-size: 25px;
+        text-transform: uppercase;
+    }
 }

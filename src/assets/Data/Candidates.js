@@ -6,14 +6,14 @@ const data = [
         img: "./pics/pk.png",
         details: {
             relation: "Late Konidela Venkata Rao",
-            Age: 55,
+            age: 55,
             name_voter: "87-Mangalagiri (Andhra Pradesh) constituency, at Serail no 1120 in Part no 197",
             self_profession: "Film Actor",
             spouse_profession: "House Wife",
             assets: "Rs 1,64,54,00,423 ~ 164 Crore+",
             liabilities: "Rs 65,84,44,703 ~ 65 Crore+",
             educational_details: "10th Pass SSLC (10th Class) in 1984 from St Joseph's English Medium High School, Nellore, A.P",
-            manifesto: "www.youtube.com"
+            manifesto: "https://www.youtube.com/"
         }
     },
     {
@@ -23,14 +23,14 @@ const data = [
         img: "./pics/pk.png",
         details: {
             relation: "Late Konidela Venkata Rao",
-            Age: 55,
+            age: 55,
             name_voter: "87-Mangalagiri (Andhra Pradesh) constituency, at Serail no 1120 in Part no 197",
             self_profession: "Film Actor",
             spouse_profession: "House Wife",
             assets: "Rs 1,64,54,00,423 ~ 164 Crore+",
             liabilities: "Rs 65,84,44,703 ~ 65 Crore+",
             educational_details: "10th Pass SSLC (10th Class) in 1984 from St Joseph's English Medium High School, Nellore, A.P",
-            manifesto: "www.youtube.com"
+            manifesto: "https://www.youtube.com/"
         }
     },
     {
@@ -40,14 +40,14 @@ const data = [
         img: "./pics/vangaGeetha.png",
         details: {
             relation: "Late Konidela Venkata Rao",
-            Age: 55,
+            age: 55,
             name_voter: "87-Mangalagiri (Andhra Pradesh) constituency, at Serail no 1120 in Part no 197",
             self_profession: "Film Actor",
             spouse_profession: "House Wife",
             assets: "Rs 1,64,54,00,423 ~ 164 Crore+",
             liabilities: "Rs 65,84,44,703 ~ 65 Crore+",
             educational_details: "10th Pass SSLC (10th Class) in 1984 from St Joseph's English Medium High School, Nellore, A.P",
-            manifesto: "www.youtube.com"
+            manifesto: "https://www.youtube.com/"
         }
     },
     {
@@ -57,14 +57,14 @@ const data = [
         img: "./pics/satyanandaRao.png",
         details: {
             relation: "Late Konidela Venkata Rao",
-            Age: 55,
+            age: 55,
             name_voter: "87-Mangalagiri (Andhra Pradesh) constituency, at Serail no 1120 in Part no 197",
             self_profession: "Film Actor",
             spouse_profession: "House Wife",
             assets: "Rs 1,64,54,00,423 ~ 164 Crore+",
             liabilities: "Rs 65,84,44,703 ~ 65 Crore+",
             educational_details: "10th Pass SSLC (10th Class) in 1984 from St Joseph's English Medium High School, Nellore, A.P",
-            manifesto: "www.youtube.com"
+            manifesto: "https://www.youtube.com/"
         }
     },
     {
@@ -74,14 +74,14 @@ const data = [
         img: "./pics/bulliRaju.png",
         details: {
             relation: "Late Konidela Venkata Rao",
-            Age: 55,
+            age: 55,
             name_voter: "87-Mangalagiri (Andhra Pradesh) constituency, at Serail no 1120 in Part no 197",
             self_profession: "Film Actor",
             spouse_profession: "House Wife",
             assets: "Rs 1,64,54,00,423 ~ 164 Crore+",
             liabilities: "Rs 65,84,44,703 ~ 65 Crore+",
             educational_details: "10th Pass SSLC (10th Class) in 1984 from St Joseph's English Medium High School, Nellore, A.P",
-            manifesto: "www.youtube.com"
+            manifesto: "https://www.youtube.com/"
         }
     },
     {
@@ -91,14 +91,14 @@ const data = [
         img: "./pics/venkataRao.png",
         details: {
             relation: "Late Konidela Venkata Rao",
-            Age: 55,
+            age: 55,
             name_voter: "87-Mangalagiri (Andhra Pradesh) constituency, at Serail no 1120 in Part no 197",
             self_profession: "Film Actor",
             spouse_profession: "House Wife",
             assets: "Rs 1,64,54,00,423 ~ 164 Crore+",
             liabilities: "Rs 65,84,44,703 ~ 65 Crore+",
             educational_details: "10th Pass SSLC (10th Class) in 1984 from St Joseph's English Medium High School, Nellore, A.P",
-            manifesto: "www.youtube.com"
+            manifesto: "https://www.youtube.com/"
         }
     }
 ]
