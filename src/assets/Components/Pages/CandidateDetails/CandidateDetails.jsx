@@ -32,7 +32,7 @@ export default function CandidateDetails() {
         <div className="candidateDetailsContainer">
             <h2>Members in your constituency</h2>
             <div className="carousel-container">
-                <img src="./pics/prev.png" alt="Prev" onClick={() => handleShift("left")} />
+                <img className="pn-btn" src="./pics/prev.png" alt="Prev" onClick={() => handleShift("left")} />
                 <div className="carousel">
                     {data.map((item, index) => {
                         const position = (index - selectedIndex + data.length) % data.length;
@@ -50,7 +50,7 @@ export default function CandidateDetails() {
                         <img id="small_img" src={selectedData.party_img} alt="" />
                     </div>
                 </div>
-                <img src="./pics/next.png" alt="Next" onClick={() => handleShift("right")} />
+                <img className="pn-btn" src="./pics/next.png" alt="Next" onClick={() => handleShift("right")} />
             </div>
             <div className="selected-info">
                 <h2>{selectedData.name}</h2>

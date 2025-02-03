@@ -8,10 +8,10 @@ import ConfirmVote from './ConfirmVote'
 export default function Vote() {
     const { selectedParty, setSelectedParty } = useContext(partiesContext);
     const [isOpen, setIsOpen] = useState(false);
-    function selectButton(event) {
+    function selectButton(event, item) {
         const { name } = event.target;
         if (selectedParty.name != name)
-            setSelectedParty({ name });
+            setSelectedParty({ name: item.name, party: name });
         else setSelectedParty("");
     }
 
@@ -44,10 +44,10 @@ export default function Vote() {
                                         variant="light"
                                         radius="sharp"
                                         name={item.party}
-                                        onClick={selectButton}
-                                        active={selectedParty.name === item.party}
+                                        onClick={(event) => selectButton(event, item)}
+                                        active={selectedParty.party === item.party}
                                     >
-                                        {selectedParty.name === item.party ? "Deselect" : " Select "}
+                                        {selectedParty.party === item.party ? "Deselect" : " Select "}
                                     </Button>
                                 </center>
                             </td>

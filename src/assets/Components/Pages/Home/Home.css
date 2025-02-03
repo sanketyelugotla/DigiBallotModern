@@ -3,18 +3,19 @@
 }
 
 .space {
-    padding-top: 90px;
+    padding-top: 9vh;
 }
 
 .homebg {
-    height: 482px;
+    width: 100vw;
+    height: 48vh;
     display: flex;
     align-items: center;
+    justify-content: center;
 
     background: linear-gradient(45deg, #f9c149, white, #a8f5a2);
 
     p {
-        margin-left: 12.5%;
         font-size: 44px;
         font-family: "Volkhov";
 
@@ -24,19 +25,20 @@
         }
 
         button {
-            margin-top: 3%;
+            margin-top: 3vh;
         }
     }
 
 
     img {
-        margin-left: 20%;
-        scale: 130%;
+        margin-left: 20vw;
+        height: 35vh;
+        width: auto;
     }
 }
 
 .vote {
-    height: 300px;
+    height: 30vh;
 }
 
 p,
@@ -62,27 +64,27 @@ li {
         font-size: 40px;
         font-family: "Volkhov-Bold";
         color: var(--themeBlue);
-        margin: 60px 0 15px 0;
+        margin: 6vh 0 1.5vh 0;
     }
 }
 
 .boxes {
     z-index: 10;
-    margin-top: 20px;
+    margin-top: 2vh;
     width: 100%;
     display: flex;
     justify-content: center;
 
     .right-box {
-        margin-right: 50px;
+        margin-right: 5vh;
     }
 
     .box {
-        padding: 30px;
+        padding: 3vh;
         box-shadow: 0 0 10px 3px #c5cfdb;
         border-radius: 30px;
-        height: 350px;
-        width: 380px;
+        height: 35vh;
+        width: 38vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
@@ -95,25 +97,24 @@ li {
 
     img {
         margin: 0;
-        margin-top: 10px;
-        height: 125px;
+        margin-top: 1vh;
+        height: 12.5vh;
     }
 
     .lg {
-        height: 150px;
-        margin-top: -10px;
+        height: 15vh;
+        margin-top: -1vh;
     }
 
     p {
         font-weight: 500;
-        margin-top: 20px;
-        margin-bottom: 20px;
+        margin: 2vh 0;
         font-size: 16px;
     }
 }
 
 .angels {
-    margin: 70px 0;
+    margin: 7vh 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -122,23 +123,24 @@ li {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: 300px;
-        height: 300px;
+        width: 30vh;
+        height: 30vh;
     }
 
     img {
-        height: 200px;
+        height: 20vh;
+        width: auto;
     }
 
     .lg {
-        margin-top: -40px;
-        height: 250px;
+        margin-top: -4vh;
+        height: 25vh;
     }
 
     .black {
-        border-radius: 100px;
+        border-radius: 10vh;
         width: 0.2cap;
-        margin: 0 100px;
+        margin: 0 10vh;
         background-color: #a1a1a1;
     }
 
@@ -162,5 +164,5 @@ li {
 
 .collapsible.open {
     height: auto;
-    padding: 10px;
+    padding: 1vh;
 }

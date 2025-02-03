@@ -24,7 +24,7 @@ export default function Logged() {
                         <p>
                             Your voice shapes the nation. <br /> Ready to vote?
                         </p>
-                        <Link to="/vote">
+                        <Link to="/instructions">
                             <Button variant="light">
                                 Vote Now
                             </Button>

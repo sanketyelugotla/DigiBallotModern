@@ -1,11 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import HoverDiv from '../../HoverDiv/HoverDiv'
 import styleVote from "./Vote.module.css"
 import Button from '../../Button/Button'
 import FadeDiv from '../../FadeDiv/FadeDiv'
 import { Link } from 'react-router-dom'
+import { partiesContext } from '../../ContextProvider/ContextProvider'
 
 export default function ConfirmVote({ onClose }) {
+    const { selectedParty } = useContext(partiesContext);
     const [isOpted, setIsopted] = useState(false);
     function handleIsopted() {
         setIsopted(!isOpted);
@@ -20,9 +22,9 @@ export default function ConfirmVote({ onClose }) {
                             <>
                                 <p>
                                     "You have selected
-                                    <span> 'Sanket Yelugotla' </span>
+                                    <span> '{selectedParty.name}' </span>
                                     from <br />
-                                    <span> 'Janasena party'. </span>
+                                    <span> '{selectedParty.party}'. </span>
                                     Do you confirm your vote?"
                                 </p>
                                 <div className={styleVote.buttonsDiv}>

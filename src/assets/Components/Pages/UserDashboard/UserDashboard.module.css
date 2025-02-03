@@ -1,6 +1,7 @@
 .india {
     position: absolute;
-    height: 700px;
+    height: 70vh;
+    width: auto;
     z-index: 0;
-    left: -150px;
+    left: -8vw;
 }

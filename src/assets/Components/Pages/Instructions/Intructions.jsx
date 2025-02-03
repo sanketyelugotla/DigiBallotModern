@@ -1,7 +1,13 @@
 import React from 'react'
 import styleInstructions from "./Instructions.module.css"
+import { useNavigate } from 'react-router-dom';
 
 export default function Intructions() {
+  const navigate = useNavigate();
+  function handleSubmit(event) {
+    event.preventDefault();
+    navigate("/vote");
+  } 
   return (
     <div className={styleInstructions.full}>
       <div className={styleInstructions.whole}>
@@ -74,13 +80,15 @@ export default function Intructions() {
         <div className={styleInstructions.field}>
           <h4 className={styleInstructions.h4}>By following these instructions, you can ensure a smooth voting experience while contributing to a fair and democratic process.</h4>
         </div>
-        <div className={`${styleInstructions.field} ${styleInstructions.check}`}>
-          <label className={styleInstructions.container}>
-            <input type="checkbox" />
-            I have read all the instructions
-          </label>
-          <button>Confirm</button>
-        </div>
+        <form>
+          <div className={`${styleInstructions.field} ${styleInstructions.check}`}>
+            <label className={styleInstructions.container}>
+              <input type="checkbox" required />
+              I have read all the instructions
+            </label>
+            <button type='submit' onClick={handleSubmit}>Confirm</button>
+          </div>
+        </form>
       </div>
     </div>
   )

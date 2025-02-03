@@ -29,8 +29,8 @@
 }
 
 .hoverdiv-loginForm {
-    height: 850px;
-    width: 1100px;
+    height: 85vh;
+    width: 110vh;
     background: var(--themeBlue);
     border-radius: var(--fixedRadius);
 }
@@ -38,8 +38,8 @@
 .hoverdiv-voteBox {
     border-radius: 10px;
     background-color: white;
-    height: 200px;
-    width: 500px;
+    height: 20vh;
+    width: 50vh;
 }
 
 /* Modal Styles */
@@ -74,8 +74,8 @@
 
 .close-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 1vh;
+    right: 1vh;
     border: none;
     background: transparent;
     font-size: 18px;

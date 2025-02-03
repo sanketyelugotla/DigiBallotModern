@@ -36,7 +36,7 @@
 }
 
 .banner {
-    margin-top: 30px;
+    margin-top: 3vh;
     font-family: Volkhov;
     font-size: 36px;
     color: white;
@@ -44,7 +44,7 @@
     align-items: center;
     justify-content: center;
     background-color: var(--themeBlue);
-    height: 80px;
+    height: 8vh;
 }
 
 .check {
@@ -53,7 +53,7 @@
     align-items: center;
 
     button {
-        margin-top: 20px;
+        margin-top: 2vh;
     }
 }
 
@@ -63,8 +63,8 @@
     justify-content: center;
 
     input[type="checkbox"] {
-        height: 15px;
-        width: 15px;
+        height: 1.5vh;
+        width: 1.5vh;
         accent-color: var(--themeBlue);
     }
 }
