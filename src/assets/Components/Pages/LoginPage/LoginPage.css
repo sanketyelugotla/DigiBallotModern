@@ -1,7 +1,11 @@
+:root {
+    --themeForm: #1E3A8A
+}
+
 .loginHalf {
     position: relative;
     overflow: hidden;
-    background-color: var(--themeBlue);
+    background-color: var(--themeForm);
     width: 50%;
     height: 100%;
     display: flex;

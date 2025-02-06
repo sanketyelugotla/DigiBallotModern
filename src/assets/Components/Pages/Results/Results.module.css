@@ -1,0 +1,83 @@
+:root {
+    --line_col: grey;
+    --text_color: #000;
+    --bg_color: #f9fafb;
+    --border_color: #d1d5db;
+    --grid_color: #e5e7eb;
+    --axis_color: #6b7280;
+    --tooltip_bg: #ffffff;
+    --tooltip_border: #d1d5db;
+    --tooltip_text_color: #111827;
+}
+
+.mainDiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5vh 0;
+    background-color: var(--bg_color);
+}
+
+.resultsDiv {
+    height: 60vh;
+    width: 70vw;
+    border: 2px solid var(--border_color);
+    padding: 5vh 5vw;
+    position: relative;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bar {
+    transition: fill 0.3s ease;
+}
+
+.bar:hover {
+    fill: inherit;
+    /* Disable the hover effect */
+    cursor: pointer;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+    font-size: 14px;
+    color: var(--text_color);
+}
+
+/* Tooltip Styling */
+.recharts-tooltip-wrapper {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.tooltipContainer {
+    border-radius: 3px;
+    background-color: var(--tooltip_bg);
+    border: 1px solid var(--tooltip_border);
+    box-shadow: 0 0 5px 1px rgb(100, 100, 100);
+    padding: 15px 20px;
+    font-size: 14px;
+    color: var(--tooltip_text_color);
+
+    p {
+        margin: 0;
+        font-size: 15px;
+    }
+}
+
+/* Custom Legend Styling */
+.customLegend {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    font-size: 14px;
+    color: var(--text_color);
+    margin-top: 20px;
+    /* Added margin for separation */
+}

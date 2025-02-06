@@ -1,20 +1,22 @@
 :root {
-    --themeBlue: #1e3a8a;
+    --inside_theme: #2559AA;
+    --hoverOverlay: rgba(255, 255, 255, 0.2);
 }
 
 .loginForm {
     height: fit-content;
     width: 44vh;
     padding: 2vh;
-    background-color: #2559AA;
+    background-color: var(--inside_theme);
     border-radius: 2vh;
-    box-shadow: 0 0 20px 2px #122761;
+    border: none;
+    /* box-shadow: 0 0 20px 2px #122761; */
+    /* box-shadow: 0 0 20px 1px var(--inside_theme); */
 }
 
 .danger {
     margin-top: 7px;
     color: #951634ee;
-    /* color: #f4f4f4; */
     width: 100%;
     font-size: 15px;
     justify-content: center;
@@ -55,7 +57,7 @@
     border: 1px solid white;
     border-radius: 15px;
     outline: none;
-    background-color: #2559AA;
+    background-color: var(--inside_theme);
     border-radius: 7px;
     margin: 0 2.8vh;
     /* box-shadow: -px -8px 8px -4px #9d9999; */
@@ -72,7 +74,7 @@
     position: absolute;
     left: 45px;
     color: white;
-    background-color: #2559AA;
+    background-color: var(--inside_theme);
     transition: 0.4s;
     letter-spacing: 1px;
     z-index: 2;
@@ -90,8 +92,9 @@
     height: 5.5vh;
     border-radius: 5vh;
     border: none;
-    background-color: #2559AA;
-    box-shadow: inset 0 -5px 10px 2px #6da5ff;
+    background-color: var(--inside_theme);
+    /* box-shadow: inset 0 -5px 10px 2px #6da5ff; */
+    box-shadow: inset 0 4px 20px var(--hoverOverlay);
     color: white;
     font-weight: bold;
     margin: 3vh 0 7% 10%;
@@ -102,13 +105,13 @@
 
 .formButton:hover {
     color: white;
-    background-color: #2559AA;
+    background-color: var(--inside_theme);
     box-shadow: inset 0 -5px 10px 2px #1c3050;
 }
 
 .formButton:active {
     color: white;
-    background-color: #2559AA;
+    background-color: var(--inside_theme);
     box-shadow: inset 0 -5px 10px 2px #0a1220;
 }
 

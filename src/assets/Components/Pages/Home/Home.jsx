@@ -1,12 +1,16 @@
 import "./Home.css"
 import Button from "../../Button/Button"
 
-import { useState, useRef } from "react"
+import { useState, useRef, useEffect } from "react"
 
-export default function Home() {
+export default function Home({ isLoginOpen, toggleLoginModal }) {
 
     const [isOpen, setOpen] = useState(false);
     const collapsibleRef = useRef(null);
+    const [colr, setCol] = useState({
+        main: "#1e3a8a",
+        sub: "2559AA"
+    })
 
     const handleClick = () => {
         const element = collapsibleRef.current;
@@ -20,6 +24,31 @@ export default function Home() {
         }
         setOpen(!isOpen);
     };
+
+    const cols1 = {
+        "user": "#1e3a8a",
+        "candidate": "#5406ac",
+        "admin": "#065F46"
+    }
+
+    const cols2 = {
+        "user": "#2559AA",
+        "candidate": "#6708d3",
+        "admin": "#0A8F6A"
+    }
+
+    useEffect(() => {
+        document.documentElement.style.setProperty('--themeForm', colr.main);
+        document.documentElement.style.setProperty('--inside_theme', colr.sub);
+    }, [colr])
+
+    function handleInButton(col) {
+        setCol({
+            main: cols1[col],
+            sub: cols2[col]
+        });
+        toggleLoginModal();
+    }
 
     return (
         <>
@@ -56,21 +85,36 @@ export default function Home() {
                         <p>
                             Log in to cast your vote and participate in the election
                         </p>
-                        <Button variant="light">Voter Login</Button>
+                        <Button
+                            onClick={() => handleInButton("user")} variant="light"
+                        >
+                            Voter Login
+                        </Button>
                     </div>
                     <div className="box right-box">
                         <img className="lg" src="./pics/profile.png" alt="voteMachine" />
                         <p>
                             Log in to manage your profile and election details
                         </p>
-                        <Button variant="light">Candidate Login</Button>
+                        <Button
+                            variant="light"
+                            onClick={() => handleInButton("candidate")}
+                        >
+                            Candidate Login
+
+                        </Button>
                     </div>
                     <div className="box">
                         <img className="lg" src="./pics/admin_profile.png" alt="voteMachine" />
                         <p>
                             Log in to manage elections and monitor voting activity
                         </p>
-                        <Button variant="light">Admin Login</Button>
+                        <Button
+                            variant="light"
+                            onClick={() => handleInButton("admin")}
+                        >
+                            Admin Login
+                        </Button>
                     </div>
                 </div>
             </div>

@@ -92,6 +92,8 @@ button.button-dark:hover {
     color: white;
     scale: 1.1;
 }
-button.button-dark:active, button.button-success:active {
+
+button.button-dark:active,
+button.button-success:active {
     box-shadow: inset 0 -5px 10px 1px #091431;
 }

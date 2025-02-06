@@ -31,7 +31,8 @@
 .hoverdiv-loginForm {
     height: 85vh;
     width: 110vh;
-    background: var(--themeBlue);
+    /* background: var(--themeBlue); */
+    background: var(--themeForm);
     border-radius: var(--fixedRadius);
 }
 

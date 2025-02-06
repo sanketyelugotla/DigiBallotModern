@@ -7,6 +7,7 @@ import UserDashboard from "./assets/Components/Pages/UserDashboard/UserDashboard
 import Instructions from "./assets/Components/Pages/Instructions/Intructions";
 import Vote from "./assets/Components/Pages/Vote/Vote";
 import CandidateDetails from "./assets/Components/Pages/CandidateDetails/CandidateDetails";
+import Results from "./assets/Components/Pages/Results/Results";
 
 import { Routes, Route, Link } from "react-router-dom"
 
@@ -21,11 +22,12 @@ export default function App() {
             <Header onLoginClick={toggleLoginModal} />
             <div className="space">
                 <Routes>
-                    <Route path="/" element={<Home />} />
+                    <Route path="/" element={<Home {...{ isLoginOpen, toggleLoginModal }}/>} />
                     <Route path="/userDashboard" element={<UserDashboard />} />
                     <Route path="/instructions" element={<Instructions />} />
                     <Route path="/vote" element={<Vote />} />
                     <Route path="candidateDetails" element={<CandidateDetails />} />
+                    <Route path="/results" element={<Results />} />
                 </Routes>
             </div>
             <Footer />

@@ -3,16 +3,16 @@ import Input from "../../Input/Index"
 import { useNavigate } from "react-router-dom";
 import { loggedContext } from "../../ContextProvider/ContextProvider";
 import { stateContext } from "../../ContextProvider/ContextProvider";
-
+import { userTypeContext } from "../../ContextProvider/ContextProvider";
 
 export default function LoginSide({ changeSide, handleClose }) {
-    const {presentState, setPresentState} = useContext(stateContext);
-    const {isLogged, setIsLogged} = useContext(loggedContext);
+    const { presentState, setPresentState } = useContext(stateContext);
+    const { isLogged, setIsLogged } = useContext(loggedContext);
     const [fomrData, setFormData] = useState({
         id: "",
         password: ""
-    })
-
+    });
+    const { userType, setUserType } = useContext(userTypeContext);
     const [isWrong, setIsWrong] = useState(false);
 
     function handleChange(event) {
@@ -30,7 +30,7 @@ export default function LoginSide({ changeSide, handleClose }) {
             navigate("/userDashboard");
             setPresentState("userDashboard");
             setIsLogged(true);
-            console.log(presentState);   
+            console.log(presentState);
         }
         else {
             setIsWrong(true);
@@ -49,7 +49,7 @@ export default function LoginSide({ changeSide, handleClose }) {
                         <a href="#">Forgot password?</a>
                     </div>
                     <Input.Danger on={isWrong}>Incorrect VoterId or Password</Input.Danger>
-                    <Input.Submit onClick={handleSubmit}>Login</Input.Submit>
+                    <Input.Submit variant="formbtn" onClick={handleSubmit}>Login</Input.Submit>
                 </Input.Form>
             </ Input.Div>
             <p className="createAccount">
