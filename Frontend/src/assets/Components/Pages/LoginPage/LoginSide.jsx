@@ -6,10 +6,11 @@ import { stateContext } from "../../ContextProvider/ContextProvider";
 import { userTypeContext } from "../../ContextProvider/ContextProvider";
 
 export default function LoginSide({ changeSide, handleClose }) {
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTRhZTcwZDE2YjQwZjNiNzBkZGRmNyIsInJvbGUiOiJ2b3RlciIsImlhdCI6MTczODg1MDIzOCwiZXhwIjoxNzM4ODUzODM4fQ.OFpV6cBOVdmoierzYb8MAunF3M8BT_tm6Rr3LPtfqlk"
     const { presentState, setPresentState } = useContext(stateContext);
     const { isLogged, setIsLogged } = useContext(loggedContext);
     const [fomrData, setFormData] = useState({
-        id: "",
+        email: "",
         password: ""
     });
     const { userType, setUserType } = useContext(userTypeContext);
@@ -22,20 +23,40 @@ export default function LoginSide({ changeSide, handleClose }) {
 
     const navigate = useNavigate();
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        const { id, password } = fomrData;
-        if (id === "sanket" && password === "sanket123") {
-            handleClose();
-            navigate("/userDashboard");
-            setPresentState("userDashboard");
-            setIsLogged(true);
-            console.log(presentState);
-        }
-        else {
-            setIsWrong(true);
+
+        const { email, password } = fomrData;
+
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email, password: password })
+            });
+
+            const res = await response.json();
+
+            if (response.ok) {
+                console.log("JWT Token:", res.token);
+
+                // Store token in localStorage for authentication
+                localStorage.setItem("authToken", res.token);
+
+                // Navigate to dashboard
+                handleClose();
+                navigate("/userDashboard");
+                setPresentState("userDashboard");
+                setIsLogged(true);
+            } else {
+                setIsWrong(true);
+                console.error("Login failed:", res.message);
+            }
+        } catch (error) {
+            console.error("Error logging in:", error);
         }
     }
+
 
     return (
         <>
@@ -43,7 +64,7 @@ export default function LoginSide({ changeSide, handleClose }) {
             <Input.Div>
                 <Input.Header>Login</Input.Header>
                 <Input.Form action="" method="post" >
-                    <Input type="text" label="Voter Id" name="id" onChange={handleChange} />
+                    <Input type="email" label="Voter Id" name="email" onChange={handleChange} />
                     <Input type="password" label="Password" name="password" onChange={handleChange} />
                     <div className="link">
                         <a href="#">Forgot password?</a>

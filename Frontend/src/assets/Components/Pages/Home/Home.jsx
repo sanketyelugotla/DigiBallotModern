@@ -1,16 +1,15 @@
 import "./Home.css"
 import Button from "../../Button/Button"
+import { loginColorState } from "../../ContextProvider/ContextProvider";
 
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useContext } from "react"
 
 export default function Home({ isLoginOpen, toggleLoginModal }) {
 
     const [isOpen, setOpen] = useState(false);
     const collapsibleRef = useRef(null);
-    const [colr, setCol] = useState({
-        main: "#1e3a8a",
-        sub: "2559AA"
-    })
+
+    const { colr, handleInButton} = useContext(loginColorState);
 
     const handleClick = () => {
         const element = collapsibleRef.current;
@@ -25,30 +24,10 @@ export default function Home({ isLoginOpen, toggleLoginModal }) {
         setOpen(!isOpen);
     };
 
-    const cols1 = {
-        "user": "#1e3a8a",
-        "candidate": "#5406ac",
-        "admin": "#065F46"
-    }
-
-    const cols2 = {
-        "user": "#2559AA",
-        "candidate": "#6708d3",
-        "admin": "#0A8F6A"
-    }
-
     useEffect(() => {
         document.documentElement.style.setProperty('--themeForm', colr.main);
         document.documentElement.style.setProperty('--inside_theme', colr.sub);
     }, [colr])
-
-    function handleInButton(col) {
-        setCol({
-            main: cols1[col],
-            sub: cols2[col]
-        });
-        toggleLoginModal();
-    }
 
     return (
         <>
@@ -86,7 +65,7 @@ export default function Home({ isLoginOpen, toggleLoginModal }) {
                             Log in to cast your vote and participate in the election
                         </p>
                         <Button
-                            onClick={() => handleInButton("user")} variant="light"
+                            onClick={() => handleInButton("user", toggleLoginModal)} variant="light"
                         >
                             Voter Login
                         </Button>
@@ -98,7 +77,7 @@ export default function Home({ isLoginOpen, toggleLoginModal }) {
                         </p>
                         <Button
                             variant="light"
-                            onClick={() => handleInButton("candidate")}
+                            onClick={() => handleInButton("candidate", toggleLoginModal)}
                         >
                             Candidate Login
 
@@ -111,7 +90,7 @@ export default function Home({ isLoginOpen, toggleLoginModal }) {
                         </p>
                         <Button
                             variant="light"
-                            onClick={() => handleInButton("admin")}
+                            onClick={() => handleInButton("admin", toggleLoginModal)}
                         >
                             Admin Login
                         </Button>

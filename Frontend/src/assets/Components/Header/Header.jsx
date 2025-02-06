@@ -4,9 +4,11 @@ import { loggedContext } from "../ContextProvider/ContextProvider";
 import { useContext, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { stateContext } from "../ContextProvider/ContextProvider";
+import { loginColorState } from "../ContextProvider/ContextProvider";
 
 export default function Header({ onLoginClick }) {
     const { isLogged } = useContext(loggedContext);
+    const { colr, handleInButton } = useContext(loginColorState);
 
     const [liElements, setLiElements] = useState({
         home: true,
@@ -15,18 +17,18 @@ export default function Header({ onLoginClick }) {
         contact: false,
     });
 
-    const {presentState} = useContext(stateContext);
+    const { presentState } = useContext(stateContext);
 
     const handleClick = (event) => {
         const { id } = event.target;
         if (id === "contact") {
-            const footerElement = document.getElementById("footer");            
+            const footerElement = document.getElementById("footer");
             if (footerElement) {
                 footerElement.scrollIntoView({ behavior: "smooth" });
             }
         } else if (id === "home") {
             if (presentState === "landing") {
-                window.scrollTo({top: 0, behavior: "smooth",});
+                window.scrollTo({ top: 0, behavior: "smooth", });
             }
         }
 
@@ -79,11 +81,11 @@ export default function Header({ onLoginClick }) {
                         <p>Sanket Yelugotla</p>
                     </div>
                 ) : (
-                    <Button variant="light" onClick={onLoginClick}>
+                    <Button variant="light" onClick={() => handleInButton("user", onLoginClick)}>
                         Login
                     </Button>
                 )}
             </div>
-        </header>
+        </header >
     );
 }
