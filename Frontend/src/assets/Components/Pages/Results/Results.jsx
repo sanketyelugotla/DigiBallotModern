@@ -54,11 +54,11 @@ export default function Results() {
     return (
         <div className={styleResults.mainDiv}>
             <div className={styleResults.resultsDiv}>
-                <div style={{ width: "100%" }}> 
+                <div style={{ width: "100%" }}>
                     <ResponsiveContainer width="100%" height={400} style={{ borderRadius: '10px' }}>
                         <BarChart data={formattedData} margin={{ top: 20, right: 100, left: 20, bottom: 5 }} barSize={70}>
                             <CartesianGrid strokeDasharray="3 3" stroke="var(--grid_color)" />
-                            <XAxis dataKey="name" stroke="var(--axis_color)" />
+                            <XAxis dataKey="" stroke="var(--axis_color)" />
                             <YAxis stroke="var(--axis_color)" />
                             <Tooltip content={<CustomTooltip />} />
                             <Bar dataKey="votes" radius={[8, 8, 0, 0]}>
