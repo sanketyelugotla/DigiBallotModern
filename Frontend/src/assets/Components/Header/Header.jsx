@@ -81,7 +81,7 @@ export default function Header({ onLoginClick }) {
                         <p>Sanket Yelugotla</p>
                     </div>
                 ) : (
-                    <Button variant="light" onClick={() => handleInButton("user", onLoginClick)}>
+                    <Button variant="light" onClick={() => handleInButton("voter", onLoginClick)}>
                         Login
                     </Button>
                 )}

@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { loggedContext } from "../../ContextProvider/ContextProvider";
 import { stateContext } from "../../ContextProvider/ContextProvider";
 import { userTypeContext } from "../../ContextProvider/ContextProvider";
+import { databaseContext } from "../../ContextProvider/ContextProvider";
 
 export default function LoginSide({ changeSide, handleClose }) {
-    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTRhZTcwZDE2YjQwZjNiNzBkZGRmNyIsInJvbGUiOiJ2b3RlciIsImlhdCI6MTczODg1MDIzOCwiZXhwIjoxNzM4ODUzODM4fQ.OFpV6cBOVdmoierzYb8MAunF3M8BT_tm6Rr3LPtfqlk"
+    const { database_url } = useContext(databaseContext);
     const { presentState, setPresentState } = useContext(stateContext);
     const { isLogged, setIsLogged } = useContext(loggedContext);
     const [fomrData, setFormData] = useState({
@@ -29,10 +30,10 @@ export default function LoginSide({ changeSide, handleClose }) {
         const { email, password } = fomrData;
 
         try {
-            const response = await fetch("http://localhost:5000/api/auth/login", {
+            const response = await fetch(`${database_url}/api/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: email, password: password })
+                body: JSON.stringify({ email, password })
             });
 
             const res = await response.json();
@@ -64,7 +65,7 @@ export default function LoginSide({ changeSide, handleClose }) {
             <Input.Div>
                 <Input.Header>Login</Input.Header>
                 <Input.Form action="" method="post" >
-                    <Input type="email" label="Voter Id" name="email" onChange={handleChange} />
+                    <Input type="email" label="Email" name="email" onChange={handleChange} />
                     <Input type="password" label="Password" name="password" onChange={handleChange} />
                     <div className="link">
                         <a href="#">Forgot password?</a>

@@ -65,7 +65,7 @@ export default function Home({ isLoginOpen, toggleLoginModal }) {
                             Log in to cast your vote and participate in the election
                         </p>
                         <Button
-                            onClick={() => handleInButton("user", toggleLoginModal)} variant="light"
+                            onClick={() => handleInButton("voter", toggleLoginModal)} variant="light"
                         >
                             Voter Login
                         </Button>

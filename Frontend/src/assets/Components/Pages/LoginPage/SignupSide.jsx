@@ -1,23 +1,45 @@
 import { useSearchParams } from "react-router-dom"
 import Input from "../../Input/Index"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { databaseContext } from "../../ContextProvider/ContextProvider"
+import { userTypeContext } from "../../ContextProvider/ContextProvider"
 
 export default function SignupSide({ changeSide, handleLogin }) {
     const [formData, setFormData] = useState({
         name: "",
-        id: "",
+        email: "",
         number: "",
         password: ""
     })
+    const { userType } = useContext(userTypeContext);
+    const { database_url } = useContext(databaseContext);
 
     function handleChange(event) {
-        const {name, value} = event.target;
-        setFormData((prev) => ({...prev, [name]: value}))
+        const { name, value } = event.target;
+        setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
-        changeSide();
+        const { name, email, number, password } = formData;
+        try {
+            const response = await fetch(`${database_url}/api/auth/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password, role: userType })
+            })
+            const res = await response.json();
+
+            if (response.ok) {
+                changeSide();
+            } else {
+                // setIsWrong(true);
+                console.error("SignUp failed:", res.message);
+            }
+
+        } catch (error) {
+            console.log("Signup failed ", error);
+        }
     }
 
     return (
@@ -26,10 +48,10 @@ export default function SignupSide({ changeSide, handleLogin }) {
             <Input.Div>
                 <Input.Header>Sign Up</Input.Header>
                 <Input.Form onSubmit={handleSubmit} action="" method="post" >
-                    <Input type="text" label="Full Name" name="name" onChange={handleChange}/>
-                    <Input type="text" label="Voter Id" name="id" onChange={handleChange}/>
-                    <Input type="text" label="Phone Number" name="number" onChange={handleChange}/>
-                    <Input type="password" label="Password" name="password" onChange={handleChange}/>
+                    <Input type="text" label="Full Name" name="name" onChange={handleChange} />
+                    <Input type="email" label="Email" name="email" onChange={handleChange} />
+                    <Input type="text" label="Phone Number" name="number" onChange={handleChange} />
+                    <Input type="password" label="Password" name="password" onChange={handleChange} />
                     <Input.checkbox>Agree to the terms & conditions</Input.checkbox>
                     <Input.Submit>Sign Up</Input.Submit>
                 </Input.Form>
