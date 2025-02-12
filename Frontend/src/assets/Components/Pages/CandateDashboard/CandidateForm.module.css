@@ -12,11 +12,17 @@
 label {
     cursor: pointer;
     /* Style as you please, it will become the visible UI component. */
- }
- 
- #upload-photo {
+}
+
+#upload-photo {
     opacity: 0;
     position: absolute;
     z-index: -1;
- }
- 
+}
+
+.full {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

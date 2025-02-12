@@ -4,24 +4,24 @@ import styleForm from "./CandidateForm.module.css"
 
 export default function CandidateForm() {
     return (
-        <div className={styleForm.div}>
-            <Input.Div variant="white" className={styleForm.div}>
-                <Input.Form>
-                    <Input type="text" label="Full Name" />
-                    <Input type="email" label="Email" />
-                    <Input type="number" label="Mobile Number" />
-                    <Input type="text" label="Education" />
-                    <Input type="password" label="Password" />
-                </Input.Form>
+        <div className={styleForm.full}>
+            <div className={styleForm.div}>
+                <Input.Div variant="white" className={styleForm.div}>
+                    <Input.Form>
+                        <Input type="text" label="Full Name" />
+                        <Input type="email" label="Email" />
+                        <Input type="number" label="Mobile Number" />
+                        <Input type="text" label="Education" />
+                        <Input type="password" label="Password" />
+                    </Input.Form>
 
-                <Input.Form>
-                    <Input type="date" label="DOB" />
-                    <Input type="text" label="Gender" />
-                    <Input type="number" label="OTP" />
-                    <Input type="text" label="Profession" />
-                    <label for="upload-photo">Browse...</label>
-                    <input type="file" name="photo" className={styleForm.upload_photo} />
-                </Input.Form>
+                    <Input.Form>
+                        <Input type="date" label="DOB" />
+                        <Input type="text" label="Gender" />
+                        <Input type="number" label="OTP" />
+                        <Input type="text" label="Profession" />
+                    </Input.Form>
+                </Input.Div>
 
 
                 {/* <Input.Form>
@@ -37,8 +37,9 @@ export default function CandidateForm() {
                     <Input type="text" label="Liabilities" />
                     <Input type="text" label="Education" />
                     <Input type="text" label="Manifesto" />
-                </Input.Form> */}
-            </Input.Div>
+                    </Input.Form> */}
+            </div >
+            <Input.File title="Upload your photo here" label="Max photo size: 5mb" />
         </div>
     )
 }
