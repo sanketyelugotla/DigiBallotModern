@@ -14,6 +14,7 @@ connectDB();
 
 // Routes
 app.use("/api/auth", require("./routes/auth"));
+app.use("/api/details", require("./routes/details"))
 
 app.get("/", (req, res) => {
     res.send("Voting System API is running...");

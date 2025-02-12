@@ -1,6 +1,6 @@
 import { useContext, useState } from "react"
 import Input from "../../Input/Index"
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import { loggedContext } from "../../ContextProvider/ContextProvider";
 import { stateContext } from "../../ContextProvider/ContextProvider";
 import { userTypeContext } from "../../ContextProvider/ContextProvider";
@@ -46,9 +46,23 @@ export default function LoginSide({ changeSide, handleClose }) {
 
                 // Navigate to dashboard
                 handleClose();
-                navigate("/userDashboard");
                 setPresentState("userDashboard");
                 setIsLogged(true);
+                switch (res.role) {
+                    case "voter":
+                        navigate("/userDashboard");
+                        break;
+                    case "candidate":
+                        navigate("/candidateDashboard");
+                        break;
+                    case "admin":
+                        navigate("/adminDashboard");
+                        break;
+                    default:
+                        console.log("Invalid user type");
+                        navigate("/", replace);
+                        break;
+                }
             } else {
                 setIsWrong(true);
                 console.error("Login failed:", res.message);

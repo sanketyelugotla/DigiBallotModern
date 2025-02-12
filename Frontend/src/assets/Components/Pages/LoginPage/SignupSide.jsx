@@ -31,6 +31,7 @@ export default function SignupSide({ changeSide, handleLogin }) {
             const res = await response.json();
 
             if (response.ok) {
+                window.alert("Please login to continue");
                 changeSide();
             } else {
                 // setIsWrong(true);

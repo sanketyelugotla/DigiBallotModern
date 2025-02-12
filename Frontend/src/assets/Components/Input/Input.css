@@ -3,6 +3,53 @@
     --hoverOverlay: rgba(255, 255, 255, 0.2);
 }
 
+.white {
+    .loginForm {
+        background-color: white;
+    }
+
+    .formHeader {
+        color: black;
+    }
+
+    .inputField input {
+        color: black;
+        border: 1px solid black;
+        background-color: white;
+    }
+
+    .inputField label {
+        color: black;
+        background-color: white;
+    }
+
+    .formButton {
+        background-color: beige;
+        color: black;
+        box-shadow: inset 0 4px 20px var(--hoverOverlay);
+    }
+
+    .formButton:hover {
+        color: white;
+        background-color: var(--inside_theme);
+        box-shadow: inset 0 -5px 10px 2px #1c3050;
+    }
+
+    .formButton:active {
+        color: white;
+        background-color: var(--inside_theme);
+        box-shadow: inset 0 -5px 10px 2px #0a1220;
+    }
+
+    .link a {
+        color: #cacaca;
+    }
+
+    .termsp {
+        color: white;
+    }
+}
+
 .loginForm {
     height: fit-content;
     width: 44vh;
@@ -10,9 +57,8 @@
     background-color: var(--inside_theme);
     border-radius: 2vh;
     border: none;
-    /* box-shadow: 0 0 20px 2px #122761; */
-    /* box-shadow: 0 0 20px 1px var(--inside_theme); */
 }
+
 
 .danger {
     margin-top: 7px;
@@ -55,9 +101,9 @@
     color: white;
     font-size: 14px;
     border: 1px solid white;
+    background-color: var(--inside_theme);
     border-radius: 15px;
     outline: none;
-    background-color: var(--inside_theme);
     border-radius: 7px;
     margin: 0 2.8vh;
     /* box-shadow: -px -8px 8px -4px #9d9999; */
@@ -93,9 +139,9 @@
     border-radius: 5vh;
     border: none;
     background-color: var(--inside_theme);
-    /* box-shadow: inset 0 -5px 10px 2px #6da5ff; */
-    box-shadow: inset 0 4px 20px var(--hoverOverlay);
     color: white;
+    box-shadow: inset 0 4px 20px var(--hoverOverlay);
+    /* box-shadow: inset 0 -5px 10px 2px #6da5ff; */
     font-weight: bold;
     margin: 3vh 0 7% 10%;
     font-size: 15px;

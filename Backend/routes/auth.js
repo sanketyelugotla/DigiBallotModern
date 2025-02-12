@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const Voter = require("../models/Voter");
 const Candidate = require("../models/Candidate");
+const Admin = require("../models/Admin");
 const express = require("express");
 
 const jwt = require("jsonwebtoken");
@@ -18,7 +19,7 @@ router.post("/register", async (req, res) => {
         let user = await User.findOne({ email: email.toLowerCase() });
         if (user) return res.status(400).json({ message: "User already exists" });
 
-        user = new User({ name, email: email.toLowerCase(), password, role }); // No manual hashing
+        user = new User({ name, email: email.toLowerCase(), password, role });
         await user.save();
 
         switch (role) {
@@ -27,6 +28,9 @@ router.post("/register", async (req, res) => {
                 break;
             case 'candidate':
                 await new Candidate({ userId: user._id, party }).save();
+                break;
+            case 'admin':
+                await new Admin({ userId: user._id }).save();
                 break;
         }
 
@@ -42,16 +46,14 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
     try {
         const { email, password } = req.body;
-        const emailLower = email.toLowerCase(); // Normalize email
+        const emailLower = email.toLowerCase();
 
-        console.log("Email being passed:", emailLower);
         const user = await User.findOne({ email: emailLower });
 
         if (!user) {
             return res.status(400).json({ message: "User not found" });
         }
 
-        console.log("User found:", user);
         const isMatch = await user.comparePassword(password);
 
         if (!isMatch) {

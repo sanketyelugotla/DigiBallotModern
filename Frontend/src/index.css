@@ -92,3 +92,8 @@ body {
 a {
   text-decoration: none;
 }
+
+input:-webkit-autofill {
+  appearance: none;
+  background: var(--themeBlue) !important;
+}
