@@ -1,8 +1,5 @@
 const mongoose = require("mongoose");
-const User = require("../models/User");
-const Voter = require("../models/Voter");
-const Candidate = require("../models/Candidate");
-const Admin = require("../models/Admin");
+const {User, Voter, Candidate, Admin} = require("../models/models.index.js")
 const express = require("express");
 
 const jwt = require("jsonwebtoken");

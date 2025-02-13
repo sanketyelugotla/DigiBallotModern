@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const cors = require("cors");
+const { auth, candidate, temp } = require("./routes/routes.index.js")
 require("dotenv").config();
 
 const app = express();
@@ -13,8 +14,9 @@ app.use(cors());
 connectDB();
 
 // Routes
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/details", require("./routes/details"))
+app.use("/auth", auth);
+app.use("/candidates", candidate)
+app.use("/temp", temp)
 
 app.get("/", (req, res) => {
     res.send("Voting System API is running...");

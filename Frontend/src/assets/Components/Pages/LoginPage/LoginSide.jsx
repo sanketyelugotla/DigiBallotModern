@@ -30,7 +30,7 @@ export default function LoginSide({ changeSide, handleClose }) {
         const { email, password } = fomrData;
 
         try {
-            const response = await fetch(`${database_url}/api/auth/login`, {
+            const response = await fetch(`${database_url}/auth/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
