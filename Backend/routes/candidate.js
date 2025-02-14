@@ -1,8 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const authenticate = require("../middleware/authenticate.js");
-const { upload, getGfsBucket } = require("../config/multerConfig.js");
+const { upload } = require("../config/multerConfig.js");
 const { Candidate } = require("../models/models.index.js");
+const { uploadFile, getFileStream } = require("../utils/uploadUtils.js");
 
 const details = express.Router();
 
@@ -18,30 +19,10 @@ details.post("/details", authenticate, upload.fields([{ name: "image" }, { name:
     const { fullName, email, mobile, education, dob, gender, profession, party, state, spouse, spouse_profession, liabilities, assets } = req.body;
 
     try {
-        const gfsBucket = getGfsBucket();
-        if (!gfsBucket) {
-            return res.status(500).json({ message: "GridFSBucket not initialized" });
-        }
+        const imageId = await uploadFile(req.files.image[0]);
+        const manifestoId = await uploadFile(req.files.manifesto[0]);
 
-        // Upload Image
-        const imageFile = req.files.image[0];
-        const imageUploadStream = gfsBucket.openUploadStream(imageFile.originalname, {
-            contentType: imageFile.mimetype,
-        });
-        await new Promise((resolve, reject) => {
-            imageUploadStream.end(imageFile.buffer, (err) => (err ? reject(err) : resolve()));
-        });
-
-        // Upload Manifesto
-        const manifestoFile = req.files.manifesto[0];
-        const manifestoUploadStream = gfsBucket.openUploadStream(manifestoFile.originalname, {
-            contentType: manifestoFile.mimetype,
-        });
-        await new Promise((resolve, reject) => {
-            manifestoUploadStream.end(manifestoFile.buffer, (err) => (err ? reject(err) : resolve()));
-        });
-
-        console.log("Upload Finished: Image ID:", imageUploadStream.id, "Manifesto ID:", manifestoUploadStream.id);
+        console.log("Upload Finished: Image ID:", imageId, "Manifesto ID:", manifestoId);
 
         const updateCandidate = await Candidate.findOneAndUpdate(
             { userId: _id },
@@ -53,8 +34,8 @@ details.post("/details", authenticate, upload.fields([{ name: "image" }, { name:
                 dob,
                 gender,
                 self_profession: profession,
-                image: imageUploadStream.id,
-                manifesto: manifestoUploadStream.id,
+                image: imageId,
+                manifesto: manifestoId,
                 party,
                 state,
                 spouse,
@@ -73,8 +54,8 @@ details.post("/details", authenticate, upload.fields([{ name: "image" }, { name:
             message: "Candidate updated successfully",
             candidate: updateCandidate,
             fileIds: {
-                image: imageUploadStream.id,
-                manifesto: manifestoUploadStream.id,
+                image: imageId,
+                manifesto: manifestoId,
             },
         });
 
@@ -100,10 +81,9 @@ details.get("/image/:userId", async (req, res) => {
             return res.status(404).json({ message: "Candidate or image not found" });
         }
 
-        const bucket = getGfsBucket();
-        const downloadStream = bucket.openDownloadStream(new mongoose.Types.ObjectId(candidate.image));
+        const downloadStream = await getFileStream(candidate.image);
 
-        res.set("Content-Type", "image/png"); // Adjust content type if needed
+        res.set("Content-Type", "image/png");
         downloadStream.pipe(res);
     } catch (error) {
         console.error("Error fetching candidate image:", error);
