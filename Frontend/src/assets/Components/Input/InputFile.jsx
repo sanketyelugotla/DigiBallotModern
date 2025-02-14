@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { TbCloudUpload } from "react-icons/tb";
 
-export default function InputFile({ title, label, onFileSelect }) {
+export default function InputFile({ title, label, onFileSelect, type = "image", name }) {
     const fileInputRef = useRef(null);
     const [file, setFile] = useState(null);
 
@@ -12,23 +12,29 @@ export default function InputFile({ title, label, onFileSelect }) {
     const handleFileChange = (event) => {
         const selectedFile = event.target.files[0];
 
-        if (selectedFile) {
-            // Check if the file is an image
-            const allowedTypes = ["image/jpeg", "image/png", "image/gif"];
-            if (!allowedTypes.includes(selectedFile.type)) {
-                alert("Only image files (JPG, PNG, GIF) are allowed!");
-                return;
-            }
+        if (!selectedFile) return;
 
-            // Check file size (Max 5MB)
-            if (selectedFile.size > 5 * 1024 * 1024) {
-                alert("File size should not exceed 5MB!");
-                return;
-            }
+        const isImage = type === "image";
+        const isPDF = type === "pdf";
 
-            setFile(selectedFile);
-            onFileSelect(selectedFile); // Pass file to CandidateForm.js
+        // Allowed file types
+        const allowedTypes = isImage
+            ? ["image/jpeg", "image/png", "image/gif"]
+            : ["application/pdf"];
+
+        if (!allowedTypes.includes(selectedFile.type)) {
+            alert(isImage ? "Only image files (JPG, PNG, GIF) are allowed!" : "Only PDF files are allowed!");
+            return;
         }
+
+        // Max file size check (5MB)
+        if (selectedFile.size > 5 * 1024 * 1024) {
+            alert("File size should not exceed 5MB!");
+            return;
+        }
+
+        setFile(selectedFile);
+        onFileSelect(selectedFile, name); // Pass file to parent component
     };
 
     return (
@@ -37,9 +43,9 @@ export default function InputFile({ title, label, onFileSelect }) {
                 <input
                     className="file-input"
                     type="file"
-                    name="file"
+                    name={name}
                     ref={fileInputRef}
-                    accept="image/jpeg, image/png, image/gif" // Only allow image files
+                    accept={type === "image" ? "image/jpeg, image/png, image/gif" : "application/pdf"}
                     hidden
                     onChange={handleFileChange}
                 />
@@ -52,7 +58,7 @@ export default function InputFile({ title, label, onFileSelect }) {
                 </div>
             </form>
 
-            {/* Uploaded File */}
+            {/* Uploaded File Info */}
             {file && (
                 <section className="uploaded-area">
                     <div className="row">

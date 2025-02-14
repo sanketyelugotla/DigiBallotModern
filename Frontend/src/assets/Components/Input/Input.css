@@ -45,7 +45,7 @@
         color: #cacaca;
     }
 
-    .termsp {
+    .termsp.light {
         color: white;
     }
 }
@@ -185,13 +185,23 @@ input[type=checkbox] {
     display: flex;
     align-items: center;
     margin: 1vh 0 0 3vh;
+    height: fit-content;
+    width: fit-content;
 }
 
 .termsp {
-    color: white;
+    display: flex;
+    align-items: center;
     font-size: 12px;
 }
 
+.termsp_theme {
+    color: white;
+}
+
+.termsp_large {
+    font-size: 20px;
+}
 
 
 ::selection {

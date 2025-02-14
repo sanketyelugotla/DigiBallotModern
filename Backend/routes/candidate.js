@@ -7,15 +7,15 @@ const { Candidate } = require("../models/models.index.js");
 const details = express.Router();
 
 // 📌 POST: Upload image and update candidate details
-details.post("/details", authenticate, upload.single("file"), async (req, res) => {
+details.post("/details", authenticate, upload.fields([{ name: "image" }, { name: "manifesto" }]), async (req, res) => {
     const { _id } = req.user;
     console.log("Authenticated user ID:", _id);
 
-    if (!req.file) {
-        return res.status(400).json({ message: "Image file is required" });
+    if (!req.files || !req.files.image || !req.files.manifesto) {
+        return res.status(400).json({ message: "Both image and manifesto files are required" });
     }
 
-    const { fullName, email, mobile, education, dob, gender, profession } = req.body;
+    const { fullName, email, mobile, education, dob, gender, profession, party, state, spouse, spouse_profession, liabilities, assets } = req.body;
 
     try {
         const gfsBucket = getGfsBucket();
@@ -23,58 +23,70 @@ details.post("/details", authenticate, upload.single("file"), async (req, res) =
             return res.status(500).json({ message: "GridFSBucket not initialized" });
         }
 
-        // Upload the file
-        const uploadStream = gfsBucket.openUploadStream(req.file.originalname, {
-            contentType: req.file.mimetype,
+        // Upload Image
+        const imageFile = req.files.image[0];
+        const imageUploadStream = gfsBucket.openUploadStream(imageFile.originalname, {
+            contentType: imageFile.mimetype,
+        });
+        await new Promise((resolve, reject) => {
+            imageUploadStream.end(imageFile.buffer, (err) => (err ? reject(err) : resolve()));
         });
 
-        uploadStream.end(req.file.buffer);
-
-        uploadStream.on("error", (err) => {
-            console.error("GridFS error:", err);
-            return res.status(500).json({ message: "File upload failed" });
+        // Upload Manifesto
+        const manifestoFile = req.files.manifesto[0];
+        const manifestoUploadStream = gfsBucket.openUploadStream(manifestoFile.originalname, {
+            contentType: manifestoFile.mimetype,
+        });
+        await new Promise((resolve, reject) => {
+            manifestoUploadStream.end(manifestoFile.buffer, (err) => (err ? reject(err) : resolve()));
         });
 
-        uploadStream.on("finish", async function () {
-            console.log("Upload finished: ", uploadStream.id); // Debugging
-            const cand = await Candidate.findOne({ userId: _id });
-            console.log("Cand", cand)
+        console.log("Upload Finished: Image ID:", imageUploadStream.id, "Manifesto ID:", manifestoUploadStream.id);
 
-            const updateCandidate = await Candidate.findOneAndUpdate(
-                { userId: _id },
-                {
-                    fullName,
-                    email,
-                    mobileNumber: mobile,
-                    education,
-                    dob,
-                    gender,
-                    self_profession: profession,
-                    img: uploadStream.id, // Store GridFS file ID
-                },
-                { new: true, runValidators: true }
-            );
+        const updateCandidate = await Candidate.findOneAndUpdate(
+            { userId: _id },
+            {
+                fullName,
+                email,
+                mobile,
+                education,
+                dob,
+                gender,
+                self_profession: profession,
+                image: imageUploadStream.id,
+                manifesto: manifestoUploadStream.id,
+                party,
+                state,
+                spouse,
+                spouse_profession,
+                liabilities,
+                assets
+            },
+            { new: true, runValidators: true }
+        );
 
-            if (!updateCandidate) {
-                return res.status(404).json({ message: "Candidate not found" });
-            }
+        if (!updateCandidate) {
+            return res.status(404).json({ message: "Candidate not found" });
+        }
 
-            return res.status(200).json({
-                message: "Candidate updated successfully",
-                candidate: updateCandidate,
-                fileId: uploadStream.id, // Return the file ID
-            });
+        return res.status(200).json({
+            message: "Candidate updated successfully",
+            candidate: updateCandidate,
+            fileIds: {
+                image: imageUploadStream.id,
+                manifesto: manifestoUploadStream.id,
+            },
         });
+
     } catch (error) {
         console.error("Error updating candidate:", error);
         return res.status(500).json({ message: error.message });
     }
 });
 
-
+// 📌 GET: Retrieve Candidate Image
 details.get("/image/:userId", async (req, res) => {
     const { userId } = req.params;
-
     console.log("Fetching image for user ID:", userId);
 
     if (!mongoose.Types.ObjectId.isValid(userId)) {
@@ -82,29 +94,21 @@ details.get("/image/:userId", async (req, res) => {
     }
 
     try {
-        // Find candidate by userId
         const candidate = await Candidate.findOne({ userId });
 
-        if (!candidate || !candidate.img) {
+        if (!candidate || !candidate.image) {
             return res.status(404).json({ message: "Candidate or image not found" });
         }
 
-        const imgId = candidate.img; // GridFS file ID
+        const bucket = getGfsBucket();
+        const downloadStream = bucket.openDownloadStream(new mongoose.Types.ObjectId(candidate.image));
 
-        // Fetch image from GridFS
-        const bucket = new mongoose.mongo.GridFSBucket(mongoose.connection.db, {
-            bucketName: "uploads" // Ensure this matches your GridFS bucket
-        });
-
-        const downloadStream = bucket.openDownloadStream(new mongoose.Types.ObjectId(imgId));
-
-        res.set("Content-Type", "image/png"); // Adjust the content type if needed
+        res.set("Content-Type", "image/png"); // Adjust content type if needed
         downloadStream.pipe(res);
     } catch (error) {
         console.error("Error fetching candidate image:", error);
         return res.status(500).json({ message: error.message });
     }
 });
-
 
 module.exports = details;

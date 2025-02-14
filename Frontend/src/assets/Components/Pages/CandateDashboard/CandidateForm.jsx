@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
 import Input from "../../Input/Index";
 import styleForm from "./CandidateForm.module.css";
-import InputFile from "../../Input/Index";
 import { sectionsContext } from "./SectionsContextProvider";
+import FadeDiv from "../../FadeDiv/FadeDiv";
+import { Personel, Party, Other, Declaration } from "./Forms";
 
 export default function CandidateForm() {
     const { sections } = useContext(sectionsContext);
@@ -16,39 +17,49 @@ export default function CandidateForm() {
         gender: "",
         otp: "",
         profession: "",
-        file: null, // Stores selected file
+        image: null,
+        party: "",
+        state: "",
+        manifesto: null,
+        spouse: "",
+        spouse_profession: "",
+        liabilities: "",
+        assets: ""
     });
 
-    // Handle text input changes
-    const handleChange = (e) => {
+    // Handle input changes
+    const handleFormChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Handle file selection (receive from InputFile)
-    const handleFileSelect = (file) => {
-        setFormData((prev) => ({ ...prev, file }));
+    // Handle file selection dynamically
+    const handleFileSelect = (file, name) => {
+        console.log(file)
+        console.log(name)
+        setFormData((prev) => ({ ...prev, [name]: file }));
     };
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+        console.log(formData)
         const formDataObj = new FormData();
+
         Object.keys(formData).forEach((key) => {
-            if (key === "file") {
-                formDataObj.append("file", formData.file);
-            } else {
-                formDataObj.append(key, formData[key]);
+            if (formData[key]) {
+                formDataObj.append(key, formData[key]); // Append all fields dynamically
             }
         });
+
+        console.log("Sending FormData:", [...formDataObj.entries()]); // Debugging
 
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch("http://localhost:5000/candidates/details", {
-                headers: { "auth": token },
                 method: "POST",
-                body: formDataObj, // Send form data including file
+                headers: { "auth": token },
+                body: formDataObj,
             });
 
             if (response.ok) {
@@ -61,54 +72,22 @@ export default function CandidateForm() {
         }
     };
 
-    function handle123() {
-        console.log(formData)
-    }
-
     return (
         <div className={styleForm.full}>
-            {sections === "personel" && <div className={styleForm.div}>
-                <form onSubmit={handleSubmit} className={styleForm.form}>
-                    <Input.Div variant="white" className={styleForm.div}>
-                        <Input.Form>
-                            <Input type="text" label="Full Name" name="fullName" onChange={handleChange} />
-                            <Input type="email" label="Email" name="email" onChange={handleChange} />
-                            <Input type="number" label="Mobile Number" name="mobile" onChange={handleChange} />
-                            <Input type="text" label="Education" name="education" onChange={handleChange} />
-                            <Input type="password" label="Password" name="password" onChange={handleChange} />
-                        </Input.Form>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
+                {/* Personal Information */}
+                <Personel {...{ handleFormChange, handleFileSelect }} />
 
-                        <Input.Form>
-                            <Input type="date" label="DOB" name="dob" onChange={handleChange} />
-                            <Input type="text" label="Gender" name="gender" onChange={handleChange} />
-                            <Input type="number" label="OTP" name="otp" onChange={handleChange} />
-                            <Input type="text" label="Profession" name="profession" onChange={handleChange} />
-                        </Input.Form>
-                    </Input.Div>
+                {/* Party Information */}
+                <Party {...{ handleFormChange, handleFileSelect }} />
 
-                    {/* File Upload */}
-                    <Input.File title="Upload your photo here" label="Max photo size: 5MB" onFileSelect={handleFileSelect} />
+                {/* Other Information */}
+                <Other {...{ handleFormChange, handleFileSelect }} />
 
-                    <button type="submit">Submit</button>
-                </form>
-            </div>}
-            {/* <button onClick={handle123}>click me</button> */}
+                {/* Declaration */}
+                <Declaration {...{ handleFormChange, handleFileSelect, handleSubmit }} />
+
+            </form>
         </div>
     );
 }
-
-
-{/* <Input.Form>
-                    <Input type="text" label="Party" />
-                    <Input type="text" label="Image" />
-                    <Input type="text" label="Party Img" />
-                    <Input type="text" label="Parent" />
-                    <Input type="text" label="Age" />
-                    <Input type="text" label="Location" />
-                    <Input type="text" label="Self Profession" />
-                    <Input type="text" label="Spouse Profession" />
-                    <Input type="text" label="Assets" />
-                    <Input type="text" label="Liabilities" />
-                    <Input type="text" label="Education" />
-                    <Input type="text" label="Manifesto" />
-                    </Input.Form> */}

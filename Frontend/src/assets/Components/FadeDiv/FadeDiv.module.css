@@ -1,8 +1,7 @@
 .fadeDiv {
-    position: absolute;
     width: 100%;
     left: 0;
-    transition: all 0.5s ease;
+    transition: all 0.3s ease;
 }
 
 .fade_in {
@@ -12,16 +11,10 @@
 }
 
 .fade_out {
+    position: absolute;
     opacity: 0;
     transform: translateX(-10%);
     z-index: 1;
     pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
-
-/* .vis {
-    display: block;
-}
-
-.hide {
-    display: none;
-} */

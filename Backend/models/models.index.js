@@ -3,4 +3,5 @@ module.exports = {
     Voter: require("./Voter.js"),
     Candidate: require("./Candidate.js"),
     Admin: require("./Admin.js"),
+    Party: require("./Party.js")
   };

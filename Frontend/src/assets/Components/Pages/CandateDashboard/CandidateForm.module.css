@@ -9,10 +9,24 @@
     }
 }
 
-form {
+.form {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.inp {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+}
+
+.decl {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 70%;
 }
 
 label {
@@ -27,7 +41,8 @@ label {
 
 
 .full {
-    width: 100%;
+    flex: 80%;
+    /* width: 80vw; */
     display: flex;
     flex-direction: column;
     align-items: center;

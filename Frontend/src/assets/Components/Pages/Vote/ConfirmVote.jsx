@@ -17,7 +17,7 @@ export default function ConfirmVote({ onClose }) {
         <HoverDiv onClose={onClose} variant="voteBox">
             {({ handleClose }) => (
                 <div className={styleVote.voteDiv}>
-                    <FadeDiv fade_out={isOpted} onChange={handleIsopted}>
+                    <FadeDiv fade_in={!isOpted} fade_out={isOpted} onChange={handleIsopted}>
                         {({ handleChange }) => (
                             <>
                                 <p>

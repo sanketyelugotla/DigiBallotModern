@@ -1,11 +1,13 @@
 .full {
     /* margin-top: 1vh; */
+    z-index: 5;
     display: flex;
     flex-direction: column;
     align-items: left;
     justify-content: start;
-    width: 20vw;
+    /* width: 20vw; */
     height: 100vh;
+    flex: 20%;
     position: sticky;
     font-family: Poppins-Regular;
     box-shadow: 0 0 5px 2px #00000040;

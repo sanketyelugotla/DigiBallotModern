@@ -3,7 +3,7 @@ import { IoIosCheckbox } from "react-icons/io";
 import { RiCheckboxBlankLine } from "react-icons/ri";
 import classNames from "classnames";
 
-export default function InputCheckbox({ children, className, ...rest }) {
+export default function InputCheckbox({ children, className, variant, size, ...rest }) {
 
     const [isChecked, setIsChecked] = useState(false)
 
@@ -12,11 +12,17 @@ export default function InputCheckbox({ children, className, ...rest }) {
     }
 
     const allClasses = classNames("terms", className)
-
+    const allClasses2 = classNames(
+        "termsp",
+        variant && `termsp_${variant}`,
+        size && `termsp_${size}`
+    )
     return (
         <div onClick={changeChecked} className={allClasses} {...rest}>
-            <input type="checkbox" name="terms" required/>
-            <label className="termsp">I agree to the terms & conditions</label><br></br>
-        </div>
+            <label className={allClasses2}>
+                <input type="checkbox" name="terms" required />
+                {children}
+            </label>
+        </div >
     )
 }

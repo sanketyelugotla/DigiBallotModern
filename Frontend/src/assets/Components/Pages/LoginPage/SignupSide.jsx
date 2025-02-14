@@ -53,7 +53,7 @@ export default function SignupSide({ changeSide, handleLogin }) {
                     <Input type="email" label="Email" name="email" onChange={handleChange} />
                     <Input type="text" label="Phone Number" name="number" onChange={handleChange} />
                     <Input type="password" label="Password" name="password" onChange={handleChange} />
-                    <Input.checkbox>Agree to the terms & conditions</Input.checkbox>
+                    <Input.checkbox variant="theme">Agree to the terms & conditions</Input.checkbox>
                     <Input.Submit>Sign Up</Input.Submit>
                 </Input.Form>
             </ Input.Div>
