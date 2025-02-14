@@ -1,11 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styleNav from "./Leftnav.module.css"
 import { ImProfile } from "react-icons/im";
 import { FaRegAddressCard } from "react-icons/fa";
 import { TbListDetails } from "react-icons/tb";
+import { sectionsContext } from './SectionsContextProvider';
 
-export default function LeftNav() {
-    const [sections, setSections] = useState("personel")
+export default function LeftNav({ handleSelectionChange }) {
+    const {sections, setSections} = useContext(sectionsContext);
 
     function handleClick(event) {
         const { id } = event.target;

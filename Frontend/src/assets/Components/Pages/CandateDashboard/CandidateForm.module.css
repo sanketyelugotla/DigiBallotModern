@@ -9,9 +9,14 @@
     }
 }
 
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 label {
     cursor: pointer;
-    /* Style as you please, it will become the visible UI component. */
 }
 
 #upload-photo {
@@ -19,6 +24,7 @@ label {
     position: absolute;
     z-index: -1;
 }
+
 
 .full {
     width: 100%;

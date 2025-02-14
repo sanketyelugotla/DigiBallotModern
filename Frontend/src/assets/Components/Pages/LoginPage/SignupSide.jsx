@@ -23,7 +23,7 @@ export default function SignupSide({ changeSide, handleLogin }) {
         event.preventDefault();
         const { name, email, number, password } = formData;
         try {
-            const response = await fetch(`${database_url}/api/auth/register`, {
+            const response = await fetch(`${database_url}/auth/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, email, password, role: userType })

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Input from "../../Input/Index";
 import styleForm from "./CandidateForm.module.css";
 import InputFile from "../../Input/Index";
+import { sectionsContext } from "./SectionsContextProvider";
 
 export default function CandidateForm() {
+    const { sections } = useContext(sectionsContext);
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -44,7 +46,7 @@ export default function CandidateForm() {
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch("http://localhost:5000/candidates/details", {
-                headers: {"auth": token},
+                headers: { "auth": token },
                 method: "POST",
                 body: formDataObj, // Send form data including file
             });
@@ -65,8 +67,8 @@ export default function CandidateForm() {
 
     return (
         <div className={styleForm.full}>
-            <div className={styleForm.div}>
-                <form onSubmit={handleSubmit}>
+            {sections === "personel" && <div className={styleForm.div}>
+                <form onSubmit={handleSubmit} className={styleForm.form}>
                     <Input.Div variant="white" className={styleForm.div}>
                         <Input.Form>
                             <Input type="text" label="Full Name" name="fullName" onChange={handleChange} />
@@ -89,7 +91,7 @@ export default function CandidateForm() {
 
                     <button type="submit">Submit</button>
                 </form>
-            </div>
+            </div>}
             {/* <button onClick={handle123}>click me</button> */}
         </div>
     );
