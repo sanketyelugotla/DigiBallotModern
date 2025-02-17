@@ -15,6 +15,16 @@ router.get("/", async (req, res) => {
 
 })
 
+router.get("/:partyId", async (req, res) => {
+    try {
+        const party = await partyService.getParty(req.params.partyId);
+        return res.status(200).json(party);
+    } catch (error) {
+        console.error("Error fetching candidate party:", error);
+        return res.status(400).json({ message: error.message });
+    }
+})
+
 // 📌 POST: Add a Party with Image
 router.post("/addParty", upload.fields([{ name: "image" }]), async (req, res) => {
     const { party } = req.body;

@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import { FadeDiv, Input } from '../../../../Hooks/index'
-import sectionsContext from "../SectionsContextProvider"
+import { sectionsContext } from '../SectionsContextProvider';
 import styleForm from "../CandidateForm.module.css";
 
-export default function Declaration({ handleFileSelect, handleFormChange, handleSubmit }) {
+export default function Declaration({ handleSubmit }) {
     const { sections } = useContext(sectionsContext)
     return (
         <FadeDiv fade_in={sections === "declaration"} fade_out={sections !== "declaration"} className={styleForm.form} variant="form">

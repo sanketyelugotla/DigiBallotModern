@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const authenticate = require("../middleware/authenticate.js");
 const { upload } = require("../config/multerConfig.js");
-const { candidateService } = require("../services/index.js")
+const { candidateService, partyService } = require("../services/index.js")
 
 const candidate = express.Router();
 
@@ -53,15 +53,5 @@ candidate.get("/image/:imageId", async (req, res) => {
         return res.status(400).json({ message: error.message });
     }
 });
-
-candidate.get("/getParty/:candidateId", async (req, res) => {
-    try {
-        const party = await candidateService.getCandidateParty(req.params.candidateId);
-        return res.status(200).json(party);
-    } catch (error) {
-        console.error("Error fetching candidate party:", error);
-        return res.status(400).json({ message: error.message });
-    }
-})
 
 module.exports = candidate;

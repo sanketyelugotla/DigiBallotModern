@@ -1,4 +1,4 @@
-const { Party } = require("../models/index.js");
+const { Party, Candidate } = require("../models/index.js");
 const { uploadFile, getFileStream } = require("../utils/uploadUtils.js");
 const mongoose = require("mongoose");
 
@@ -9,6 +9,22 @@ const getParties = async () => {
         throw new Error("No parties found")
     }
     return parties;
+}
+
+const getParty = async (partyId) => {
+    if (!mongoose.Types.ObjectId.isValid(partyId)) {
+        throw new Error("Invalid partyId");
+    }
+    try {
+        const party = await Party.findById(partyId);
+        if (!party) {
+            throw new Error("Error finding party");
+        }
+        return party;
+    } catch (error) {
+        console.error(error);
+        throw new Error("Error fetching party");
+    }
 }
 
 // 📌 Service to Add a Party
@@ -40,11 +56,18 @@ const addCandidate = async (partyId, candidateId) => {
     }
 
     try {
-        const updatedParty = await Party.findOneAndUpdate(
+        const updatedParty = await Party.findByIdAndUpdate(
             { _id: partyId },
             { candidateId },
             { new: true, runValidators: true }
         );
+
+        const updatedCandidate = await Candidate.findByIdAndUpdate(
+            { _id: candidateId },
+            { partyId: updatedParty._id },
+            { new: true, runValidators: true }
+        )
+
 
         if (!updatedParty) {
             throw new Error("Party not found");
@@ -71,4 +94,4 @@ const getPartyImage = async (partyId) => {
     return getFileStream(party.partyImage);
 };
 
-module.exports = { getParties, addParty, getPartyImage, addCandidate };
+module.exports = { getParties, addParty, getPartyImage, addCandidate, getParty };

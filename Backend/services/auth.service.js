@@ -10,8 +10,7 @@ const registerUser = async ({ name, email, password, role, party }) => {
     let user = await User.findOne({ email: emailLower });
     if (user) throw new Error("User already exists");
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    user = new User({ name, email: emailLower, password: hashedPassword, role });
+    user = new User({ name, email: emailLower, password, role }); // ⬅️ Don't hash manually
     await user.save();
 
     switch (role) {
