@@ -54,4 +54,14 @@ candidate.get("/image/:imageId", async (req, res) => {
     }
 });
 
+candidate.get("/getParty/:candidateId", async (req, res) => {
+    try {
+        const party = await candidateService.getCandidateParty(req.params.candidateId);
+        return res.status(200).json(party);
+    } catch (error) {
+        console.error("Error fetching candidate party:", error);
+        return res.status(400).json({ message: error.message });
+    }
+})
+
 module.exports = candidate;

@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./MemberCarousel.css";
 import styleVote from "../Vote/Vote.module.css"
 import data from "../../../Data/Candidates";
 import { Button } from "../../../Hooks/index";
+import { databaseContext } from "../../../Hooks/ContextProvider/ContextProvider";
 
 export default function CandidateDetails() {
     const [selectedIndex, setSelectedIndex] = useState(2);
     const [selectedData, setSelectedData] = useState(data[0]);
+    const { database_url } = useContext(databaseContext);
 
     const handleShift = (direction) => {
         setSelectedIndex((prevIndex) => {
@@ -15,6 +17,16 @@ export default function CandidateDetails() {
                 : (prevIndex + 1) % data.length;
         });
     };
+
+    async function fetchCandidates() {
+        const response = await fetch(`${database_url}/candidates`);
+        const res = await response.json();
+        console.log(res);
+    }
+
+    useEffect(() => {
+        fetchCandidates();
+    }, [])
 
     useEffect(() => {
         setSelectedData(data[(selectedIndex + 2) % data.length]);

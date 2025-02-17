@@ -4,6 +4,17 @@ const { partyService } = require("../services/index.js")
 
 const router = express.Router();
 
+router.get("/", async (req, res) => {
+    try {
+        const parties = await partyService.getParties();
+        res.status(200).json({ message: "Parties fetched successfully", parties })
+    } catch (error) {
+        console.log("Unable to get parties", error.message);
+        res.status(500).json({ message: error.message })
+    }
+
+})
+
 // 📌 POST: Add a Party with Image
 router.post("/addParty", upload.fields([{ name: "image" }]), async (req, res) => {
     const { party } = req.body;
@@ -24,12 +35,24 @@ router.get("/image/:partyId", async (req, res) => {
 
     try {
         const downloadStream = await partyService.getPartyImage(partyId);
-        res.set("Content-Type", "image/png"); // Adjust if necessary
+        res.set("Content-Type", "image/png");
         downloadStream.pipe(res);
     } catch (error) {
         console.error("Error fetching party image:", error);
         return res.status(400).json({ message: error.message });
     }
 });
+
+router.post("/addCandidate", async (req, res) => {
+    const { partyId, candidateId } = req.body;
+    console.log(req.body)
+    try {
+        const addedParty = await partyService.addCandidate(partyId, candidateId);
+        res.status(200).json({ message: "Candidate registered to party successfully", addedParty });
+    } catch (error) {
+        console.log("Error adding candidate to party", error);
+        return res.status(500).json({ message: error.message })
+    }
+})
 
 module.exports = router;

@@ -8,7 +8,7 @@ import CandidateDashboard from "./assets/Components/Pages/CandateDashboard/Candi
 import AdminDashboard from "./assets/Components/Pages/AdminDashboard/AdminDashboard";
 import Instructions from "./assets/Components/Pages/Instructions/Intructions";
 import Vote from "./assets/Components/Pages/Vote/Vote";
-import CandidateDetails from "./assets/Components/Pages/CandidateDetails/CandidateDetails2";
+import CandidateDetails from "./assets/Components/Pages/CandidateDetails/CandidateDetails";
 import CandidateProfile from "./assets/Components/Pages/CandateDashboard/CandidateProfile";
 import Results from "./assets/Components/Pages/Results/Results";
 import { HoverDiv } from "./assets/Hooks";

@@ -7,7 +7,6 @@ const updateCandidateDetails = async (userId, files, details) => {
     if (!files.image || !files.manifesto) {
         throw new Error("Both image and manifesto files are required");
     }
-
     const imageId = await uploadFile(files.image[0]);
     const manifestoId = await uploadFile(files.manifesto[0]);
 
@@ -70,4 +69,27 @@ const getCandidateImage = async (imageId) => {
     return getFileStream(imageId);
 }
 
-module.exports = { updateCandidateDetails, getCandidateImage, getCandidates, getCandidateDetails };
+const getCandidateParty = async (candidateId) => {
+    if (!mongoose.Types.ObjectId.isValid(candidateId)) {
+        throw new Error("Invalid candidateId");
+    }
+
+    // 🔥 Import dynamically to avoid circular dependency
+    const { partyService } = require("./index.js");
+
+    const parties = await partyService.getParties();
+    if (!parties || parties.length === 0) {
+        throw new Error("No parties found");
+    }
+
+    const party = parties.find(p => p.candidateId.toString() === candidateId.toString());
+
+    if (!party) {
+        throw new Error("Candidate not found in any party");
+    }
+
+    return party;
+};
+
+
+module.exports = { updateCandidateDetails, getCandidateImage, getCandidates, getCandidateImageByCandidateId, getCandidateDetails, getCandidateParty };
