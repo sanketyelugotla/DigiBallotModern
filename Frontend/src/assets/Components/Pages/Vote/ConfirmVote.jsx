@@ -1,10 +1,8 @@
 import React, { useContext, useState } from 'react'
-import HoverDiv from '../../HoverDiv/HoverDiv'
 import styleVote from "./Vote.module.css"
-import Button from '../../Button/Button'
-import FadeDiv from '../../FadeDiv/FadeDiv'
 import { Link } from 'react-router-dom'
-import { partiesContext } from '../../ContextProvider/ContextProvider'
+import { HoverDiv, Button, FadeDiv } from '../../../Hooks/index'
+import { partiesContext } from '../../../Hooks/ContextProvider/ContextProvider'
 
 export default function ConfirmVote({ onClose }) {
     const { selectedParty } = useContext(partiesContext);

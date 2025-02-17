@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
-import Input from "../../Input/Index";
 import styleForm from "./CandidateForm.module.css";
 import { sectionsContext } from "./SectionsContextProvider";
-import FadeDiv from "../../FadeDiv/FadeDiv";
 import { Personel, Party, Other, Declaration } from "./Forms";
 
 export default function CandidateForm() {

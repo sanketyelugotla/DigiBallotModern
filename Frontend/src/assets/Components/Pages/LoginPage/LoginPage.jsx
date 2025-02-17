@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./LoginPage.css";
-import HoverDiv from "../../HoverDiv/HoverDiv";
+import { HoverDiv } from "../../../Hooks/index";
 import LoginSide from "./LoginSide";
 import SignupSide from "./SignupSide";
 

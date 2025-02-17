@@ -1,9 +1,8 @@
 import style from "./UserDashboard.module.css";
-import Button from "../../Button/Button";
-import { loggedContext } from "../../ContextProvider/ContextProvider";
+import { Button } from "../../../Hooks/index";
 import { useContext } from "react";
 import { Navigate, Link } from "react-router-dom";
-import { stateContext } from "../../ContextProvider/ContextProvider";
+import { stateContext } from "../../../Hooks/ContextProvider/ContextProvider";
 
 export default function Logged() {
     const { presentState } = useContext(stateContext);

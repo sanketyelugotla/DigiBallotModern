@@ -1,10 +1,8 @@
 import "./Header.css";
-import Button from "../Button/Button";
-import { loggedContext } from "../ContextProvider/ContextProvider";
+import { Button } from "../../Hooks/index";
+import { loggedContext, stateContext, loginColorState } from "../../Hooks/ContextProvider/ContextProvider";
 import { useContext, useState } from "react";
 import { CgProfile } from "react-icons/cg";
-import { stateContext } from "../ContextProvider/ContextProvider";
-import { loginColorState } from "../ContextProvider/ContextProvider";
 
 export default function Header({ onLoginClick }) {
     const { isLogged } = useContext(loggedContext);

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react'
 import data from "../../../Data/Candidates"
 import styleVote from "./Vote.module.css"
-import Button from '../../Button/Button'
-import { partiesContext } from '../../ContextProvider/ContextProvider'
+import { Button } from '../../../Hooks/index'
+import { partiesContext } from '../../../Hooks/ContextProvider/ContextProvider'
 import ConfirmVote from './ConfirmVote'
 
 export default function Vote() {

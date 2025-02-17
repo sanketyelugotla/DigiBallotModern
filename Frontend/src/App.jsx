@@ -16,7 +16,6 @@ import { Routes, Route, Link } from "react-router-dom"
 
 export default function App() {
     const [isLoginOpen, setLoginOpen] = useState(false);
-    // const name = localStorage.getItem("name");
 
     const toggleLoginModal = () => setLoginOpen(!isLoginOpen);
 

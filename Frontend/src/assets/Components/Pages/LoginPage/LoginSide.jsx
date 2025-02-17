@@ -1,10 +1,7 @@
 import { useContext, useState } from "react"
-import Input from "../../Input/Index"
+import { Input } from "../../../Hooks/index"
 import { replace, useNavigate } from "react-router-dom";
-import { loggedContext } from "../../ContextProvider/ContextProvider";
-import { stateContext } from "../../ContextProvider/ContextProvider";
-import { userTypeContext } from "../../ContextProvider/ContextProvider";
-import { databaseContext } from "../../ContextProvider/ContextProvider";
+import { loggedContext, stateContext, userTypeContext, databaseContext } from "../../../Hooks/ContextProvider/ContextProvider";
 
 export default function LoginSide({ changeSide, handleClose }) {
     const { database_url } = useContext(databaseContext);

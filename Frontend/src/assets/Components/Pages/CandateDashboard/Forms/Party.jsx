@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
-import FadeDiv from '../../../FadeDiv/FadeDiv'
-import Input from '../../../Input/Index'
+import { FadeDiv, Input } from '../../../../Hooks/index'
 import { sectionsContext } from '../SectionsContextProvider'
 import styleForm from "../CandidateForm.module.css";
 

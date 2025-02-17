@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./MemberCarousel.css";
 import styleVote from "../Vote/Vote.module.css"
 import data from "../../../Data/Candidates";
-import Button from "../../Button/Button";
+import { Button } from "../../../Hooks/index";
 
 export default function CandidateDetails() {
     const [selectedIndex, setSelectedIndex] = useState(2);

@@ -1,6 +1,6 @@
 import "./Home.css"
-import Button from "../../Button/Button"
-import { loginColorState } from "../../ContextProvider/ContextProvider";
+import { Button } from "../../../Hooks/index"
+import { loginColorState } from "../../../Hooks/ContextProvider/ContextProvider";
 
 import { useState, useRef, useEffect, useContext } from "react"
 
@@ -9,7 +9,7 @@ export default function Home({ isLoginOpen, toggleLoginModal }) {
     const [isOpen, setOpen] = useState(false);
     const collapsibleRef = useRef(null);
 
-    const { colr, handleInButton} = useContext(loginColorState);
+    const { colr, handleInButton } = useContext(loginColorState);
 
     const handleClick = () => {
         const element = collapsibleRef.current;

@@ -1,8 +1,6 @@
-import { useSearchParams } from "react-router-dom"
-import Input from "../../Input/Index"
+import { Input } from "../../../Hooks/index"
 import { useContext, useState } from "react"
-import { databaseContext } from "../../ContextProvider/ContextProvider"
-import { userTypeContext } from "../../ContextProvider/ContextProvider"
+import { databaseContext, userTypeContext } from "../../../Hooks/ContextProvider/ContextProvider"
 
 export default function SignupSide({ changeSide, handleLogin }) {
     const [formData, setFormData] = useState({
