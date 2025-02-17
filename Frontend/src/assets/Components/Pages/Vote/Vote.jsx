@@ -1,60 +1,48 @@
-import React, { useContext, useState } from 'react'
-import data from "../../../Data/Candidates"
+import React, { useContext, useEffect, useState } from 'react'
 import styleVote from "./Vote.module.css"
 import { Button } from '../../../Hooks/index'
 import { partiesContext } from '../../../Hooks/ContextProvider/ContextProvider'
 import ConfirmVote from './ConfirmVote'
+import VotingTable from './VotingTable'
+import { databaseContext } from '../../../Hooks/ContextProvider/ContextProvider'
 
 export default function Vote() {
     const { selectedParty, setSelectedParty } = useContext(partiesContext);
     const [isOpen, setIsOpen] = useState(false);
+    const [candidateDetails, setCandidateDetails] = useState();
+    const { database_url } = useContext(databaseContext);
+
+    async function fetchCandidates() {
+        const response = await fetch(`${database_url}/candidates`);
+        const res = await response.json();
+        setCandidateDetails(res);
+    }
+
+    useEffect(() => {
+        fetchCandidates();
+    }, [databaseContext])
+
     function selectButton(event, item) {
-        const { name } = event.target;
-        if (selectedParty.name != name)
-            setSelectedParty({ name: item.name, party: name });
+        const { fullName } = event.target;
+        if (selectedParty.name != item.name) setSelectedParty({ name: item.name, party: name });
         else setSelectedParty("");
     }
 
     function handleVote() {
+        if (!selectedParty) {
+            alert("Please select a party to procees")
+            return;
+        }
         setIsOpen(!isOpen);
     }
 
     return (
         <div className={styleVote.full}>
-            <table className={styleVote.table} border={1}>
-                <thead>
-                    <tr className={styleVote.row}>
-                        <th id={styleVote.col} className={styleVote.col}>Candidate Name</th>
-                        <th id={styleVote.col} className={styleVote.col}>Party Name</th>
-                        <th id={styleVote.col} className={styleVote.col}>Party Symbol</th>
-                        <th id={styleVote.col} className={styleVote.col}></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((item, key) => (
-                        <tr className={styleVote.row} key={item.party}>
-                            <td className={styleVote.col}>{item.name}</td>
-                            <td className={styleVote.col}>{item.party}</td>
-                            <td className={styleVote.col}>
-                                <center><img src={item.party_img} alt="" /></center>
-                            </td>
-                            <td className={styleVote.col}>
-                                <center>
-                                    <Button
-                                        variant="light"
-                                        radius="sharp"
-                                        name={item.party}
-                                        onClick={(event) => selectButton(event, item)}
-                                        active={selectedParty.party === item.party}
-                                    >
-                                        {selectedParty.party === item.party ? "Deselect" : " Select "}
-                                    </Button>
-                                </center>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
+            <VotingTable
+                data={candidateDetails}
+                selectButton={selectButton}
+                selectedParty={selectedParty}
+            />
             {isOpen &&
                 <ConfirmVote onClose={handleVote} />
             }
