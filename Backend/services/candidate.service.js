@@ -34,18 +34,40 @@ const updateCandidateDetails = async (userId, files, details) => {
     };
 };
 
-// 📌 Get Candidate Image
-const getCandidateImage = async (userId) => {
+const getCandidates = async () => {
+    const candidates = await Candidate.find().lean();
+    if (!candidates || candidates.length === 0) {
+        throw new Error("No candidates found");
+    }
+
+    return candidates;
+};
+
+const getCandidateDetails = async (userId) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) {
         throw new Error("Invalid user ID");
     }
-
-    const candidate = await Candidate.findOne({ userId });
-    if (!candidate || !candidate.image) {
-        throw new Error("Candidate or image not found");
+    const candidate = await Candidate.findOne({ userId }).lean();
+    if (!candidate) {
+        throw new Error("Candidate not found");
     }
 
+    return candidate;
+};
+
+// 📌 Fetch Candidate Image Separately
+const getCandidateImageByCandidateId = async (userId = null, candidate = null) => {
+    console.log(candidate)
+    candidate = candidate || await getCandidateDetails(userId);
+
+    if (!candidate?.image) {
+        throw new Error("Candidate image not found");
+    }
     return getFileStream(candidate.image);
 };
 
-module.exports = { updateCandidateDetails, getCandidateImage };
+const getCandidateImage = async (imageId) => {
+    return getFileStream(imageId);
+}
+
+module.exports = { updateCandidateDetails, getCandidateImage, getCandidates, getCandidateDetails };
