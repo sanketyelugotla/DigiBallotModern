@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default function HoverMainDiv({children, isLoginOpen}) {
+export default function HoverMainDiv({ children, open }) {
   return (
-    <div div className={isLoginOpen ? "dim-background" : ""}>
-        {children}
+    <div className={open ? "dim-background" : ""}>
+      {children}
     </div>
   )
 }

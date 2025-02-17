@@ -11,6 +11,7 @@ import Vote from "./assets/Components/Pages/Vote/Vote";
 import CandidateDetails from "./assets/Components/Pages/CandidateDetails/CandidateDetails2";
 import CandidateProfile from "./assets/Components/Pages/CandateDashboard/CandidateProfile";
 import Results from "./assets/Components/Pages/Results/Results";
+import { HoverDiv } from "./assets/Hooks";
 
 import { Routes, Route, Link } from "react-router-dom"
 
@@ -20,7 +21,7 @@ export default function App() {
     const toggleLoginModal = () => setLoginOpen(!isLoginOpen);
 
     return (
-        <div className={isLoginOpen ? "dim-background" : ""}>
+        <HoverDiv.Main open={isLoginOpen} >
             <Header onLoginClick={toggleLoginModal} />
             <div className="space">
                 <Routes>
@@ -37,6 +38,6 @@ export default function App() {
             </div>
             <Footer />
             {isLoginOpen && <Login onClose={toggleLoginModal} />}
-        </div>
+        </HoverDiv.Main>
     );
 }
