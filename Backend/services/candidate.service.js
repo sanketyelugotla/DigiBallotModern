@@ -21,11 +21,7 @@ const updateCandidateDetails = async (userId, files, details) => {
         },
         { new: true, runValidators: true }
     );
-
-    if (!updatedCandidate) {
-        throw new Error("Candidate not found");
-    }
-
+    if (!updatedCandidate) throw new Error("Candidate not found");
     return {
         candidate: updatedCandidate,
         fileIds: { image: imageId, manifesto: manifestoId },
@@ -34,31 +30,26 @@ const updateCandidateDetails = async (userId, files, details) => {
 
 const getCandidates = async () => {
     const candidates = await Candidate.find().lean();
-    if (!candidates || candidates.length === 0) {
-        throw new Error("No candidates found");
-    }
-
+    if (!candidates || candidates.length === 0) return []
     return candidates;
+};
+
+const getApprovedCandidates = async () => {
+    const candidates = await Candidate.find({ electionStatus: "approved" }).lean();
+    return candidates.length ? candidates : [];
 };
 
 const getCandidateDetails = async (userId) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) throw new Error("Invalid user ID");
     const candidate = await Candidate.findOne({ userId }).lean();
-    if (!candidate) {
-        throw new Error("Candidate not found");
-    }
-
+    if (!candidate) throw new Error("Candidate not found");
     return candidate;
 };
 
 // 📌 Fetch Candidate Image Separately
 const getCandidateImageByCandidateId = async (userId = null, candidate = null) => {
-    console.log(candidate)
     candidate = candidate || await getCandidateDetails(userId);
-
-    if (!candidate?.image) {
-        throw new Error("Candidate image not found");
-    }
+    if (!candidate?.image) throw new Error("Candidate image not found");
     return getFileStream(candidate.image);
 };
 
@@ -91,12 +82,29 @@ const registerForElection = async (candidateId, electionId) => {
     }
 };
 
+const isCandidateRegistered = async (candidateId, electionId) => {
+    try {
+        const candidate = await Candidate.findById(candidateId);
+        if (!candidate) throw new Error("Candidate not found");
+        const status =
+            candidate.electionId?.toString() === electionId.toString() &&
+            candidate.electionStatus === "approved";
+
+        return { candidate, status };
+    } catch (error) {
+        return { success: false, message: error.message };
+    }
+};
+
+
 
 module.exports = {
     updateCandidateDetails,
     getCandidateImage,
     getCandidates,
+    getApprovedCandidates,
     getCandidateImageByCandidateId,
     getCandidateDetails,
-    registerForElection
+    registerForElection,
+    isCandidateRegistered
 };

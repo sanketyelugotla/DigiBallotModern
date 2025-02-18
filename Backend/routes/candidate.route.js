@@ -22,7 +22,7 @@ candidate.put("/updatecandidate", authenticate, upload.fields([{ name: "image" }
 
 candidate.get("/", async (req, res) => {
     try {
-        const candidates = await candidateService.getCandidates();
+        const candidates = await candidateService.getApprovedCandidates();
         return res.status(200).json(candidates);
     } catch (error) {
         console.log(error);

@@ -12,4 +12,35 @@ const getElectionById = async (electionId) => {
     }
 }
 
-module.exports = { getElectionById }
+const getActiveElections = async () => {
+    const currentDate = new Date();
+
+    const activeElections = await Election.find({
+        startDate: { $lte: currentDate },
+        endDate: { $gte: currentDate }
+    }).lean();
+
+    return activeElections.length ? activeElections : [];
+};
+
+const isElectionActive = async (electionId) => {
+    try {
+        const currentDate = new Date();
+        const election = await Election.findById(electionId);
+
+        if (!election) throw new Error("Election not found");
+
+        const startDate = new Date(election.startDate);
+        const endDate = new Date(election.endDate);
+        const status = startDate <= currentDate && endDate >= currentDate
+        return { election, status };
+    } catch (error) {
+        throw new Error(error);
+    }
+}
+
+module.exports = {
+    getElectionById,
+    getActiveElections,
+    isElectionActive
+}
