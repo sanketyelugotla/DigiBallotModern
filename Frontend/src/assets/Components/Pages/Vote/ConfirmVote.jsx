@@ -10,6 +10,7 @@ export default function ConfirmVote({ onClose }) {
     function handleIsopted() {
         setIsopted(!isOpted);
     }
+    console.log(selectedParty)
 
     return (
         <HoverDiv onClose={onClose} variant="voteBox">

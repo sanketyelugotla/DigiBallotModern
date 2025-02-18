@@ -22,9 +22,9 @@ export default function Vote() {
         fetchCandidates();
     }, [databaseContext])
 
-    function selectButton(event, item) {
+    function selectButton(event, item, party) {
         const { fullName } = event.target;
-        if (selectedParty.name != item.name) setSelectedParty({ name: item.name, party: name });
+        if (selectedParty.name != item.fullName) setSelectedParty({ name: item.fullName, candidateId: item._id, party: party.partyName, partyId: party._id });
         else setSelectedParty("");
     }
 
