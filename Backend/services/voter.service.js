@@ -1,8 +1,6 @@
 const Vote = require('../models/Vote');
-const Election = require('../models/Election');
-const Candidate = require('../models/Candidate');
-const User = require('../models/User');
-const { Voter } = require('../models');
+const mongoose = require("mongoose")
+const { Voter, Election } = require('../models');
 
 const voteCandidate = async (voterId, candidateId, electionId) => {
     try {
@@ -33,6 +31,31 @@ const voteCandidate = async (voterId, candidateId, electionId) => {
     }
 };
 
+const getVotes = async (electionId) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(electionId)) throw new Error("Invalid electionId");
+        const election = await Election.findById(electionId);
+        if (!election) throw new Error("Election not found");
+
+        // Ensure the election is completed before declaring results
+        // if (election.status !== "completed") throw new Error("Election is not yet completed");
+
+        // Count votes for each candidate in the election
+        const voteCounts = await Vote.aggregate([
+            { $match: { electionId: new mongoose.Types.ObjectId(electionId) } },
+            { $group: { _id: "$candidateId", votes: { $sum: 1 } } },
+            { $sort: { votes: -1 } }
+        ]);
+        console.log(voteCounts)
+
+        if (voteCounts.length === 0) throw new Error("No votes cast in this election");
+        return voteCounts;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
 module.exports = {
-    voteCandidate
+    voteCandidate,
+    getVotes
 }
