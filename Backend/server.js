@@ -1,7 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const cors = require("cors");
-const { auth, candidate, temp, party } = require("./routes/index.js")
+const { auth, candidate, temp, party, admin } = require("./routes/index.js")
 require("dotenv").config();
 
 const app = express();
@@ -17,6 +17,7 @@ connectDB();
 app.use("/auth", auth);
 app.use("/candidates", candidate)
 app.use("/party", party)
+app.use("/admin", admin)
 // app.use("/temp", temp)
 
 app.get("/", (req, res) => {

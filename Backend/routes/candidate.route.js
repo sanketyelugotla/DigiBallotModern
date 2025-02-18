@@ -54,4 +54,17 @@ candidate.get("/image/:imageId", async (req, res) => {
     }
 });
 
+candidate.post("/register", async (req, res) => {
+    const { candidateId, electionId } = req.body;
+    try {
+        const candidate = await candidateService.registerForElection(candidateId, electionId);
+        console.log(candidate)
+        if (!candidate.success) throw new Error(candidate.message);
+        return res.status(201).json({ success: true, status: "pending", message: candidate.message })
+    } catch (error) {
+        console.log("Error registering", error.message);
+        return res.status(500).json({ message: error.message });
+    }
+})
+
 module.exports = candidate;

@@ -1,3 +1,5 @@
 module.exports.authService = require("./auth.service")
 module.exports.candidateService = require("./candidate.service")
 module.exports.partyService = require("./party.service")
+module.exports.adminService = require("./admin.service")
+module.exports.electionService = require("./election.service")
