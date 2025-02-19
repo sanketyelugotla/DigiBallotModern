@@ -6,7 +6,7 @@ export default function Intructions() {
   const navigate = useNavigate();
   function handleSubmit(event) {
     event.preventDefault();
-    navigate("/vote");
+    navigate("/userDashboard/vote");
   } 
   return (
     <div className={styleInstructions.full}>

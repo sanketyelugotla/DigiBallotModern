@@ -7,10 +7,6 @@ import { stateContext } from "../../../Hooks/ContextProvider/ContextProvider";
 export default function Logged() {
     const { presentState } = useContext(stateContext);
 
-    if (presentState != "userDashboard") {
-        return <Navigate to="/" replace />;
-    }
-
     return (
         <div>
             <img src="./pics/India_vote.jpg" alt="" className={style.india} />
@@ -23,7 +19,7 @@ export default function Logged() {
                         <p>
                             Your voice shapes the nation. <br /> Ready to vote?
                         </p>
-                        <Link to="/instructions">
+                        <Link to="/userDashboard/election">
                             <Button variant="light">
                                 Vote Now
                             </Button>
@@ -34,7 +30,7 @@ export default function Logged() {
                         <p>
                             Know about Candidates and their manifests
                         </p>
-                        <Link to="/candidateDetails">
+                        <Link to="/candidate/details">
                             <Button variant="light">
                                 Candidate Details
                             </Button>

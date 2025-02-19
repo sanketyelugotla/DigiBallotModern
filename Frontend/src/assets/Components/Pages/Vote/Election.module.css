@@ -1,0 +1,21 @@
+.main {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    min-height: 80vh;
+    flex-direction: column;
+
+    h2 {
+        margin-top: 5vh;
+    }
+}
+
+#table {
+    width: 50vw;
+}
+
+.hover {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

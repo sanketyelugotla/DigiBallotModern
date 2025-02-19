@@ -11,6 +11,7 @@ import Vote from "./assets/Components/Pages/Vote/Vote";
 import CandidateDetails from "./assets/Components/Pages/CandidateDetails/CandidateDetails";
 import CandidateProfile from "./assets/Components/Pages/CandateDashboard/CandidateProfile";
 import Results from "./assets/Components/Pages/Results/Results";
+import Election from "./assets/Components/Pages/Vote/Election";
 import { HoverDiv } from "./assets/Hooks";
 
 import { Routes, Route, Link } from "react-router-dom"
@@ -27,12 +28,13 @@ export default function App() {
                 <Routes>
                     <Route path="/" element={<Home {...{ isLoginOpen, toggleLoginModal }} />} />
                     <Route path="/userDashboard" element={<UserDashboard />} />
+                    <Route path="/userDashboard/instructions" element={<Instructions />} />
+                    <Route path="/userDashboard/election" element={<Election />} />
+                    <Route path="/userDashboard/vote" element={<Vote />} />
                     <Route path="/candidateDashboard" element={<CandidateDashboard />} />
+                    <Route path="/candidateDashboard/profile" element={<CandidateProfile />} />
+                    <Route path="/candidate/details" element={<CandidateDetails />} />
                     <Route path="/adminDashboard" element={<AdminDashboard />} />
-                    <Route path="/instructions" element={<Instructions />} />
-                    <Route path="/vote" element={<Vote />} />
-                    <Route path="/candidateDetails" element={<CandidateDetails />} />
-                    <Route path="/candidateProfile" element={<CandidateProfile />} />
                     <Route path="/results" element={<Results />} />
                 </Routes>
             </div>

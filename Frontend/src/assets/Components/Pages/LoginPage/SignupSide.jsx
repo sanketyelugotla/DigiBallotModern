@@ -1,8 +1,9 @@
 import { Input } from "../../../Hooks/index"
 import { useContext, useState } from "react"
 import { databaseContext, userTypeContext } from "../../../Hooks/ContextProvider/ContextProvider"
+import { useNavigate } from "react-router-dom";
 
-export default function SignupSide({ changeSide, handleLogin }) {
+export default function SignupSide({ changeSide, handleLogin, handleClose }) {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -17,6 +18,8 @@ export default function SignupSide({ changeSide, handleLogin }) {
         setFormData((prev) => ({ ...prev, [name]: value }))
     }
 
+    const navigate = useNavigate();
+
     async function handleSubmit(event) {
         event.preventDefault();
         const { name, email, number, password } = formData;
@@ -29,8 +32,25 @@ export default function SignupSide({ changeSide, handleLogin }) {
             const res = await response.json();
 
             if (response.ok) {
-                window.alert("Please login to continue");
-                changeSide();
+                // window.alert("Please login to continue");
+                // changeSide();
+                handleClose();
+                switch (userType) {
+                    case "voter":
+                        navigate("/userDashboard");
+                        break;
+                    case "candidate":
+                        navigate("/candidateDashboard");
+                        break;
+                    case "admin":
+                        navigate("/adminDashboard");
+                        break;
+                    default:
+                        console.log("Invalid user type");
+                        navigate("/", replace);
+                        break;
+                }
+
             } else {
                 // setIsWrong(true);
                 console.error("SignUp failed:", res.message);
