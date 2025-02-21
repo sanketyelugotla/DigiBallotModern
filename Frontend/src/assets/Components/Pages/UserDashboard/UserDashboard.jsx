@@ -41,7 +41,7 @@ export default function Logged() {
                         <p>
                             See the live results of the election.
                         </p>
-                        <Link>
+                        <Link to="/results/election">
                             <Button variant="light">
                                 View Results
                             </Button>

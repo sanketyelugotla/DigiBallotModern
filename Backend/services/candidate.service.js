@@ -39,7 +39,14 @@ const getApprovedCandidates = async (electionId) => {
     return candidates.length ? candidates : [];
 };
 
-const getCandidateDetails = async (userId) => {
+const getCandidateDetails = async (candidateId) => {
+    if (!mongoose.Types.ObjectId.isValid(candidateId)) throw new Error("Invalid candidateId");
+    const candidate = await Candidate.findById(candidateId);
+    if (!candidate) throw new Error("Candidate not found");
+    return candidate;
+};
+
+const getCandidateDetailsByUserId = async (userId) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) throw new Error("Invalid user ID");
     const candidate = await Candidate.findOne({ userId }).lean();
     if (!candidate) throw new Error("Candidate not found");
@@ -106,5 +113,5 @@ module.exports = {
     getCandidateImageByCandidateId,
     getCandidateDetails,
     registerForElection,
-    isCandidateRegistered
+    getCandidateDetailsByUserId
 };

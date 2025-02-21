@@ -30,7 +30,18 @@ candidate.get("/:electionId", async (req, res) => {
     }
 });
 
-candidate.get("/get/:id", async (req, res) => {
+candidate.get("/get/user/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const candidates = await candidateService.getCandidateDetailsByUserId(id);
+        return res.status(200).json(candidates);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ message: "Something went wrong" });
+    }
+});
+
+candidate.get("/get/:id" , async (req, res) => {
     try {
         const { id } = req.params;
         const candidates = await candidateService.getCandidateDetails(id);
@@ -39,7 +50,7 @@ candidate.get("/get/:id", async (req, res) => {
         console.log(error);
         return res.status(500).json({ message: "Something went wrong" });
     }
-});
+})
 
 
 // 📌 GET: Retrieve Candidate Image

@@ -18,7 +18,8 @@ voter.post("/vote", authenticate, async (req, res) => {
 
 voter.post("/getVotes/:electionId", async (req, res) => {
     try {
-        const votes = voterService.getVotes(req.params.electionId)
+        const votes = await voterService.getVotes(req.params.electionId);
+        return res.status(200).json({ message: "votes fetched successfylly", votes })
     } catch (error) {
         console.log(error.message);
         return res.status(500).json(error.message)

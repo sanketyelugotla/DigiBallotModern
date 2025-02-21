@@ -1,26 +1,68 @@
-import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from 'recharts';
+import React, { useContext, useEffect, useState } from "react";
+import {
+    BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell
+} from "recharts";
 import styleResults from "./Results.module.css";
-import { getTotal } from '../../../Data/Results';
-import data from '../../../Data/Candidates';
+import { getTotal } from "../../../Data/Results";
+import { databaseContext, electionDetails } from "../../../Hooks/ContextProvider/ContextProvider";
 
 export default function Results() {
-    const totalVotes = getTotal();
-    const colors = ['#1e3a8a', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+    const colors = ["#1e3a8a", "#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
+    const { database_url } = useContext(databaseContext);
+    const { selectedElection } = useContext(electionDetails);
+    const [votes, setVotes] = useState([]);
 
-    const formattedData = data.map((item, index) => ({
+    const totalVotes = votes.reduce((acc, curr) => acc + curr.votes, 0);
+
+    async function fetchVotes() {
+        try {
+            const response = await fetch(`${database_url}/voter/getVotes/${selectedElection._id}`, {
+                method: "POST",
+            });
+            const res = await response.json();
+
+            if (!res.votes || res.votes.length === 0) {
+                console.log("No votes found");
+                setVotes([]);
+                return;
+            }
+
+            // Fetch candidate details for each vote
+            const candidatesWithVotes = await Promise.all(
+                res.votes.map(async (vote) => {
+                    console.log(vote)
+                    const candidateResponse = await fetch(`${database_url}/candidates/get/${vote._id}`);
+                    const candidateData = await candidateResponse.json();
+                    console.log(candidateData)
+                    return {
+                        name: candidateData.fullName,
+                        votes: vote.votes,
+                    };
+                })
+            );
+            setVotes(candidatesWithVotes);
+        } catch (error) {
+            console.error("Error fetching votes:", error);
+        }
+    }
+
+    useEffect(() => {
+        if (selectedElection) {
+            fetchVotes();
+        }
+    }, [database_url, selectedElection]);
+
+    const formattedData = votes.map((item, index) => ({
         name: item.name,
         votes: item.votes,
-        percentage: ((item.votes / totalVotes) * 100).toFixed(1)
+        percentage: ((item.votes / totalVotes) * 100).toFixed(1),
     }));
-
-    console.log("Formatted Data:", formattedData); // Debugging output
 
     if (formattedData.length === 0) {
         return <p>No data available to display the chart.</p>;
     }
 
-    // Custom Tooltip function
+    // Custom Tooltip
     const CustomTooltip = ({ payload }) => {
         if (!payload || payload.length === 0) return null;
         const { name, votes, percentage } = payload[0].payload;
@@ -33,20 +75,20 @@ export default function Results() {
         );
     };
 
-    // Custom Legend component
+    // Custom Legend
     const renderLegend = () => {
         return formattedData.map((entry, index) => (
-            <div key={`legend-${index}`} style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+            <div key={`legend-${index}`} style={{ display: "flex", alignItems: "center", marginBottom: "8px" }}>
                 <div
                     style={{
-                        width: '15px',
-                        height: '15px',
+                        width: "15px",
+                        height: "15px",
                         backgroundColor: colors[index % colors.length],
-                        marginRight: '8px',
-                        borderRadius: "4px"
+                        marginRight: "8px",
+                        borderRadius: "4px",
                     }}
                 />
-                <span style={{ fontSize: '14px', color: 'var(--text_color)' }}>{entry.name}</span>
+                <span style={{ fontSize: "14px", color: "var(--text_color)" }}>{entry.name}</span>
             </div>
         ));
     };
@@ -55,10 +97,10 @@ export default function Results() {
         <div className={styleResults.mainDiv}>
             <div className={styleResults.resultsDiv}>
                 <div style={{ width: "100%" }}>
-                    <ResponsiveContainer width="100%" height={400} style={{ borderRadius: '10px' }}>
+                    <ResponsiveContainer width="100%" height={400} style={{ borderRadius: "10px" }}>
                         <BarChart data={formattedData} margin={{ top: 20, right: 100, left: 20, bottom: 5 }} barSize={70}>
                             <CartesianGrid strokeDasharray="3 3" stroke="var(--grid_color)" />
-                            <XAxis dataKey="" stroke="var(--axis_color)" />
+                            <XAxis dataKey="name" stroke="var(--axis_color)" />
                             <YAxis stroke="var(--axis_color)" />
                             <Tooltip content={<CustomTooltip />} />
                             <Bar dataKey="votes" radius={[8, 8, 0, 0]}>
