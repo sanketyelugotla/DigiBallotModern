@@ -20,7 +20,7 @@ export default function CandidateTable({ selectedData, party }) {
             <table className={styleVote.table} id="tab">
                 <thead>
                     <tr className={styleVote.row}>
-                        <th id={styleVote.col} className={styleVote.col} colSpan="2">Personal Details</th>``
+                        <th id={styleVote.col} className={styleVote.col} colSpan="2">Personal Details</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -2,15 +2,35 @@ import React, { useContext, useState } from 'react'
 import styleVote from "./Vote.module.css"
 import { Link } from 'react-router-dom'
 import { HoverDiv, Button, FadeDiv } from '../../../Hooks/index'
-import { partiesContext } from '../../../Hooks/ContextProvider/ContextProvider'
+import { partiesContext, databaseContext, electionDetails } from '../../../Hooks/ContextProvider/ContextProvider'
 
 export default function ConfirmVote({ onClose }) {
     const { selectedParty } = useContext(partiesContext);
     const [isOpted, setIsopted] = useState(false);
+    const { database_url } = useContext(databaseContext);
+    const { selectedElection } = useContext(electionDetails);
+
     function handleIsopted() {
         setIsopted(!isOpted);
     }
-    console.log(selectedParty)
+
+    async function handleVote() {
+        console.log(selectedParty);
+        const authToken = localStorage.getItem("authToken");
+        console.log(authToken)
+        const response = await fetch(`${database_url}/voter/vote`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({ candidateId: selectedParty.candidateId, electionId: selectedElection._id })
+        });
+        const res = await response.json();
+        console.log(res);
+        handleIsopted();
+    }
+
 
     return (
         <HoverDiv onClose={onClose} variant="voteBox">
@@ -33,7 +53,7 @@ export default function ConfirmVote({ onClose }) {
                                     >
                                         Back
                                     </Button>
-                                    <Button onClick={handleChange} hover="success">Confirm</Button>
+                                    <Button onClick={handleVote} hover="success">Confirm</Button>
                                 </div>
                             </>
                         )}
@@ -47,7 +67,7 @@ export default function ConfirmVote({ onClose }) {
                                 </p>
                                 <div className={styleVote.buttonsDiv}>
                                     <Link to="/userDashboard" replace>
-                                        <Button onClick={handleChange} hover="success">Done</Button>
+                                        <Button onClick={handleVote} hover="success">Done</Button>
                                     </Link>
                                 </div>
                             </>

@@ -7,7 +7,8 @@ export default function Button({ children, className, size, variant, radius, act
         variant && `button-${variant}`,
         radius && `button-${radius}`,
         active && `button-active`,
-        hover && `button-${hover}`
+        hover && `button-${hover}`,
+        className && className
     )
     return (
         <button className={allClasses} {...rest}>{children}</button>

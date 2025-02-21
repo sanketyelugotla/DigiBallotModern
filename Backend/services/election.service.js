@@ -23,6 +23,11 @@ const getActiveElections = async () => {
     return activeElections.length ? activeElections : [];
 };
 
+const getAllElections = async () => {
+    const elections = await Election.find()
+    return elections.length ? elections : [];
+};
+
 const isElectionActive = async (electionId) => {
     try {
         const currentDate = new Date();
@@ -42,5 +47,6 @@ const isElectionActive = async (electionId) => {
 module.exports = {
     getElectionById,
     getActiveElections,
-    isElectionActive
+    isElectionActive,
+    getAllElections
 }

@@ -1,19 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styleVote from "./Vote.module.css"
 import { Button } from '../../../Hooks/index'
-import { partiesContext } from '../../../Hooks/ContextProvider/ContextProvider'
+import { partiesContext, databaseContext, electionDetails } from '../../../Hooks/ContextProvider/ContextProvider'
 import ConfirmVote from './ConfirmVote'
 import VotingTable from './VotingTable'
-import { databaseContext } from '../../../Hooks/ContextProvider/ContextProvider'
 
 export default function Vote() {
     const { selectedParty, setSelectedParty } = useContext(partiesContext);
     const [isOpen, setIsOpen] = useState(false);
     const [candidateDetails, setCandidateDetails] = useState();
     const { database_url } = useContext(databaseContext);
+    const { selectedElection } = useContext(electionDetails);
 
     async function fetchCandidates() {
-        const response = await fetch(`${database_url}/candidates`);
+        const response = await fetch(`${database_url}/candidates/${selectedElection._id}`);
         const res = await response.json();
         setCandidateDetails(res);
     }

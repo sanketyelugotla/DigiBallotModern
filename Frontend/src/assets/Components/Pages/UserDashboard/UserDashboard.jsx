@@ -9,13 +9,13 @@ export default function Logged() {
 
     return (
         <div>
-            <img src="./pics/India_vote.jpg" alt="" className={style.india} />
+            <img src="/pics/India_vote.jpg" alt="" className={style.india} />
             <div className="options">
                 <h1>Welcome! <br /> Sanket Yelugotla</h1>
                 <h1>Please select to continue...</h1>
                 <div className="boxes">
                     <div className="box right-box">
-                        <img src="./pics/voteMachine.png" alt="voteMachine" />
+                        <img src="/pics/voteMachine.png" alt="voteMachine" />
                         <p>
                             Your voice shapes the nation. <br /> Ready to vote?
                         </p>
@@ -26,18 +26,18 @@ export default function Logged() {
                         </Link>
                     </div>
                     <div className="box right-box">
-                        <img className="lg" src="./pics/profile.png" alt="voteMachine" />
+                        <img className="lg" src="/pics/profile.png" alt="voteMachine" />
                         <p>
                             Know about Candidates and their manifests
                         </p>
-                        <Link to="/candidate/details">
+                        <Link to="/candidate/election">
                             <Button variant="light">
                                 Candidate Details
                             </Button>
                         </Link>
                     </div>
                     <div className="box">
-                        <img className="lg" src="./pics/admin_profile.png" alt="voteMachine" />
+                        <img className="lg" src="/pics/admin_profile.png" alt="voteMachine" />
                         <p>
                             See the live results of the election.
                         </p>

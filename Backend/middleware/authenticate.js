@@ -1,7 +1,12 @@
 const jwt = require("jsonwebtoken");
 
 function authenticate(req, res, next) {
-    const token = req.header("auth");
+    const authHeader = req.header("Authorization");
+    if (!authHeader) {
+        return res.status(401).json({ error: "Access Denied" });
+    }
+
+    const token = authHeader.startsWith("Bearer ") ? authHeader.split(" ")[1] : authHeader;
     if (!token) {
         return res.status(401).json({ error: "Access Denied" });
     }

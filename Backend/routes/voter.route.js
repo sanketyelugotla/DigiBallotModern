@@ -1,10 +1,13 @@
 const express = require("express");
 const voter = express.Router();
-const { voterService, adminService } = require("../services/index")
+const authenticate = require("../middleware/authenticate")
+const { voterService, adminService } = require("../services/index");
 
-voter.post("/vote", async (req, res) => {
-    const { voterId, candidateId, electionId } = req.body;
+voter.post("/vote", authenticate, async (req, res) => {
+    const { candidateId, electionId } = req.body;
     try {
+        console.log(req.user);
+        const voterId = await voterService.getVoterIdFromUserId(req.user._id);
         const vote = await voterService.voteCandidate(voterId, candidateId, electionId);
         return res.status(201).json({ message: vote.message });
     } catch (error) {

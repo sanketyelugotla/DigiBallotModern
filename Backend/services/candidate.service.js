@@ -34,8 +34,8 @@ const getCandidates = async () => {
     return candidates;
 };
 
-const getApprovedCandidates = async () => {
-    const candidates = await Candidate.find({ electionStatus: "approved" }).lean();
+const getApprovedCandidates = async (electionId) => {
+    const candidates = await Candidate.find({ electionId, electionStatus: "approved" }).lean();
     return candidates.length ? candidates : [];
 };
 

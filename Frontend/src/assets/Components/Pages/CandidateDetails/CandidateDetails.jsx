@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./MemberCarousel.css";
-import { databaseContext } from "../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, electionDetails } from "../../../Hooks/ContextProvider/ContextProvider";
 import CandidateTable from "./CandidateTable";
 import CandidateCarousel from "./CandidateCarousel";
 
@@ -9,6 +9,7 @@ export default function CandidateDetails() {
     const [candidatesData, setCandidatesData] = useState([]);
     const [selectedData, setSelectedData] = useState(null);
     const { database_url } = useContext(databaseContext);
+    const { selectedElection, setSelectedElection } = useContext(electionDetails);
     const [party, setParty] = useState(null);
 
     const handleShift = (direction) => {
@@ -21,7 +22,7 @@ export default function CandidateDetails() {
 
     async function fetchCandidates() {
         try {
-            const response = await fetch(`${database_url}/candidates`);
+            const response = await fetch(`${database_url}/candidates/${selectedElection._id}`);
             const res = await response.json();
             console.log("Fetched candidates:", res);
             setCandidatesData(res);
@@ -53,8 +54,10 @@ export default function CandidateDetails() {
 
     useEffect(() => {
         if (candidatesData.length > 0) {
-            const selected = candidatesData[(selectedIndex + 2) % candidatesData.length];
-            console.log("Selected candidate:", selected);
+            let ind = selectedIndex;
+            if (candidatesData.length === 3) ind += 1;
+            else if (candidatesData.length > 3) ind += 2;
+            let selected = candidatesData[(ind) % candidatesData.length]; console.log("Selected candidate:", selected);
             setSelectedData(selected);
         }
     }, [selectedIndex, candidatesData]);

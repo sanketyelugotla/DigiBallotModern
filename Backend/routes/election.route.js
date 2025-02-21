@@ -12,4 +12,14 @@ election.get("/", async (req, res) => {
     }
 })
 
+election.get("/all", async (req, res) => {
+    try {
+        const elections = await electionService.getAllElections();
+        return res.status(200).json(elections);
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: error.message })
+    }
+})
+
 module.exports = election

@@ -2,8 +2,24 @@ const Vote = require('../models/Vote');
 const mongoose = require("mongoose")
 const { Voter, Election } = require('../models');
 
+const getVoterIdFromUserId = async (userId) => {
+    try {
+        console.log(userId)
+        if (!mongoose.Types.ObjectId.isValid(userId)) throw new Error("Invalid userId");
+        const voter = await Voter.findOne({userId});
+        return voter._id;
+    } catch (error) {
+        console.error(error);
+        return error;
+    }
+}
+
 const voteCandidate = async (voterId, candidateId, electionId) => {
     try {
+        if (!mongoose.Types.ObjectId.isValid(voterId)) throw new Error("Invalid voterId");
+        if (!mongoose.Types.ObjectId.isValid(candidateId)) throw new Error("Invalid candidateId");
+        if (!mongoose.Types.ObjectId.isValid(electionId)) throw new Error("Invalid electionId");
+        
         const { isElectionActive } = require("./election.service")
         const election = await isElectionActive(electionId)
         if (!election.status) throw new Error("Election is not active.");
@@ -27,7 +43,7 @@ const voteCandidate = async (voterId, candidateId, electionId) => {
         return { message: "Vote successfully cast." };
     } catch (error) {
         console.error(error);
-        return { message: "An error occurred while voting." };
+        return error;
     }
 };
 
@@ -57,5 +73,6 @@ const getVotes = async (electionId) => {
 
 module.exports = {
     voteCandidate,
-    getVotes
+    getVotes,
+    getVoterIdFromUserId
 }
