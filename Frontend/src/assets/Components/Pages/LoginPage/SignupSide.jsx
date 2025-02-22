@@ -3,7 +3,7 @@ import { useContext, useState } from "react"
 import { databaseContext, userTypeContext } from "../../../Hooks/ContextProvider/ContextProvider"
 import { useNavigate } from "react-router-dom";
 
-export default function SignupSide({ changeSide, handleLogin, handleClose }) {
+export default function SignupSide({ changeSide, handleLogin, handleClose, fetchUserDetails }) {
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -34,6 +34,7 @@ export default function SignupSide({ changeSide, handleLogin, handleClose }) {
             if (response.ok) {
                 // window.alert("Please login to continue");
                 // changeSide();
+                fetchUserDetails();
                 handleClose();
                 switch (userType) {
                     case "voter":

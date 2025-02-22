@@ -7,6 +7,7 @@ const loginColorState = createContext();
 const loginColors = createContext();
 const databaseContext = createContext();
 const electionDetails = createContext();
+const userContext = createContext();
 
 export default function ContextProvider({ children }) {
     const [isLogged, setIsLogged] = useState(false);
@@ -18,6 +19,8 @@ export default function ContextProvider({ children }) {
         main: "#1e3a8a",
         sub: "2559AA"
     })
+    const [user, setUser] = useState();
+
     function handleInButton(col, toggleLoginModal) {
         setUserType(col);
         setCol({
@@ -37,6 +40,7 @@ export default function ContextProvider({ children }) {
         "candidate": "#6708d3",
         "admin": "#0A8F6A"
     }
+
     const database_url = "http://localhost:5000"
 
     return (
@@ -48,7 +52,9 @@ export default function ContextProvider({ children }) {
                             <loginColors.Provider value={{ outside, inside }} >
                                 <databaseContext.Provider value={{ database_url }} >
                                     <electionDetails.Provider value={{ selectedElection, setSelectedElection }}>
-                                        {children}
+                                        <userContext.Provider value={{ user, setUser }} >
+                                            {children}
+                                        </userContext.Provider>
                                     </electionDetails.Provider>
                                 </databaseContext.Provider>
                             </loginColors.Provider>
@@ -60,4 +66,14 @@ export default function ContextProvider({ children }) {
     )
 }
 
-export { loggedContext, stateContext, partiesContext, userTypeContext, loginColors, loginColorState, databaseContext, electionDetails }
+export {
+    loggedContext,
+    stateContext,
+    partiesContext,
+    userTypeContext,
+    loginColors,
+    loginColorState,
+    databaseContext,
+    electionDetails,
+    userContext
+}

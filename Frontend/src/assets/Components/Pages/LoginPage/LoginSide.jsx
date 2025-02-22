@@ -3,7 +3,7 @@ import { Input } from "../../../Hooks/index"
 import { replace, useNavigate } from "react-router-dom";
 import { loggedContext, stateContext, userTypeContext, databaseContext } from "../../../Hooks/ContextProvider/ContextProvider";
 
-export default function LoginSide({ changeSide, handleClose }) {
+export default function LoginSide({ changeSide, handleClose, fetchUserDetails }) {
     const { database_url } = useContext(databaseContext);
     const { presentState, setPresentState } = useContext(stateContext);
     const { isLogged, setIsLogged } = useContext(loggedContext);
@@ -36,12 +36,9 @@ export default function LoginSide({ changeSide, handleClose }) {
             const res = await response.json();
 
             if (response.ok) {
-                console.log("JWT Token:", res.token);
-
-                // Store token in localStorage for authentication
                 localStorage.setItem("authToken", res.token);
+                fetchUserDetails();
 
-                // Navigate to dashboard
                 handleClose();
                 setPresentState("userDashboard");
                 setIsLogged(true);

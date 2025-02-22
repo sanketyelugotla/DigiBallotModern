@@ -1,12 +1,38 @@
 import "./Header.css";
 import { Button } from "../../Hooks/index";
-import { loggedContext, stateContext, loginColorState } from "../../Hooks/ContextProvider/ContextProvider";
-import { useContext, useState } from "react";
+import { loggedContext, stateContext, loginColorState, databaseContext, userContext } from "../../Hooks/ContextProvider/ContextProvider";
+import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 
 export default function Header({ onLoginClick }) {
     const { isLogged } = useContext(loggedContext);
     const { colr, handleInButton } = useContext(loginColorState);
+    const { database_url } = useContext(databaseContext);
+    const navigate = useNavigate();
+    const { user, setUser } = useContext(userContext);
+
+    async function fetchUserDetails() {
+        const token = localStorage.getItem("authToken");
+
+        const response = await fetch(`${database_url}/auth/details`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+        const res = await response.json();
+
+        if (!res.status) {
+            navigate("/");
+        }
+        setUser(res.user);
+    }
+
+    useEffect(() => {
+        if (!user) fetchUserDetails();
+    }, [database_url]);
 
     const [liElements, setLiElements] = useState({
         home: true,
@@ -26,7 +52,7 @@ export default function Header({ onLoginClick }) {
             }
         } else if (id === "home") {
             if (presentState === "landing") {
-                window.scrollTo({ top: 0, behavior: "smooth", });
+                window.scrollTo({ top: 0, behavior: "smooth" });
             }
         }
 
@@ -50,13 +76,13 @@ export default function Header({ onLoginClick }) {
                 >
                     Home
                 </li>
-                <li
+                {/* <li
                     id="candidates"
                     className={`${liElements.candidates ? "selected" : ""}`}
                     onClick={handleClick}
                 >
                     Candidates
-                </li>
+                </li> */}
                 <li
                     id="faq"
                     className={`${liElements.faq ? "selected" : ""}`}
@@ -73,10 +99,10 @@ export default function Header({ onLoginClick }) {
                 </li>
             </ul>
             <div className="profile">
-                {isLogged ? (
-                    <div>
+                {user ? (
+                    <div className="profile-container">
                         <CgProfile className="icon" />
-                        <p>Sanket Yelugotla</p>
+                        <p className="username">{user.name}</p>
                     </div>
                 ) : (
                     <Button variant="light" onClick={() => handleInButton("voter", onLoginClick)}>
@@ -84,6 +110,7 @@ export default function Header({ onLoginClick }) {
                     </Button>
                 )}
             </div>
-        </header >
+        </header>
     );
 }
+

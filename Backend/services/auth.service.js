@@ -43,4 +43,20 @@ const loginUser = async ({ email, password }) => {
     return { token, role: user.role };
 };
 
-module.exports = { registerUser, loginUser };
+const getUserDetails = async (req) => {
+    try {
+        const { _id } = req.user;
+        const user = await User.findById(_id);
+        if (!user) throw new Error("Cannot find user");
+        return user;
+    } catch (error) {
+        console.log(error);
+        throw new Error(error);
+    }
+}
+
+module.exports = {
+    registerUser,
+    loginUser,
+    getUserDetails
+};

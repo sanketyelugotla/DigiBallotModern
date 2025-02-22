@@ -1,5 +1,6 @@
 const express = require("express");
 const { authService } = require("../services/index.js")
+const authenticate = require("../middleware/authenticate.js")
 
 const router = express.Router();
 
@@ -24,5 +25,15 @@ router.post("/login", async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 });
+
+router.get("/details", authenticate, async (req, res) => {
+    try {
+        const user = await authService.getUserDetails(req);
+        res.status(200).json({ status: true, message: "User verified successfully", user });
+    } catch (error) {
+        console.error("Error Getting details:", error);
+        res.status(400).json({ message: error.message });
+    }
+})
 
 module.exports = router;
