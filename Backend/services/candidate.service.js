@@ -55,7 +55,7 @@ const getCandidateDetailsByUserId = async (userId) => {
 
 // 📌 Fetch Candidate Image Separately
 const getCandidateImageByCandidateId = async (userId = null, candidate = null) => {
-    candidate = candidate || await getCandidateDetails(userId);
+    candidate = candidate || await getCandidateDetailsByUserId(userId);
     if (!candidate?.image) throw new Error("Candidate image not found");
     return getFileStream(candidate.image);
 };
