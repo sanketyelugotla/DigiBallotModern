@@ -19,6 +19,7 @@ export default function Vote() {
     }
 
     useEffect(() => {
+        setSelectedParty([]);
         fetchCandidates();
     }, [databaseContext])
 

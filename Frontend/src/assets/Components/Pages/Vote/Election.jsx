@@ -27,6 +27,7 @@ export default function Election() {
     }
 
     useEffect(() => {
+        setSelectedElection([]);
         fetchElections();
     }, [])
 

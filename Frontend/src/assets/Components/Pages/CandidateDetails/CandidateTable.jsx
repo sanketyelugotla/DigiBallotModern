@@ -13,10 +13,9 @@ export default function CandidateTable({ selectedData, party }) {
         return Math.abs(age_dt.getUTCFullYear() - 1970);
     }
 
-    console.log(party)
     return (
         <div className="selected-info">
-            <h2>{selectedData.name}</h2>
+            <h2>{selectedData.fullName}</h2>
             <table className={styleVote.table} id="tab">
                 <thead>
                     <tr className={styleVote.row}>

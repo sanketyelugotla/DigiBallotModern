@@ -34,6 +34,7 @@ export default function SelectElection() {
     }
 
     useEffect(() => {
+        setSelectedElection([]);
         fetchElections();
     }, []);
 
