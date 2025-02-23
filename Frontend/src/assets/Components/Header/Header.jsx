@@ -1,9 +1,12 @@
 import "./Header.css";
 import { Button } from "../../Hooks/index";
 import { loggedContext, stateContext, loginColorState, databaseContext, userContext } from "../../Hooks/ContextProvider/ContextProvider";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
+import { HoverDiv } from "../../Hooks/index";
+import { FaAngleDown } from "react-icons/fa";
+import { FaSortDown } from "react-icons/fa6";
 
 export default function Header({ onLoginClick }) {
     const { isLogged } = useContext(loggedContext);
@@ -11,6 +14,10 @@ export default function Header({ onLoginClick }) {
     const { database_url } = useContext(databaseContext);
     const navigate = useNavigate();
     const { user, setUser } = useContext(userContext);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [profilePosition, setProfilePosition] = useState({ top: 0, left: 0 });
+
+    const usernameRef = useRef(null); // Reference for user.name
 
     async function fetchUserDetails() {
         const token = localStorage.getItem("authToken");
@@ -65,6 +72,25 @@ export default function Header({ onLoginClick }) {
         }));
     };
 
+    function handleProfileOpen() {
+        setIsProfileOpen(!isProfileOpen);
+
+        if (usernameRef.current) {
+            const rect = usernameRef.current.getBoundingClientRect();
+            setProfilePosition({
+                top: rect.bottom + window.scrollY + 10, // Below the username
+                left: rect.left + window.scrollX, // Align with the username
+            });
+        }
+    }
+
+    function handleLogout() {
+        localStorage.removeItem("authToken");
+        handleProfileOpen();
+        setUser(null);
+        navigate("/");
+    }
+
     return (
         <header className="header">
             <span className="logo">DigiBallot</span>
@@ -100,9 +126,10 @@ export default function Header({ onLoginClick }) {
             </ul>
             <div className="profile">
                 {user ? (
-                    <div className="profile-container">
+                    <div className="profile-container" onClick={handleProfileOpen}>
                         <CgProfile className="icon" />
-                        <p className="username">{user.name}</p>
+                        <p ref={usernameRef} className="username">{user.name}</p>
+                        <FaAngleDown className="right-icon" />
                     </div>
                 ) : (
                     <Button variant="light" onClick={() => handleInButton("voter", onLoginClick)}>
@@ -110,7 +137,18 @@ export default function Header({ onLoginClick }) {
                     </Button>
                 )}
             </div>
+            {
+                isProfileOpen &&
+                <HoverDiv onClose={handleProfileOpen} insideDiv="aprofileHover"
+                    shade="light"
+                    style={{ top: `${profilePosition.top}px`, left: `${profilePosition.left}px`, position: "absolute" }}>
+                    {({ handleClose }) => (
+                        <div className="mainProfile">
+                            <p className="eachProfile"><Button variant="cdanger" onClick={handleLogout}>Logout</Button></p>
+                        </div>
+                    )}
+                </HoverDiv>
+            }
         </header>
     );
 }
-

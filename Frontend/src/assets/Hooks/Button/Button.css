@@ -60,9 +60,19 @@ button.button-danger {
     color: var(--themeBlue);
 }
 
+button.button-cdanger {
+    background-color: #951634ee;
+    color: white;
+}
+
+button.button-cdanger:hover {
+    background-color: #951634;
+    color: white;
+}
+
 button.button-danger:hover {
     transform: scale(1);
-    border-color: red;
+    border-color: #951634ee;
     background-color: #951634ee;
     color: white;
 }

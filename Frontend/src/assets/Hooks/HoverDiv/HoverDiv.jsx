@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import classNames from "classnames";
 import "./HoverDiv.css";
 
-export default function HoverDiv({ children, onClose, className, variant, ...rest }) {
+export default function HoverDiv({ children, onClose, className, variant, insideDiv, style, shade, ...rest }) {
     const [isClosing, setIsClosing] = useState(false);
     const [isOpening, setIsOpening] = useState(false);
 
@@ -23,12 +23,16 @@ export default function HoverDiv({ children, onClose, className, variant, ...res
         }
     };
 
-    const allClasses1 = classNames(className, `login-overlay ${isOpening ? "" : "hidden"} ${isClosing ? "hidden" : ""}`);
-    const allClasses2 = classNames(variant && `hoverdiv-${variant}`, `login-modal ${isOpening ? "" : "hidden"} ${isClosing ? "hidden" : ""}`);
+    const allClasses1 = classNames(
+        className,
+        `login-overlay ${isOpening ? "" : "hidden"} ${isClosing ? "hidden" : ""}`,
+        shade && shade
+    );
+    const allClasses2 = classNames(variant && `hoverdiv-${variant}`, `login-modal ${isOpening ? "" : "hidden"} ${isClosing ? "hidden" : ""}`, insideDiv && insideDiv);
 
     return (
-        <div className={allClasses1} onClick={handleOverlayClick} {...rest}>
-            <div className={allClasses2}>
+        <div className={allClasses1} onClick={handleOverlayClick}>
+            <div className={allClasses2} style={style} {...rest}>
                 {children({ handleClose })}
             </div>
         </div>

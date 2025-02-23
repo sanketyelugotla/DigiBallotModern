@@ -1,7 +1,3 @@
-:root {
-    --themeBlue: #1e3a8a;
-}
-
 header {
     display: flex;
     position: fixed;
@@ -80,6 +76,7 @@ header {
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
 
         .icon {
             font-size: 30px;
@@ -89,7 +86,7 @@ header {
 
         p {
             width: 200px;
-            font-size: 20px;
+            font-size: 18px;
         }
 
         div {
@@ -97,6 +94,28 @@ header {
             align-items: center;
             white-space: nowrap;
         }
+        .right-icon {
+            margin-left: 1vw;
+        }
 
+    }
+}
+
+.aprofileHover {
+    background-color: white;
+    padding: 1vh 1vw;
+    border-radius: 5px;
+
+    .mainProfile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+
+        .eachProfile {
+            display: flex;
+            align-items: center;
+            height: 5vh;
+        }
     }
 }

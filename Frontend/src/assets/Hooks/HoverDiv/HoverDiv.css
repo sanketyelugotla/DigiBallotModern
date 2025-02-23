@@ -23,6 +23,10 @@
     z-index: 20;
 }
 
+.login-overlay.light {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
 .login-overlay.hidden {
     opacity: 0;
     pointer-events: none;
