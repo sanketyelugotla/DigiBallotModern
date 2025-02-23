@@ -60,6 +60,12 @@ const getCandidateImageByCandidateId = async (userId = null, candidate = null) =
     return getFileStream(candidate.image);
 };
 
+const getCandidateImageByUserId = async (userId) => {
+    if (!mongoose.Types.ObjectId.isValid(userId)) throw new Error("Invalid user ID");
+    const candidate = await getCandidateDetailsByUserId(userId);
+    return getFileStream(candidate.image);
+}
+
 const getCandidateImage = async (imageId) => {
     if (!mongoose.Types.ObjectId.isValid(imageId)) throw new Error("Invalid image ID");
     return getFileStream(imageId);
@@ -113,5 +119,6 @@ module.exports = {
     getCandidateImageByCandidateId,
     getCandidateDetails,
     registerForElection,
-    getCandidateDetailsByUserId
+    getCandidateDetailsByUserId,
+    getCandidateImageByUserId
 };

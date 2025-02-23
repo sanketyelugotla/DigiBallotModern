@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { FadeDiv, Input } from '../../../../Hooks/index'
-import { sectionsContext } from '../SectionsContextProvider'
-import styleForm from "../CandidateForm.module.css";
+import { sectionsContext } from "../CandidateProfile/SectionsContextProvider";
+import styleForm from "../CandidateProfile/CandidateForm.module.css";
 
 export default function Other({ handleFileSelect, handleFormChange }) {
     const { sections } = useContext(sectionsContext)

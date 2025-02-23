@@ -3,7 +3,7 @@ import styleNav from "./Leftnav.module.css"
 import { ImProfile } from "react-icons/im";
 import { FaRegAddressCard } from "react-icons/fa";
 import { TbListDetails } from "react-icons/tb";
-import { sectionsContext } from './SectionsContextProvider';
+import { sectionsContext } from '../SectionsContextProvider';
 import { CiCircleCheck } from "react-icons/ci";
 
 export default function LeftNav({ handleSelectionChange }) {

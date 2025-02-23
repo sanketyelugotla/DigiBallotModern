@@ -9,11 +9,12 @@ import AdminDashboard from "./assets/Components/Pages/AdminDashboard/AdminDashbo
 import Instructions from "./assets/Components/Pages/Instructions/Intructions";
 import Vote from "./assets/Components/Pages/Vote/Vote";
 import CandidateDetails from "./assets/Components/Pages/CandidateDetails/CandidateDetails";
-import CandidateProfile from "./assets/Components/Pages/CandateDashboard/CandidateProfile";
+import CandidateProfile from "./assets/Components/Pages/CandateDashboard/CandidateProfile/CandidateProfile";
 import Results from "./assets/Components/Pages/Results/Results";
 import Election from "./assets/Components/Pages/Vote/Election";
 import SelectElection from "./assets/Components/Pages/CandidateDetails/SelectElection";
 import SelectResultElection from "./assets/Components/Pages/Results/SelectResultElection";
+import RegisterElection from "./assets/Components/Pages/CandateDashboard/CandidateElection/RegisterElection";
 import { HoverDiv } from "./assets/Hooks";
 
 import { Routes, Route, Link } from "react-router-dom"
@@ -37,6 +38,7 @@ export default function App() {
 
                     <Route path="/candidateDashboard" element={<CandidateDashboard />} />
                     <Route path="/candidateDashboard/profile" element={<CandidateProfile />} />
+                    <Route path="/candidateDashboard/election" element={<RegisterElection />} />
 
                     <Route path="/candidate/election" element={<SelectElection />} />
                     <Route path="/candidate/details" element={<CandidateDetails />} />

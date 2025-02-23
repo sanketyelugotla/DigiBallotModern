@@ -2,16 +2,17 @@ import style from "./UserDashboard.module.css";
 import { Button } from "../../../Hooks/index";
 import { useContext } from "react";
 import { Navigate, Link } from "react-router-dom";
-import { stateContext } from "../../../Hooks/ContextProvider/ContextProvider";
+import { stateContext, userContext } from "../../../Hooks/ContextProvider/ContextProvider";
 
 export default function Logged() {
     const { presentState } = useContext(stateContext);
+    const { user } = useContext(userContext);
 
     return (
         <div>
             <img src="/pics/India_vote.jpg" alt="" className={style.india} />
             <div className="options">
-                <h1>Welcome! <br /> Sanket Yelugotla</h1>
+                <h1>Welcome! <br /> {user ? user.name : "Error fetching user name"}</h1>
                 <h1>Please select to continue...</h1>
                 <div className="boxes">
                     <div className="box right-box">

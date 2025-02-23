@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import CandidateForm from './CandidateForm'
-import LeftNav from './LeftNav'
+import LeftNav from './LeftNav/LeftNav'
 import SectionsContextProvider from './SectionsContextProvider'
 import StyleProf from "./CandidateProfile.module.css"
 

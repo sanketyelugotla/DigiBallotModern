@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import styleForm from "./CandidateForm.module.css";
 import { sectionsContext } from "./SectionsContextProvider";
-import { Personel, Party, Other, Declaration } from "./Forms";
+import { Personel, Party, Other, Declaration } from "../Forms";
 
 export default function CandidateForm() {
     const { sections } = useContext(sectionsContext);

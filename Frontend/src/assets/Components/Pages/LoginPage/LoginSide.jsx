@@ -1,17 +1,14 @@
 import { useContext, useState } from "react"
 import { Input } from "../../../Hooks/index"
 import { replace, useNavigate } from "react-router-dom";
-import { loggedContext, stateContext, userTypeContext, databaseContext } from "../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext } from "../../../Hooks/ContextProvider/ContextProvider";
 
 export default function LoginSide({ changeSide, handleClose, fetchUserDetails }) {
     const { database_url } = useContext(databaseContext);
-    const { presentState, setPresentState } = useContext(stateContext);
-    const { isLogged, setIsLogged } = useContext(loggedContext);
     const [fomrData, setFormData] = useState({
         email: "",
         password: ""
     });
-    const { userType, setUserType } = useContext(userTypeContext);
     const [isWrong, setIsWrong] = useState(false);
 
     function handleChange(event) {
@@ -39,9 +36,8 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
                 localStorage.setItem("authToken", res.token);
                 fetchUserDetails();
 
+
                 handleClose();
-                setPresentState("userDashboard");
-                setIsLogged(true);
                 switch (res.role) {
                     case "voter":
                         navigate("/userDashboard");
