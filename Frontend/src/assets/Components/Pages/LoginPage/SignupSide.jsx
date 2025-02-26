@@ -34,6 +34,7 @@ export default function SignupSide({ changeSide, handleLogin, handleClose, fetch
             if (response.ok) {
                 // window.alert("Please login to continue");
                 // changeSide();
+                localStorage.setItem("authToken", res.token);
                 fetchUserDetails();
                 handleClose();
                 switch (userType) {

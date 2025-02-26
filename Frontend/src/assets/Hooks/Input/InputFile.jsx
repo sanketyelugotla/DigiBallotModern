@@ -34,7 +34,7 @@ export default function InputFile({ title, label, onFileSelect, type = "image", 
         }
 
         setFile(selectedFile);
-        onFileSelect(selectedFile, name); // Pass file to parent component
+        onFileSelect(selectedFile, name);
     };
 
     return (

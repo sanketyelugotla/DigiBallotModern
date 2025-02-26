@@ -48,7 +48,7 @@ const getCandidateDetails = async (candidateId) => {
 
 const getCandidateDetailsByUserId = async (userId) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) throw new Error("Invalid user ID");
-    const candidate = await Candidate.findOne({ userId }).lean();
+    const candidate = await Candidate.findOne({ userId });
     if (!candidate) throw new Error("Candidate not found");
     return candidate;
 };
@@ -71,18 +71,18 @@ const getCandidateImage = async (imageId) => {
     return getFileStream(imageId);
 }
 
-const registerForElection = async (candidateId, electionId) => {
+const registerForElection = async (user, electionId) => {
     try {
-        if (!mongoose.Types.ObjectId.isValid(candidateId)) throw new Error("Invalid candidate ID");
-        const candidate = await Candidate.findById(candidateId);
+        const candidate = await getCandidateDetailsByUserId(user._id);
+
         if (!candidate) throw new Error("Candidate not found");
 
         const { electionService } = require("./index.js")
 
-        const election = await electionService.getElectionById(electionId)
+        const election = await electionService.getElectionById(electionId);
         if (!election) throw new Error("No election found");
 
-        if (candidate.electionStatus === "approved") throw new Error("Candidate is already registered for an election");
+        if (candidate.electionStatus === "approved") throw new Error("You already registered for an election");
         if (candidate.electionStatus === "pending") throw new Error("Please wait for admin approval");
 
         candidate.electionId = electionId;

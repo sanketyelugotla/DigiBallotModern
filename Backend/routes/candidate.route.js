@@ -41,7 +41,7 @@ candidate.get("/get/user/:id", async (req, res) => {
     }
 });
 
-candidate.get("/get/:id" , async (req, res) => {
+candidate.get("/get/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const candidates = await candidateService.getCandidateDetails(id);
@@ -76,11 +76,10 @@ candidate.get("/image/:imageId", async (req, res) => {
     }
 });
 
-candidate.post("/register", async (req, res) => {
-    const { candidateId, electionId } = req.body;
+candidate.post("/register", authenticate, async (req, res) => {
+    const { electionId } = req.body;
     try {
-        const candidate = await candidateService.registerForElection(candidateId, electionId);
-        console.log(candidate)
+        const candidate = await candidateService.registerForElection(req.user, electionId);
         if (!candidate.success) throw new Error(candidate.message);
         return res.status(201).json({ success: true, status: "pending", message: candidate.message })
     } catch (error) {

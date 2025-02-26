@@ -28,7 +28,7 @@ export default function CandidateDashboard() {
                         <img src="/pics/voteMachine.png" alt="voteMachine" />
                         <p>Register for election.</p>
                         <Link to="/candidateDashboard/election">
-                            <Button variant="light">Vote Now</Button>
+                            <Button variant="light">Register Now</Button>
                         </Link>
                     </div>
                     <div className="box">

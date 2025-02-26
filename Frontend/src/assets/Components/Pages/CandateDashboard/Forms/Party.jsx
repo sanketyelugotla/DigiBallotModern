@@ -3,18 +3,18 @@ import { FadeDiv, Input } from '../../../../Hooks/index'
 import { sectionsContext } from "../CandidateProfile/SectionsContextProvider";
 import styleForm from "../CandidateProfile/CandidateForm.module.css";
 
-export default function Party({ handleFileSelect, handleFormChange }) {
+export default function Party({ handleFileSelect, handleFormChange, formData }) {
     const { sections } = useContext(sectionsContext)
     return (
         <FadeDiv fade_in={sections === "party"} fade_out={sections !== "party"} className={styleForm.form} variant="form">
             <Input.Div variant="white" className={styleForm.div}>
-                <Input.Form className={styleForm.inp}>
-                    <Input type="text" label="Party Affiliation" name="partyName" onChange={handleFormChange} />
-                </Input.Form>
+                <div className={styleForm.inp}>
+                    <Input type="text" label="Party Affiliation" name="partyName" value={formData.partyName} onChange={handleFormChange} />
+                </div>
 
-                <Input.Form className={styleForm.inp}>
-                    <Input type="text" label="State" name="state" onChange={handleFormChange} />
-                </Input.Form>
+                <div className={styleForm.inp}>
+                    <Input type="text" label="State" name="state" value={formData.state} onChange={handleFormChange} />
+                </div>
             </Input.Div>
 
             {/* File Upload */}

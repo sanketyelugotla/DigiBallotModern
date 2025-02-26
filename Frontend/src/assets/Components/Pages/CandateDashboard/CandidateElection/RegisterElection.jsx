@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { databaseContext, electionDetails } from "../../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, electionDetails, userContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import styleElection from "../../CandidateDetails/Election.module.css";
 import { Button } from "../../../../Hooks";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterElection() {
+    const { user } = useContext(userContext);
     const { selectedElection, setSelectedElection } = useContext(electionDetails);
     const { database_url } = useContext(databaseContext);
     const [elections, setElections] = useState([]);
@@ -47,8 +48,32 @@ export default function RegisterElection() {
     const navigate = useNavigate();
     function handleClick(item) {
         setSelectedElection(item);
-        navigate('/results');
+        registerForElection(item);
+        // navigate('/candidateDashboard/register');
     }
+
+    async function registerForElection(item) {
+        try {
+            const token = localStorage.getItem("authToken");
+            console.log(item)
+            const response = await fetch(`${database_url}/candidates/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ electionId: item._id }),
+            });
+
+            const res = await response.json();
+            console.log(res)
+            if (res.success) window.alert("Registeres successfylly! Please wait for admin approval");
+            else window.alert(res.message)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <div className={styleElection.main}>
