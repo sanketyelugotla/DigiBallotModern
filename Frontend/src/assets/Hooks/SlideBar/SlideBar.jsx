@@ -1,93 +1,56 @@
 import React, { useState } from "react";
 import styleSlide from "./SlideBar.module.css";
 
-export default function SlideBar() {
-    const [activeTab, setActiveTab] = useState(2);
+export default function SlideBar({ headings, content }) {
+    const [activeTab, setActiveTab] = useState(0); // Default to first tab
 
-    const handleTabChange = (tabIndex) => {
-        setActiveTab(tabIndex);
+    const handleTabChange = (index) => {
+        setActiveTab(index);
     };
+
+    const totalTabs = headings.length;
+    const sliderWidth = 100 / totalTabs; // Adjust slider width dynamically
 
     return (
         <div className={styleSlide.wrapper}>
+            {/* Tabs Header */}
             <header className={styleSlide.header}>
-                <label
-                    className={`${styleSlide.tab} ${activeTab === 1 ? styleSlide.activeTab : ""}`}
-                    onClick={() => handleTabChange(1)}
-                >
-                    Basic
-                </label>
-                <label
-                    className={`${styleSlide.tab} ${activeTab === 2 ? styleSlide.activeTab : ""}`}
-                    onClick={() => handleTabChange(2)}
-                >
-                    Standard
-                </label>
-                <label
-                    className={`${styleSlide.tab} ${activeTab === 3 ? styleSlide.activeTab : ""}`}
-                    onClick={() => handleTabChange(3)}
-                >
-                    Team
-                </label>
+                {headings.map((heading, index) => (
+                    <label
+                        key={index}
+                        className={`${styleSlide.tab} ${activeTab === index ? styleSlide.activeTab : ""}`}
+                        onClick={() => handleTabChange(index)}
+                        style={{ width: `${sliderWidth}%` }} // Adjust width
+                    >
+                        {heading}
+                    </label>
+                ))}
                 <div
                     className={styleSlide.slider}
                     style={{
-                        left: activeTab === 1 ? "5%" : activeTab === 2 ? "50%" : "100%",
-                        width: activeTab === 1 ? "90px" : activeTab === 2 ? "120px" : "95px",
-                        transform: activeTab === 1 ? "translateX(0%)" : activeTab === 2 ? "translateX(-50%)" : "translateX(-100%)",
+                        left: `${(activeTab * 100) / totalTabs}%`,
+                        width: `${sliderWidth}%`,
+                        transform: `translateX(0%)`, // Align properly
                     }}
                 ></div>
             </header>
 
+            {/* Content Area */}
             <div className={styleSlide.cardArea}>
                 <div
                     className={styleSlide.cards}
                     style={{
-                        transform: `translateX(-${(activeTab - 1) * 33.4}%)`,
+                        width: `${totalTabs * 100}%`,
+                        transform: `translateX(-${(activeTab * 100) / totalTabs}%)`,
                     }}
                 >
-                    <div className={`${styleSlide.row} ${styleSlide.row1}`}>
-                        <div className={styleSlide.priceDetails}>
-                            <span className={styleSlide.price}>19</span>
-                            <p>For beginner use</p>
+                    {content.map((item, index) => (
+                        <div key={index} className={styleSlide.row} style={{ width: `${100 / totalTabs}%` }}>
+                            {item}
                         </div>
-                        <ul className={styleSlide.features}>
-                            <li><i className="fas fa-check"></i><span>100 GB Premium Bandwidth</span></li>
-                            <li><i className="fas fa-check"></i><span>FREE 50+ Installation Scripts</span></li>
-                            <li><i className="fas fa-check"></i><span>One FREE Domain Registration</span></li>
-                            <li><i className="fas fa-check"></i><span>Unlimited Email Accounts</span></li>
-                        </ul>
-                    </div>
-
-                    <div className={styleSlide.row}>
-                        <div className={styleSlide.priceDetails}>
-                            <span className={styleSlide.price}>99</span>
-                            <p>For professional use</p>
-                        </div>
-                        <ul className={styleSlide.features}>
-                            <li><i className="fas fa-check"></i><span>Unlimited GB Premium Bandwidth</span></li>
-                            <li><i className="fas fa-check"></i><span>FREE 200+ Installation Scripts</span></li>
-                            <li><i className="fas fa-check"></i><span>Five FREE Domain Registration</span></li>
-                            <li><i className="fas fa-check"></i><span>Unlimited Email Accounts</span></li>
-                        </ul>
-                    </div>
-
-                    <div className={styleSlide.row}>
-                        <div className={styleSlide.priceDetails}>
-                            <span className={styleSlide.price}>49</span>
-                            <p>For team collaboration</p>
-                        </div>
-                        <ul className={styleSlide.features}>
-                            <li><i className="fas fa-check"></i><span>200 GB Premium Bandwidth</span></li>
-                            <li><i className="fas fa-check"></i><span>FREE 100+ Installation Scripts</span></li>
-                            <li><i className="fas fa-check"></i><span>Two FREE Domain Registration</span></li>
-                            <li><i className="fas fa-check"></i><span>Unlimited Email Accounts</span></li>
-                        </ul>
-                    </div>
+                    ))}
                 </div>
             </div>
-
-            <button className={styleSlide.button}>Choose plan</button>
         </div>
     );
 }

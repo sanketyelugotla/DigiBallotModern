@@ -1,12 +1,16 @@
 .wrapper {
-    width: 400px;
-    background: #fff;
+    /* background: #fff; */
+    width: 100%;
     border-radius: 16px;
     padding: 30px;
-    box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.05); */
 }
 
 .header {
+    width: 20vw;
     height: 55px;
     display: flex;
     align-items: center;
@@ -26,15 +30,16 @@
 
 
 .activeTab {
-    color: #fff;
+    color: white;
 }
 
 .slider {
     z-index: 0;
     position: absolute;
-    height: 85%;
+    height: 80%;
     border-radius: inherit;
-    background: linear-gradient(145deg, #D5A3FF 0%, #77A5F8 100%);
+    /* background: linear-gradient(145deg, #D5A3FF 0%, #77A5F8 100%); */
+    background-color: var(--themeBlue);
     transition: all 0.3s ease;
 }
 
