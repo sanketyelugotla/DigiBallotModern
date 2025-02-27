@@ -4,5 +4,6 @@ import FadeDiv from "./FadeDiv/FadeDiv"
 import HoverDiv from "./HoverDiv/index"
 import Input from "./Input/Index"
 import ScrollAppear from "./ScrollAppear/ScrollAnimation"
+import SlideBar from "./SlideBar/SlideBar"
 
-export { Button, ContextProvider, FadeDiv, HoverDiv, Input, ScrollAppear }
+export { Button, ContextProvider, FadeDiv, HoverDiv, Input, ScrollAppear, SlideBar }

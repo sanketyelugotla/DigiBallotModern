@@ -15,7 +15,6 @@ export default function Login({ onClose }) {
     const { user, setUser } = useContext(userContext);
 
     async function fetchUserDetails() {
-        console.log("called")
         const token = localStorage.getItem("authToken");
 
         const response = await fetch(`${database_url}/auth/details`, {
@@ -29,9 +28,7 @@ export default function Login({ onClose }) {
         console.log(res)
         setUser(res.user);
 
-        if (!res.status) {
-            navigate("/");
-        }
+        if (!res.status) navigate("/");
     }
 
     return (

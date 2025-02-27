@@ -1,4 +1,4 @@
-header {
+.header {
     display: flex;
     position: fixed;
     background-color: white;
@@ -94,6 +94,7 @@ header {
             align-items: center;
             white-space: nowrap;
         }
+
         .right-icon {
             margin-left: 1vw;
         }
