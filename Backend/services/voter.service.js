@@ -119,10 +119,26 @@ const registerForElection = async (userId, electionId) => {
     }
 };
 
+const getRegisteredElections = async (userId) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(userId)) throw new Error("Invalid userId");
+
+        const voter = await Voter.findOne({ userId }).populate("elections.electionId");
+        if (!voter) throw new Error("Voter not found");
+
+        if (!voter.elections || voter.elections.length === 0) return { success: true, message: "No registered elections found", elections: [] };
+
+        return { success: true, elections: voter.elections };
+    } catch (error) {
+        return { success: false, message: error.message };
+    }
+};
+
 
 module.exports = {
     voteCandidate,
     getVotes,
     getVoterIdFromUserId,
     registerForElection,
+    getRegisteredElections
 };

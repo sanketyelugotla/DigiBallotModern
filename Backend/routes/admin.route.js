@@ -37,7 +37,7 @@ admin.get("/candidates", async (req, res) => {
 admin.post("/declare/:electionId", async (req, res) => {
     try {
         const results = await adminService.declareElection(req.params.electionId);
-        return res.status(201).json({message: results.winner})
+        return res.status(201).json({ message: results.winner })
     } catch (error) {
         console.log(error)
         return res.status(500).json({ message: error.message })

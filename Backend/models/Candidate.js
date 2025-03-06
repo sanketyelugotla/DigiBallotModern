@@ -19,10 +19,10 @@ const CandidateSchema = new mongoose.Schema({
     assets: { type: String },
     elections: [
         {
-            electionId: { type: mongoose.Schema.Types.ObjectId, ref: "Elections", required: true },
-            electionType: { type: String, required: true },
-            status: { type: String, required: true },
-            partyId: { type: mongoose.Schema.Types.ObjectId, ref: "Parties", required: true },
+            electionId: { type: mongoose.Schema.Types.ObjectId, ref: "Elections" },
+            electionType: { type: String },
+            status: { type: String },
+            partyId: { type: mongoose.Schema.Types.ObjectId, ref: "Parties" },
             party: { type: String }
         }
     ]

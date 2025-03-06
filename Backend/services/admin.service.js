@@ -5,6 +5,7 @@ const addElection = async (name, startDate, endDate) => {
     try {
         const existing = await Election.findOne({ name });
         if (existing) throw new Error("Election already exists");
+
         const newElection = new Election({
             name,
             startDate: new Date(startDate),
@@ -14,29 +15,37 @@ const addElection = async (name, startDate, endDate) => {
         await newElection.save();
         return newElection;
     } catch (error) {
-        throw new Error(error)
+        throw new Error(error);
     }
 };
 
+// ✅ Get candidates who have at least one pending election
 const getPendingCandidates = async () => {
     try {
-        const candidates = await Candidate.find({ electionStatus: "pending" });
-        if (!candidates) return []
-        return candidates;
-    } catch (error) {
-        throw new Error(error)
-    }
-}
+        const candidates = await Candidate.find({
+            elections: { $elemMatch: { status: "pending" } }
+        });
 
-const approveCandidate = async (candidateId) => {
+        return candidates.length ? candidates : [];
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+// ✅ Approve a specific candidate for a specific election
+const approveCandidate = async (candidateId, electionId) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(candidateId)) throw new Error("Invalid candidate ID");
-        const candidate = await Candidate.findByIdAndUpdate(
-            candidateId,
-            { electionStatus: "approved" },
+        if (!mongoose.Types.ObjectId.isValid(electionId)) throw new Error("Invalid election ID");
+
+        const candidate = await Candidate.findOneAndUpdate(
+            { _id: candidateId, "elections.electionId": electionId },
+            { $set: { "elections.$.status": "approved" } },
             { new: true }
         );
-        if (!candidate) throw new Error("Candidate not found or error approving candidate");
+
+        if (!candidate) throw new Error("Candidate or election not found");
+
         return candidate;
     } catch (error) {
         throw new Error(error.message);
@@ -49,16 +58,12 @@ const declareElection = async (electionId) => {
         const election = await Election.findById(electionId);
         if (!election) throw new Error("Election not found");
 
-        // Ensure the election is completed before declaring results
-        // if (election.status !== "completed") throw new Error("Election is not yet completed");
-
         // Count votes for each candidate in the election
         const voteCounts = await Vote.aggregate([
             { $match: { electionId: new mongoose.Types.ObjectId(electionId) } },
             { $group: { _id: "$candidateId", votes: { $sum: 1 } } },
             { $sort: { votes: -1 } }
         ]);
-        console.log(voteCounts)
 
         if (voteCounts.length === 0) throw new Error("No votes cast in this election");
 
@@ -74,7 +79,6 @@ const declareElection = async (electionId) => {
         throw new Error(error.message);
     }
 };
-
 
 module.exports = {
     addElection,
