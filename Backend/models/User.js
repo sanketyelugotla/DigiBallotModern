@@ -5,7 +5,15 @@ const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true, lowercase: true },
     password: { type: String, required: true },
-    role: { type: String, enum: ["voter", "candidate", "admin"], required: true }
+    role: { type: String, enum: ["voter", "candidate", "admin"], required: true },
+    userType: { type: String, required: true },
+    elections: [
+        {
+            electionId: { type: mongoose.Schema.Types.ObjectId, ref: "Election", required: true },
+            electionType: { type: String, required: true },
+            status: { type: String, required: true }
+        }
+    ]
 });
 
 UserSchema.pre("save", async function (next) {

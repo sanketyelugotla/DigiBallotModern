@@ -40,6 +40,19 @@ export default function Logged() {
                     <div className="box">
                         <img className="lg" src="/pics/admin_profile.png" alt="voteMachine" />
                         <p>
+                            Register for election
+                        </p>
+                        <Link to="/userDashboard/register">
+                            <Button variant="light">
+                                Register Now
+                            </Button>
+                        </Link>
+                    </div>
+                </div>
+                <div className="boxes">
+                    <div className="box">
+                        <img className="lg" src="/pics/admin_profile.png" alt="voteMachine" />
+                        <p>
                             See the live results of the election.
                         </p>
                         <Link to="/results/election">

@@ -21,6 +21,14 @@ const CandidateSchema = new mongoose.Schema({
     spouse_profession: { type: String },
     liabilities: { type: String },
     assets: { type: String },
+    candidateType: { type: String },
+    elections: [
+        {
+            electionId: { type: mongoose.Schema.Types.ObjectId, ref: "Election", required: true },
+            electionType: { type: String, required: true },
+            status: { type: String, required: true }
+        }
+    ]
 });
 
 module.exports = mongoose.model("Candidate", CandidateSchema);

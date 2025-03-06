@@ -10,7 +10,7 @@ export default function VotingTable({ data, selectButton, selectedParty }) {
     useEffect(() => {
         async function fetchAllParties() {
             const partyData = {};
-            await Promise.all(data.map(async (item) => {
+            data && await Promise.all(data.map(async (item) => {
                 if (!item.partyId) return;
                 try {
                     const response = await fetch(`${database_url}/party/${item.partyId}`);

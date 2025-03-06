@@ -15,6 +15,7 @@ import Election from "./assets/Components/Pages/Vote/Election";
 import SelectElection from "./assets/Components/Pages/CandidateDetails/SelectElection";
 import SelectResultElection from "./assets/Components/Pages/Results/SelectResultElection";
 import RegisterElection from "./assets/Components/Pages/CandateDashboard/CandidateElection/RegisterElection";
+import Register from "./assets/Components/Pages/UserDashboard/Register";
 import { HoverDiv } from "./assets/Hooks";
 
 import { Routes, Route, Link } from "react-router-dom"
@@ -34,6 +35,7 @@ export default function App() {
                     <Route path="/userDashboard" element={<UserDashboard />} />
                     <Route path="/userDashboard/instructions" element={<Instructions />} />
                     <Route path="/userDashboard/election" element={<Election />} />
+                    <Route path="/userDashboard/register" element={<Register />} />
                     <Route path="/userDashboard/vote" element={<Vote />} />
 
                     <Route path="/candidateDashboard" element={<CandidateDashboard />} />

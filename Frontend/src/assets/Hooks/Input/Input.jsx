@@ -18,10 +18,10 @@ export default function Input({ children, type, label, className, ...rest }) {
     };
 
     return type === "password" ? (
-        <div class={`${allClasses} wrapperr`}>
+        <div className={`${allClasses} wrapperr`}>
             <input type="password" required ref={inputRef} {...rest} />
             <label> {label}</label>
-            <span onClick={togglePasswordVisibility} class="show-btn"><BiHide /></span>
+            <span onClick={togglePasswordVisibility} className="show-btn"><BiHide /></span>
         </div>
     ) :
         (

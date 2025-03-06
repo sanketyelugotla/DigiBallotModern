@@ -68,7 +68,8 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
             <h2 className="topLogin">Log in to shape the future!!!</h2>
             <Input.Div>
                 <Input.Header>Login</Input.Header>
-                <Input.Form action="" method="post" >
+                <Input.Form action="" method="post">
+                    <Input.Dropdown header="Select" options={["option1", "option2"]}>Selection Election Type</Input.Dropdown>
                     <Input type="email" label="Email" name="email" onChange={handleChange} />
                     <Input type="password" label="Password" name="password" onChange={handleChange} />
                     <div className="link">

@@ -6,6 +6,7 @@ import Submit from "./Submit";
 import InputCheckbox from "./InputCheckbox";
 import Danger from "./Danger";
 import InputFile from "./InputFile";
+import Dropdown from "./Dropdown";
 import "./Input.css"
 
 Input.Div = InputDiv
@@ -15,5 +16,6 @@ Input.Submit = Submit
 Input.checkbox = InputCheckbox
 Input.Danger = Danger
 Input.File = InputFile
+Input.Dropdown = Dropdown
 
 export default Input
