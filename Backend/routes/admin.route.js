@@ -34,6 +34,16 @@ admin.get("/candidates", async (req, res) => {
     }
 })
 
+admin.get("/users", async (req, res) => {
+    try {
+        const users = await adminService.getPendingUsers();
+        return res.status(200).json(users);
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: error.message });
+    }
+})
+
 admin.post("/declare/:electionId", async (req, res) => {
     try {
         const results = await adminService.declareElection(req.params.electionId);

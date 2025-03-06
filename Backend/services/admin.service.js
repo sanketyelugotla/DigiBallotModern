@@ -1,4 +1,4 @@
-const { Election, Candidate, Vote } = require("../models");
+const { Election, Candidate, Voter, Vote } = require("../models");
 const mongoose = require("mongoose");
 
 const addElection = async (name, startDate, endDate) => {
@@ -27,6 +27,18 @@ const getPendingCandidates = async () => {
         });
 
         return candidates.length ? candidates : [];
+    } catch (error) {
+        throw new Error(error);
+    }
+};
+
+const getPendingUsers = async () => {
+    try {
+        const users = await Voter.find({
+            elections: { $elemMatch: { status: "pending" } }
+        });
+
+        return users.length ? users : [];
     } catch (error) {
         throw new Error(error);
     }
@@ -85,4 +97,5 @@ module.exports = {
     getPendingCandidates,
     approveCandidate,
     declareElection,
+    getPendingUsers
 };
