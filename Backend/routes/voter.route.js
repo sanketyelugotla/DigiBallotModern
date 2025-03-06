@@ -26,4 +26,15 @@ voter.post("/getVotes/:electionId", async (req, res) => {
     }
 })
 
+voter.post("/register/:electionId", authenticate, async (req, res) => {
+    try {
+        const user = await voterService.registerForElection(req.user, req.params.electionId);
+        if (!user.success) throw new Error(user.message);
+        return res.status(201).json({ success: true, status: "pending", message: user.message })
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json(error.message)
+    }
+})
+
 module.exports = voter;

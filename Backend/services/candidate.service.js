@@ -30,12 +30,15 @@ const updateCandidateDetails = async (userId, files, details) => {
 
 const getCandidates = async () => {
     const candidates = await Candidate.find().lean();
-    if (!candidates || candidates.length === 0) return []
-    return candidates;
+    return candidates.length ? candidates : [];
 };
 
 const getApprovedCandidates = async (electionId) => {
-    const candidates = await Candidate.find({ electionId, electionStatus: "approved" }).lean();
+    const candidates = await Candidate.find({
+        elections: {
+            $elemMatch: { electionId, status: "approved" }
+        }
+    }).lean();
     return candidates.length ? candidates : [];
 };
 
@@ -71,24 +74,28 @@ const getCandidateImage = async (imageId) => {
     return getFileStream(imageId);
 }
 
-const registerForElection = async (user, electionId) => {
+const registerForElection = async (user, electionId, partyId) => {
     try {
         const candidate = await getCandidateDetailsByUserId(user._id);
-
         if (!candidate) throw new Error("Candidate not found");
 
-        const { electionService } = require("./index.js")
-
+        const { electionService } = require("./index.js");
         const election = await electionService.getElectionById(electionId);
         if (!election) throw new Error("No election found");
 
-        if (candidate.electionStatus === "approved") throw new Error("You already registered for an election");
-        if (candidate.electionStatus === "pending") throw new Error("Please wait for admin approval");
+        // Check if the candidate is already registered for this election
+        const isAlreadyRegistered = candidate.elections.some(e => e.electionId.toString() === electionId.toString());
+        if (isAlreadyRegistered) throw new Error("Already registered for this election");
 
-        candidate.electionId = electionId;
-        candidate.electionStatus = "pending";
+        // Add election registration entry
+        candidate.elections.push({
+            electionId,
+            electionType: election.electionType,
+            status: "pending",
+            partyId
+        });
+
         await candidate.save();
-
         return { success: true, message: "Candidate registration request sent", candidate };
     } catch (error) {
         return { success: false, message: error.message };
@@ -99,17 +106,14 @@ const isCandidateRegistered = async (candidateId, electionId) => {
     try {
         const candidate = await Candidate.findById(candidateId);
         if (!candidate) throw new Error("Candidate not found");
-        const status =
-            candidate.electionId?.toString() === electionId.toString() &&
-            candidate.electionStatus === "approved";
 
-        return { candidate, status };
+        const isRegistered = candidate.elections.some(e => e.electionId.toString() === electionId.toString() && e.status === "approved");
+
+        return { candidate, status: isRegistered };
     } catch (error) {
         return { success: false, message: error.message };
     }
 };
-
-
 
 module.exports = {
     updateCandidateDetails,
@@ -120,5 +124,6 @@ module.exports = {
     getCandidateDetails,
     registerForElection,
     getCandidateDetailsByUserId,
-    getCandidateImageByUserId
+    getCandidateImageByUserId,
+    isCandidateRegistered
 };
