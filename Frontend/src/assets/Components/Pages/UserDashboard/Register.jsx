@@ -49,26 +49,23 @@ export default function Register() {
     function handleClick(item) {
         setSelectedElection(item);
         registerForElection(item);
-        // navigate('/candidateDashboard/register');
     }
 
     async function registerForElection(item) {
         try {
             const token = localStorage.getItem("authToken");
-            console.log(item)
-            const response = await fetch(`${database_url}/candidates/register`, {
+            const response = await fetch(`${database_url}/voter/register/${item._id}`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({ electionId: item._id }),
+                }
             });
 
             const res = await response.json();
             console.log(res)
             if (res.success) window.alert("Registeres successfylly! Please wait for admin approval");
-            else window.alert(res.message)
+            else window.alert(res)
         } catch (error) {
             console.log(error);
         }
@@ -102,7 +99,7 @@ export default function Register() {
                                 className={styleElection.button}
                                 onClick={() => handleClick(item)}
                             >
-                                Details
+                                Register
                             </Button>
                         </div>
 
