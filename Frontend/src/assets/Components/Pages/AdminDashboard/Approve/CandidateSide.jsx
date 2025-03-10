@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ToggleButton } from '../../../../Hooks/index';
+import { ToggleButton, Button } from '../../../../Hooks/index';
 import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 
-export default function CandidateSide() {
+export default function CandidateSide({ setExportData, setExportHeaders }) {
     const { database_url } = useContext(databaseContext);
     const [candidates, setCandidates] = useState([]);
-    const [toggleStates, setToggleStates] = useState({}); // Store toggle states
+    const [toggleStates, setToggleStates] = useState({});
 
     async function fetchPendingCandidates() {
         try {
@@ -20,12 +20,19 @@ export default function CandidateSide() {
             const res = await response.json();
             setCandidates(res);
 
-            // Initialize toggle states for each candidate
+            // Initialize toggle states
             const initialStates = res.reduce((acc, candidate) => {
-                acc[candidate.id] = false; // Default all toggles to 'false' (off)
+                acc[candidate._id] = false;
                 return acc;
             }, {});
             setToggleStates(initialStates);
+
+            // Set export data dynamically
+            setExportData(res);
+            setExportHeaders([
+                { label: "Name", key: "fullName" },
+                { label: "Id", key: "_id" }
+            ]);
         } catch (error) {
             console.log(error);
         }
@@ -35,7 +42,6 @@ export default function CandidateSide() {
         fetchPendingCandidates();
     }, []);
 
-    // Function to handle toggle change
     const handleToggle = (candidateId) => {
         setToggleStates((prev) => ({
             ...prev,
@@ -48,9 +54,9 @@ export default function CandidateSide() {
             {candidates.length > 0 ? (
                 <div>
                     {candidates.map((item) => (
-                        <div key={item.id}>
-                            <p>{item.fullName} - {toggleStates[item.id] ? "On" : "Off"}</p>
-                            <ToggleButton isOn={toggleStates[item.id]} onToggle={() => handleToggle(item.id)} />
+                        <div key={item._id}>
+                            <p>{item.fullName} - {toggleStates[item._id] ? "On" : "Off"}</p>
+                            <ToggleButton isOn={toggleStates[item._id]} onToggle={() => handleToggle(item._id)} />
                         </div>
                     ))}
                 </div>

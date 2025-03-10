@@ -36,13 +36,15 @@ const getPendingUsers = async () => {
     try {
         const users = await Voter.find({
             elections: { $elemMatch: { status: "pending" } }
-        });
+        }).populate("userId", "name"); // Fetch username from User schema
 
+        console.log(users);
         return users.length ? users : [];
     } catch (error) {
         throw new Error(error);
     }
 };
+
 
 // ✅ Approve a specific candidate for a specific election
 const approveCandidate = async (candidateId, electionId) => {
