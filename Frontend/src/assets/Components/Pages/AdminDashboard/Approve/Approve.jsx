@@ -10,11 +10,16 @@ import { LuDownload } from "react-icons/lu";
 export default function Approve({ handleApprove }) {
     const [exportData, setExportData] = useState([]);
     const [exportHeaders, setExportHeaders] = useState([]);
+    const [active, setActive] = useState(false);
+
+    function handleTab() {
+        setActive(!active);
+    }
 
     const headings = ["User", "Candidate"];
     const content = [
-        <UserSide setExportData={setExportData} setExportHeaders={setExportHeaders} />,
-        <CandidateSide setExportData={setExportData} setExportHeaders={setExportHeaders} />
+        <UserSide setExportData={setExportData} setExportHeaders={setExportHeaders} active={active} />,
+        <CandidateSide setExportData={setExportData} setExportHeaders={setExportHeaders} active={active} />
     ];
 
     return (
@@ -27,7 +32,7 @@ export default function Approve({ handleApprove }) {
                     </CSVLink>
 
                     {/* SlideBar for switching between User & Candidate */}
-                    <SlideBar headings={headings} content={content} />
+                    <SlideBar headings={headings} content={content} onTabChange={handleTab} />
                 </div>
             )}
         </HoverDiv>

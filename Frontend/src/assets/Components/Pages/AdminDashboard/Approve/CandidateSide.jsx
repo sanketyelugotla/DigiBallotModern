@@ -2,10 +2,14 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ToggleButton, Button } from '../../../../Hooks/index';
 import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 
-export default function CandidateSide({ setExportData, setExportHeaders }) {
+export default function CandidateSide({ setExportData, setExportHeaders, active }) {
     const { database_url } = useContext(databaseContext);
     const [candidates, setCandidates] = useState([]);
     const [toggleStates, setToggleStates] = useState({});
+    const headersData = [
+        { label: "Name", key: "fullName" },
+        { label: "Id", key: "_id" }
+    ];
 
     async function fetchPendingCandidates() {
         try {
@@ -29,10 +33,7 @@ export default function CandidateSide({ setExportData, setExportHeaders }) {
 
             // Set export data dynamically
             setExportData(res);
-            setExportHeaders([
-                { label: "Name", key: "fullName" },
-                { label: "Id", key: "_id" }
-            ]);
+            setExportHeaders(headersData);
         } catch (error) {
             console.log(error);
         }
@@ -41,6 +42,13 @@ export default function CandidateSide({ setExportData, setExportHeaders }) {
     useEffect(() => {
         fetchPendingCandidates();
     }, []);
+
+    useEffect(() => {
+        if (active) {
+            setExportData(candidates);
+            setExportHeaders(headersData);
+        }
+    }, [active])
 
     const handleToggle = (candidateId) => {
         setToggleStates((prev) => ({
