@@ -24,6 +24,20 @@ admin.post("/approve/:candidateId", async (req, res) => {
     }
 })
 
+admin.post("/approve-candidates-bulk", async (req, res) => {
+    try {
+        const { candidateIds, electionIds } = req.body;
+
+        // Call the bulk approval service
+        const result = await adminService.approveCandidatesBulk(candidateIds, electionIds);
+
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
 admin.get("/candidates", async (req, res) => {
     try {
         const candidates = await adminService.getPendingCandidates();

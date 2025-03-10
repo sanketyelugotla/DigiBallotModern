@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ToggleButton } from '../../../../Hooks/index';
+import { ToggleButton, Button } from '../../../../Hooks/index';
 import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 
 export default function UserSide({ setExportData, setExportHeaders, active }) {
@@ -68,6 +68,7 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
                             <ToggleButton isOn={toggleStates[user._id]} onToggle={() => handleToggle(user._id)} />
                         </div>
                     ))}
+                    <Button>Approve</Button>
                 </div>
             ) : (
                 <p>Loading Users...</p>

@@ -23,14 +23,30 @@ const addElection = async (name, startDate, endDate) => {
 const getPendingCandidates = async () => {
     try {
         const candidates = await Candidate.find({
-            elections: { $elemMatch: { status: "pending" } }
+            "elections.status": "pending" // Find candidates where at least one election has "pending" status
         });
 
-        return candidates.length ? candidates : [];
+        // Flatten candidates so that each candidate-election pair is separate
+        const expandedCandidates = candidates.flatMap(candidate =>
+            candidate.elections
+                .filter(election => election.status === "pending") // Only keep pending elections
+                .map(election => ({
+                    _id: candidate._id, // Candidate ID
+                    fullName: candidate.fullName, // Candidate Name
+                    email: candidate.email, // Keep required fields only
+                    party: candidate.party,
+                    electionId: election._id, // Attach the specific election ID
+                    status: election.status // Keep only the relevant election status
+                }))
+        );
+        console.log(expandedCandidates)
+
+        return expandedCandidates.length ? expandedCandidates : [];
     } catch (error) {
         throw new Error(error);
     }
 };
+
 
 const getPendingUsers = async () => {
     try {
@@ -38,7 +54,6 @@ const getPendingUsers = async () => {
             elections: { $elemMatch: { status: "pending" } }
         }).populate("userId", "name"); // Fetch username from User schema
 
-        console.log(users);
         return users.length ? users : [];
     } catch (error) {
         throw new Error(error);
@@ -53,7 +68,7 @@ const approveCandidate = async (candidateId, electionId) => {
         if (!mongoose.Types.ObjectId.isValid(electionId)) throw new Error("Invalid election ID");
 
         const candidate = await Candidate.findOneAndUpdate(
-            { _id: candidateId, "elections.electionId": electionId },
+            { _id: candidateId, "elections._id": electionId },
             { $set: { "elections.$.status": "approved" } },
             { new: true }
         );
@@ -61,6 +76,64 @@ const approveCandidate = async (candidateId, electionId) => {
         if (!candidate) throw new Error("Candidate or election not found");
 
         return candidate;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+const approveCandidatesBulk = async (candidateIds, electionIds) => {
+    try {
+        // Validate input
+        if (!candidateIds || !Array.isArray(candidateIds)) {
+            throw new Error("Invalid candidate IDs");
+        }
+        if (!electionIds || !Array.isArray(electionIds)) {
+            throw new Error("Invalid election IDs");
+        }
+        if (candidateIds.length !== electionIds.length) {
+            throw new Error("Candidate IDs and Election IDs must have the same length");
+        }
+
+        // Iterate through each candidate and approve them for their respective election
+        const results = [];
+        for (let i = 0; i < candidateIds.length; i++) {
+            const candidateId = candidateIds[i];
+            const electionId = electionIds[i];
+            console.log(candidateId);
+            console.log(electionId);
+
+            // Validate IDs
+            if (!mongoose.Types.ObjectId.isValid(candidateId)) {
+                throw new Error(`Invalid candidate ID: ${candidateId}`);
+            }
+            if (!mongoose.Types.ObjectId.isValid(electionId)) {
+                throw new Error(`Invalid election ID: ${electionId}`);
+            }
+
+            // Update the candidate's election status
+            const candidate = await Candidate.findOneAndUpdate(
+                {
+                    _id: candidateId,
+                    "elections._id": electionId
+                },
+                {
+                    $set: { "elections.$.status": "approved" }
+                },
+                { new: true }
+            );
+
+            const cand = await Candidate.findOne({ _id: candidateId, "elections.electionId": electionId });
+            console.log(cand);
+
+
+            if (!candidate) {
+                throw new Error(`Candidate or election not found for candidateId: ${candidateId}`);
+            }
+
+            results.push(candidate);
+        }
+
+        return { success: true, message: `${results.length} candidates approved`, results };
     } catch (error) {
         throw new Error(error.message);
     }
@@ -99,5 +172,6 @@ module.exports = {
     getPendingCandidates,
     approveCandidate,
     declareElection,
-    getPendingUsers
+    getPendingUsers,
+    approveCandidatesBulk
 };
