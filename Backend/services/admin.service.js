@@ -30,51 +30,55 @@ const addElection = async (name, startDate, endDate, userId) => {
 const getPendingCandidates = async () => {
     try {
         const candidates = await Candidate.find({
-            "elections.status": "pending" // Find candidates where at least one election has "pending" status
-        });
+            "elections.status": "pending"
+        })
+        .populate("elections._id", "name"); // Fetch election name from Election schema
 
         // Flatten candidates so that each candidate-election pair is separate
         const expandedCandidates = candidates.flatMap(candidate =>
             candidate.elections
-                .filter(election => election.status === "pending") // Only keep pending elections
+                .filter(election => election.status === "pending")
                 .map(election => ({
                     _id: candidate._id, // Candidate ID
-                    fullName: candidate.fullName, // Candidate Name
-                    email: candidate.email, // Keep required fields only
-                    party: candidate.party,
-                    electionId: election._id, // Attach the specific election ID
-                    status: election.status // Keep only the relevant election status
+                    fullName: candidate.fullName,
+                    email: candidate.email,
+                    electionId: election._id?._id || election._id, // Ensure only the ObjectId is stored
+                    electionName: election._id?.name || "Unknown", // Extract election name directly
+                    status: election.status
                 }))
         );
 
-        return expandedCandidates.length ? expandedCandidates : [];
+        console.log(expandedCandidates);
+        return expandedCandidates;
     } catch (error) {
-        throw new Error(error);
+        throw new Error(error.message || "Failed to fetch pending candidates");
     }
 };
-
 
 const getPendingUsers = async () => {
     try {
         const users = await Voter.find({
-            "elections.status": "pending" // Find users where at least one election has "pending" status
-        }).populate("userId", "name"); // Fetch username from User schema
+            "elections.status": "pending"
+        })
+            .populate("userId", "name") // Fetch user name from User schema
+            .populate("elections._id", "name"); // Fetch election name from Election schema
 
         // Flatten users so that each user-election pair is separate
         const expandedUsers = users.flatMap(user =>
             user.elections
-                .filter(election => election.status === "pending") // Only keep pending elections
+                .filter(election => election.status === "pending")
                 .map(election => ({
                     _id: user._id, // User ID
-                    name: user.userId?.name || "Unknown", // Fetch user name
-                    email: user.email, // Keep required fields only
-                    electionId: election._id, // Attach the specific election ID
-                    status: election.status // Keep only the relevant election status
+                    name: user.userId?.name || "Unknown",
+                    electionId: election._id?._id || election._id, // Ensure only the ObjectId is stored
+                    electionName: election._id?.name || "Unknown", // Extract name directly
+                    status: election.status
                 }))
         );
-        return expandedUsers.length ? expandedUsers : [];
+        // console.log(expandedUsers)
+        return expandedUsers;
     } catch (error) {
-        throw new Error(error);
+        throw new Error(error.message || "Failed to fetch pending users");
     }
 };
 

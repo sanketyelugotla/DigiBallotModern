@@ -27,6 +27,7 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
 
             if (!response.ok) throw new Error("Failed to fetch users");
             const res = await response.json();
+            console.log(res);
 
             setUsers(res); // Store all entries
 
