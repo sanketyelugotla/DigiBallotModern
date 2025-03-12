@@ -1,23 +1,30 @@
-const { Election, Candidate, Voter, Vote } = require("../models");
+const { Election, Candidate, Voter, Vote, Admin } = require("../models");
 const mongoose = require("mongoose");
 
-const addElection = async (name, startDate, endDate) => {
+const addElection = async (name, startDate, endDate, userId) => {
     try {
         const existing = await Election.findOne({ name });
         if (existing) throw new Error("Election already exists");
 
+        // Fetch the adminId from userId
+        const user = await Admin.findOne({ userId });
+        if (!user) throw new Error("Admin not found");
+        const adminId = user._id;
+
         const newElection = new Election({
             name,
             startDate: new Date(startDate),
-            endDate: new Date(endDate)
+            endDate: new Date(endDate),
+            adminId // Add adminId to the election object
         });
 
         await newElection.save();
         return newElection;
     } catch (error) {
-        throw new Error(error);
+        throw new Error(error.message || "Failed to create election");
     }
 };
+
 
 // ✅ Get candidates who have at least one pending election
 const getPendingCandidates = async () => {
@@ -65,7 +72,6 @@ const getPendingUsers = async () => {
                     status: election.status // Keep only the relevant election status
                 }))
         );
-
         return expandedUsers.length ? expandedUsers : [];
     } catch (error) {
         throw new Error(error);
@@ -94,8 +100,6 @@ const approveVoter = async (voterId, electionId) => {
 const approveVotersBulk = async (voterIds, electionIds) => {
     try {
         // Validate input
-        console.log(voterIds);
-        console.log(electionIds);
         if (!voterIds || !Array.isArray(voterIds)) {
             throw new Error("Invalid voter IDs");
         }
@@ -185,8 +189,6 @@ const approveCandidatesBulk = async (candidateIds, electionIds) => {
         for (let i = 0; i < candidateIds.length; i++) {
             const candidateId = candidateIds[i];
             const electionId = electionIds[i];
-            console.log(candidateId);
-            console.log(electionId);
 
             // Validate IDs
             if (!mongoose.Types.ObjectId.isValid(candidateId)) {
@@ -209,8 +211,6 @@ const approveCandidatesBulk = async (candidateIds, electionIds) => {
             );
 
             const cand = await Candidate.findOne({ _id: candidateId, "elections.electionId": electionId });
-            console.log(cand);
-
 
             if (!candidate) {
                 throw new Error(`Candidate or election not found for candidateId: ${candidateId}`);

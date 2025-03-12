@@ -1,11 +1,12 @@
 const express = require("express");
+const authenticate = require("../middleware/authenticate")
 const { adminService } = require("../services")
 const admin = express.Router();
 
-admin.post("/addElection", async (req, res) => {
+admin.post("/addElection", authenticate, async (req, res) => {
     const { name, startDate, endDate } = req.body;
     try {
-        const election = await adminService.addElection(name, startDate, endDate)
+        const election = await adminService.addElection(name, startDate, endDate, req.user._id);
         res.status(201).json({ message: "Election created successfully", election })
     } catch (error) {
         console.log(error)

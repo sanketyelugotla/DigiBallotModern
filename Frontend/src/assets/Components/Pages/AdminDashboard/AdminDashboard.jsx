@@ -26,7 +26,7 @@ export default function AdminDashboard() {
                     <div className="box right-box">
                         <img src="/pics/voteMachine.png" alt="voteMachine" />
                         <p>Create an election.</p>
-                        <Link to="/adminDashboard/election">
+                        <Link to="/adminDashboard/createElection">
                             <Button variant="light">Create</Button>
                         </Link>
                     </div>

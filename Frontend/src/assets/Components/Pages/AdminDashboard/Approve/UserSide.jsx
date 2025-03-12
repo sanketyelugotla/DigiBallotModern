@@ -15,8 +15,8 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
     ];
 
     async function fetchPendingUsers() {
-        setLoading(true); // Start loading
         try {
+            setLoading(true); // Start loading before API call
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/users`, {
                 headers: {
@@ -28,31 +28,22 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
             if (!response.ok) throw new Error("Failed to fetch users");
             const res = await response.json();
 
-            // Deduplicate users based on `_id` and `electionId`
-            const uniqueUsers = res.reduce((acc, user) => {
-                const key = `${user._id}-${user.electionId}`;
-                if (!acc.some((u) => `${u._id}-${u.electionId}` === key)) {
-                    acc.push(user);
-                }
-                return acc;
-            }, []);
-
-            setUsers(uniqueUsers);
+            setUsers(res); // Store all entries
 
             // Initialize toggle states
-            const initialStates = uniqueUsers.reduce((acc, user) => {
-                acc[`${user._id}-${user.electionId}`] = false;
+            const initialStates = res.reduce((acc, user) => {
+                acc[`${user._id}-${user.electionId}`] = false; // Ensure unique toggle states
                 return acc;
             }, {});
             setToggleStates(initialStates);
 
             // Set export data dynamically
-            setExportData(uniqueUsers);
+            setExportData(res);
             setExportHeaders(headersData);
         } catch (error) {
             console.error("Error fetching users:", error.message);
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false); // Stop loading after API call completes
         }
     }
 
@@ -72,6 +63,37 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
             ...prev,
             [userKey]: !prev[userKey]
         }));
+    };
+
+    const handleBulkApprove = async () => {
+        try {
+            const usersToApprove = users.filter((user) => toggleStates[user._id]);
+            if (usersToApprove.length === 0) {
+                alert("No users selected for approval.");
+                return;
+            }
+
+            const userIds = usersToApprove.map((user) => user._id);
+
+            const token = localStorage.getItem("authToken");
+            const response = await fetch(`${database_url}/admin/approve-users-bulk`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ userIds })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.message);
+
+            alert(data.message); // Success message
+            fetchPendingUsers(); // Refresh the list of users
+        } catch (error) {
+            console.error("Error approving users:", error.message);
+            alert("Failed to approve users. Please try again.");
+        }
     };
 
     return (

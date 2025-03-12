@@ -16,6 +16,7 @@ import SelectElection from "./assets/Components/Pages/CandidateDetails/SelectEle
 import SelectResultElection from "./assets/Components/Pages/Results/SelectResultElection";
 import RegisterElection from "./assets/Components/Pages/CandateDashboard/CandidateElection/RegisterElection";
 import Register from "./assets/Components/Pages/UserDashboard/Register";
+import CreateElection from "./assets/Components/Pages/AdminDashboard/CreateElection/CreateElection";
 import { HoverDiv } from "./assets/Hooks";
 
 import { Routes, Route, Link } from "react-router-dom"
@@ -46,6 +47,7 @@ export default function App() {
                     <Route path="/candidate/details" element={<CandidateDetails />} />
 
                     <Route path="/adminDashboard" element={<AdminDashboard />} />
+                    <Route path="/adminDashboard/createElection" element={<CreateElection />} />
 
                     <Route path="/results/election" element={<SelectResultElection />} />
                     <Route path="/results" element={<Results />} />
