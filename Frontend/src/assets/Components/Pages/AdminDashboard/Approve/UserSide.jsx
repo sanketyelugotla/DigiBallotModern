@@ -6,15 +6,16 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
     const { database_url } = useContext(databaseContext);
     const [users, setUsers] = useState([]);
     const [toggleStates, setToggleStates] = useState({});
+    const [loading, setLoading] = useState(true); // Loading state
 
     const headersData = [
         { label: "Name", key: "name" },
         { label: "Id", key: "_id" },
         { label: "Election ID", key: "electionId" },
-        { label: "Status", key: "status" }
     ];
 
     async function fetchPendingUsers() {
+        setLoading(true); // Start loading
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/users`, {
@@ -26,23 +27,32 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
 
             if (!response.ok) throw new Error("Failed to fetch users");
             const res = await response.json();
-            console.log(res);
 
-            // Store all entries without deduplication
-            setUsers(res);
+            // Deduplicate users based on `_id` and `electionId`
+            const uniqueUsers = res.reduce((acc, user) => {
+                const key = `${user._id}-${user.electionId}`;
+                if (!acc.some((u) => `${u._id}-${u.electionId}` === key)) {
+                    acc.push(user);
+                }
+                return acc;
+            }, []);
+
+            setUsers(uniqueUsers);
 
             // Initialize toggle states
-            const initialStates = res.reduce((acc, user) => {
-                acc[`${user._id}-${user.electionId}`] = false; // Ensure unique toggle states
+            const initialStates = uniqueUsers.reduce((acc, user) => {
+                acc[`${user._id}-${user.electionId}`] = false;
                 return acc;
             }, {});
             setToggleStates(initialStates);
 
             // Set export data dynamically
-            setExportData(res);
+            setExportData(uniqueUsers);
             setExportHeaders(headersData);
         } catch (error) {
             console.error("Error fetching users:", error.message);
+        } finally {
+            setLoading(false); // Stop loading
         }
     }
 
@@ -64,55 +74,16 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
         }));
     };
 
-    const handleBulkApprove = async () => {
-        try {
-            // Get selected users with their electionIds
-            const usersToApprove = users
-                .filter((user) => toggleStates[`${user._id}-${user.electionId}`])
-                .map((user) => ({
-                    userId: user._id,
-                    electionId: user.electionId, // Ensuring electionId is included
-                }));
-
-            if (usersToApprove.length === 0) {
-                alert("No users selected for approval.");
-                return;
-            }
-
-            // Extract userIds and electionIds into separate arrays
-            const userIds = usersToApprove.map((user) => user.userId);
-            const electionIds = usersToApprove.map((user) => user.electionId);
-
-            const token = localStorage.getItem("authToken");
-            const response = await fetch(`${database_url}/admin/approve-users-bulk`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    userIds: userIds,
-                    electionIds: electionIds
-                }),
-            });
-
-            const data = await response.json();
-            if (!response.ok) throw new Error(data.message);
-
-            alert(data.message); // Success message
-            fetchPendingUsers(); // Refresh the list of users
-        } catch (error) {
-            console.error("Error approving users:", error.message);
-            alert("Failed to approve users. Please try again.");
-        }
-    };
-
     return (
         <div>
-            {users.length > 0 ? (
+            {loading ? (
+                <p>Loading Users...</p>
+            ) : users.length === 0 ? (
+                <p>No users found.</p>
+            ) : (
                 <div>
                     {users.map((user) => {
-                        const userKey = `${user._id}-${user.electionId}`; // Unique key for users with multiple election entries
+                        const userKey = `${user._id}-${user.electionId}`;
                         return (
                             <div key={userKey}>
                                 <p>{user.name || "Unknown"} - {toggleStates[userKey] ? "On" : "Off"}</p>
@@ -122,8 +93,6 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
                     })}
                     <Button onClick={handleBulkApprove}>Approve Selected Users</Button>
                 </div>
-            ) : (
-                <p>Loading Users...</p>
             )}
         </div>
     );

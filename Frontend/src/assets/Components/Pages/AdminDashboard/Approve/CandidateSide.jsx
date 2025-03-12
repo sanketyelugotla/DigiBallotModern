@@ -6,13 +6,16 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
     const { database_url } = useContext(databaseContext);
     const [candidates, setCandidates] = useState([]);
     const [toggleStates, setToggleStates] = useState({});
+    const [loading, setLoading] = useState(true); // Loading state
 
     const headersData = [
         { label: "Name", key: "fullName" },
-        { label: "Id", key: "_id" }
+        { label: "Id", key: "_id" },
+        { label: "Election ID", key: "electionId" } // Added election ID to match user component
     ];
 
     async function fetchPendingCandidates() {
+        setLoading(true); // Start loading
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/candidates`, {
@@ -22,26 +25,25 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
                 },
             });
 
+            if (!response.ok) throw new Error("Failed to fetch candidates");
             const res = await response.json();
 
-            // Ensure each candidate gets a unique electionId as a string or number
-
-
-            console.log(res);
             setCandidates(res);
 
-            // Fix toggle states key structure
-            const initialStates = expandedCandidates.reduce((acc, candidate) => {
-                acc[`${candidate._id}_${candidate.electionId}`] = false; // Ensure key is a string
+            // Initialize toggle states properly
+            const initialStates = res.reduce((acc, candidate) => {
+                acc[`${candidate._id}_${candidate.electionId}`] = false; 
                 return acc;
             }, {});
             setToggleStates(initialStates);
 
             // Set export data dynamically
-            setExportData(expandedCandidates);
+            setExportData(res);
             setExportHeaders(headersData);
         } catch (error) {
             console.log("Error fetching candidates:", error);
+        } finally {
+            setLoading(false); // Stop loading
         }
     }
 
@@ -66,12 +68,11 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
 
     const handleBulkApprove = async () => {
         try {
-            // Get selected candidates with their electionIds
             const candidatesToApprove = candidates
                 .filter((candidate) => toggleStates[`${candidate._id}_${candidate.electionId}`])
                 .map((candidate) => ({
                     candidateId: candidate._id,
-                    electionId: candidate.electionId, // Already fixed as string
+                    electionId: candidate.electionId, 
                 }));
 
             if (candidatesToApprove.length === 0) {
@@ -79,7 +80,6 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
                 return;
             }
 
-            // Extract candidateIds and electionIds into separate arrays
             const candidateIds = candidatesToApprove.map((candidate) => candidate.candidateId);
             const electionIds = candidatesToApprove.map((candidate) => candidate.electionId);
 
@@ -90,17 +90,14 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    candidateIds: candidateIds,
-                    electionIds: electionIds
-                }),
+                body: JSON.stringify({ candidateIds, electionIds }),
             });
 
             const data = await response.json();
             if (!response.ok) throw new Error(data.message);
 
-            alert(data.message); // Success message
-            fetchPendingCandidates(); // Refresh the list of candidates
+            alert(data.message); 
+            fetchPendingCandidates(); // Refresh the list
         } catch (error) {
             console.error("Error approving candidates:", error.message);
             alert("Failed to approve candidates. Please try again.");
@@ -109,10 +106,14 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
 
     return (
         <div>
-            {candidates.length > 0 ? (
+            {loading ? (
+                <p>Loading Candidates...</p>
+            ) : candidates.length === 0 ? (
+                <p>No candidates found.</p>
+            ) : (
                 <div>
                     {candidates.map((item) => (
-                        <div key={`${item._id}_${item.electionId}`}> {/* Fix: Unique key */}
+                        <div key={`${item._id}_${item.electionId}`}>
                             <p>{item.fullName} - {toggleStates[`${item._id}_${item.electionId}`] ? "On" : "Off"}</p>
                             <ToggleButton
                                 isOn={toggleStates[`${item._id}_${item.electionId}`]}
@@ -122,8 +123,6 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
                     ))}
                     <Button onClick={handleBulkApprove}>Approve Selected Candidates</Button>
                 </div>
-            ) : (
-                <p>Loading Candidates...</p>
             )}
         </div>
     );

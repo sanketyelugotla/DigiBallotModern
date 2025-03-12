@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { HoverDiv, SlideBar } from '../../../../Hooks';
 import { CSVLink } from "react-csv";
-import { Button } from '../../../../Hooks/index';
 import styleApprove from "./Approve.module.css";
 import UserSide from './UserSide';
 import CandidateSide from './CandidateSide';

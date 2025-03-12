@@ -3,7 +3,6 @@ import styleSlide from "./SlideBar.module.css";
 
 export default function SlideBar({ headings, content, onTabChange }) {
     const [activeTab, setActiveTab] = useState(0); // Default to first tab
-    console.log(activeTab)
     const handleTabChange = (index) => {
         setActiveTab(index);
         onTabChange && onTabChange();
