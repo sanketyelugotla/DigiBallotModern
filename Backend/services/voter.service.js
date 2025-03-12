@@ -103,7 +103,7 @@ const registerForElection = async (userId, electionId) => {
 
         // Push new election registration
         voter.elections.push({
-            electionId: new mongoose.Types.ObjectId(electionId),
+            _id: new mongoose.Types.ObjectId(electionId),
             status: "pending",
         });
 

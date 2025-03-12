@@ -13,7 +13,7 @@ admin.post("/addElection", async (req, res) => {
     }
 })
 
-admin.post("/approve/:candidateId", async (req, res) => {
+admin.post("/approveCandidate/:candidateId", async (req, res) => {
     try {
         const candidate = await adminService.approveCandidate(req.params.candidateId);
         if (!candidate) throw new Error("Could not register approve candidate");
@@ -57,6 +57,31 @@ admin.get("/users", async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 })
+
+admin.post("/approveUser/:userId", async (req, res) => {
+    try {
+        const user = await adminService.approveVoter(req.params.userId);
+        if (!user) throw new Error("Could not register approve user");
+        res.status(200).json({ message: "User approved successfully", user })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: error.message })
+    }
+})
+
+admin.post("/approve-users-bulk", async (req, res) => {
+    try {
+        const { userIds, electionIds } = req.body;
+
+        // Call the bulk approval service
+        const result = await adminService.approveVotersBulk(userIds, electionIds);
+
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
 
 admin.post("/declare/:electionId", async (req, res) => {
     try {

@@ -39,7 +39,6 @@ const getPendingCandidates = async () => {
                     status: election.status // Keep only the relevant election status
                 }))
         );
-        console.log(expandedCandidates)
 
         return expandedCandidates.length ? expandedCandidates : [];
     } catch (error) {
@@ -51,14 +50,101 @@ const getPendingCandidates = async () => {
 const getPendingUsers = async () => {
     try {
         const users = await Voter.find({
-            elections: { $elemMatch: { status: "pending" } }
+            "elections.status": "pending" // Find users where at least one election has "pending" status
         }).populate("userId", "name"); // Fetch username from User schema
 
-        return users.length ? users : [];
+        // Flatten users so that each user-election pair is separate
+        const expandedUsers = users.flatMap(user =>
+            user.elections
+                .filter(election => election.status === "pending") // Only keep pending elections
+                .map(election => ({
+                    _id: user._id, // User ID
+                    name: user.userId?.name || "Unknown", // Fetch user name
+                    email: user.email, // Keep required fields only
+                    electionId: election._id, // Attach the specific election ID
+                    status: election.status // Keep only the relevant election status
+                }))
+        );
+
+        return expandedUsers.length ? expandedUsers : [];
     } catch (error) {
         throw new Error(error);
     }
 };
+
+const approveVoter = async (voterId, electionId) => {
+    try {
+        if (!mongoose.Types.ObjectId.isValid(voterId)) throw new Error("Invalid voter ID");
+        if (!mongoose.Types.ObjectId.isValid(electionId)) throw new Error("Invalid election ID");
+
+        const voter = await Voter.findOneAndUpdate(
+            { _id: voterId, "elections._id": electionId },
+            { $set: { "elections.$.status": "approved" } },
+            { new: true }
+        );
+
+        if (!voter) throw new Error("Voter or election not found");
+
+        return voter;
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
+const approveVotersBulk = async (voterIds, electionIds) => {
+    try {
+        // Validate input
+        console.log(voterIds);
+        console.log(electionIds);
+        if (!voterIds || !Array.isArray(voterIds)) {
+            throw new Error("Invalid voter IDs");
+        }
+        if (!electionIds || !Array.isArray(electionIds)) {
+            throw new Error("Invalid election IDs");
+        }
+        if (voterIds.length !== electionIds.length) {
+            throw new Error("Voter IDs and Election IDs must have the same length");
+        }
+
+        // Iterate through each voter and approve them for their respective election
+        const results = [];
+        for (let i = 0; i < voterIds.length; i++) {
+            const voterId = voterIds[i];
+            const electionId = electionIds[i];
+
+            // Validate IDs
+            if (!mongoose.Types.ObjectId.isValid(voterId)) {
+                throw new Error(`Invalid voter ID: ${voterId}`);
+            }
+            if (!mongoose.Types.ObjectId.isValid(electionId)) {
+                throw new Error(`Invalid election ID: ${electionId}`);
+            }
+
+            // Update the voter's election status
+            const voter = await Voter.findOneAndUpdate(
+                {
+                    _id: voterId,
+                    "elections._id": electionId
+                },
+                {
+                    $set: { "elections.$.status": "approved" }
+                },
+                { new: true }
+            );
+
+            if (!voter) {
+                throw new Error(`Voter or election not found for voterId: ${voterId}`);
+            }
+
+            results.push(voter);
+        }
+
+        return { success: true, message: `${results.length} voters approved`, results };
+    } catch (error) {
+        throw new Error(error.message);
+    }
+};
+
 
 
 // ✅ Approve a specific candidate for a specific election
@@ -173,5 +259,7 @@ module.exports = {
     approveCandidate,
     declareElection,
     getPendingUsers,
-    approveCandidatesBulk
+    approveCandidatesBulk,
+    approveVoter,
+    approveVotersBulk
 };

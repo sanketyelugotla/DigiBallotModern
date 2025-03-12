@@ -4,7 +4,7 @@ const VoterSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     elections: [
         {
-            electionId: { type: mongoose.Schema.Types.ObjectId, ref: "Election", required: true },
+            _id: { type: mongoose.Schema.Types.ObjectId, ref: "Election", required: true },
             status: { type: String, enum: ["pending", "approved", "rejected"], default: "pending" }
         }
     ]
