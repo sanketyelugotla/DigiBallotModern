@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { HoverDiv, SlideBar } from '../../../../Hooks';
+import { HoverDiv, SlideBar, ToggleButton } from '../../../../Hooks';
 import { CSVLink } from "react-csv";
 import styleApprove from "./Approve.module.css";
 import UserSide from './UserSide';
@@ -40,11 +40,14 @@ export default function Approve({ handleApprove }) {
     ];
     const buttons =
         <div className={styleApprove.buttonsDiv}>
+            <div ref={filterRef}><FaFilter className={styleApprove.link} onClick={handleFilter} /></div>
             <CSVLink data={exportData} headers={exportHeaders} filename='ExportData.csv'>
                 <LuDownload className={styleApprove.buttonItem} />
             </CSVLink>
-            <div ref={filterRef}><FaFilter className={styleApprove.link} onClick={handleFilter} /></div>
-            {isFilterOpen && <Filter handleFilter={handleFilter} filterPosition={filterPosition} />}
+            <div className={styleApprove.approveAll}>
+                <ToggleButton />
+                <p>Approve all</p>
+            </div>
         </div>;
 
     const trailRef = useRef(null);
@@ -60,6 +63,7 @@ export default function Approve({ handleApprove }) {
                     </div>
                 )}
             </HoverDiv>
+            {isFilterOpen && <Filter handleFilter={handleFilter} filterPosition={filterPosition} />}
         </div>
     );
 }

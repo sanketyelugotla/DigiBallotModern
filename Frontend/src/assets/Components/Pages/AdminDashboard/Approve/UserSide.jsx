@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ToggleButton, Button } from "../../../../Hooks/index";
 import { databaseContext } from "../../../../Hooks/ContextProvider/ContextProvider";
+import styles from "./Approve.module.css"
 
 export default function UserSide({ setExportData, setExportHeaders, active }) {
     const { database_url } = useContext(databaseContext);
@@ -103,20 +104,39 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
             ) : users.length === 0 ? (
                 <p>No users found.</p>
             ) : (
-                <div>
-                    {users.map((user) => {
-                        const userKey = `${user._id}-${user.electionId}`;
-                        return (
-                            <div key={userKey}>
-                                <p>{user.name || "Unknown"} - { /* {toggleStates[userKey] ? "On" : "Off"} */ }</p>
-                                <p>{user.electionName}</p>
-                                <ToggleButton isOn={toggleStates[userKey]} onToggle={() => handleToggle(userKey)} />
-                            </div>
-                        );
-                    })}
-                    <Button onClick={handleBulkApprove}>Approve Selected Users</Button>
-                </div>
-            )}
-        </div>
+                <>
+                    <table className={styles.tableDiv}>
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Election Name</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {users.map((user) => {
+                                const userKey = `${user._id}-${user.electionId}`;
+                                return (
+                                    <tr key={userKey} className={styles.entry}>
+                                        <td>{user.name || "Unknown"}</td>
+                                        <td>{user.electionName}</td>
+                                        <td>
+                                            <ToggleButton
+                                                isOn={toggleStates[userKey]}
+                                                onToggle={() => handleToggle(userKey)}
+                                            />
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                    <Button className={styles.approveButton} onClick={handleBulkApprove}>
+                        Approve Selected Users
+                    </Button>
+                </>
+            )
+            }
+        </div >
     );
 }
