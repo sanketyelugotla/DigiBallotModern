@@ -1,21 +1,32 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ToggleButton, Button } from '../../../../Hooks/index';
 import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
+import styles from "./Approve.module.css"
 
-export default function CandidateSide({ setExportData, setExportHeaders, active }) {
+export default function CandidateSide({ setExportData, setExportHeaders, active, isToggleAllActive }) {
     const { database_url } = useContext(databaseContext);
     const [candidates, setCandidates] = useState([]);
     const [toggleStates, setToggleStates] = useState({});
-    const [loading, setLoading] = useState(true); // Loading state
+    const [loading, setLoading] = useState(true);
 
     const headersData = [
         { label: "Name", key: "fullName" },
         { label: "Id", key: "_id" },
-        { label: "Election ID", key: "electionId" } // Added election ID to match user component
+        { label: "Election ID", key: "electionId" }
     ];
 
+    useEffect(() => {
+        setToggleStates((prev) => {
+            const newState = {};
+            Object.keys(prev).forEach((key) => {
+                newState[key] = isToggleAllActive; // Set all toggles to match the global toggle
+            });
+            return newState;
+        });
+    }, [isToggleAllActive]);
+
     async function fetchPendingCandidates() {
-        setLoading(true); // Start loading
+        setLoading(true);
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/candidates`, {
@@ -30,7 +41,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
 
             setCandidates(res);
 
-            // Initialize toggle states properly
+            // Initialize toggle states
             const initialStates = res.reduce((acc, candidate) => {
                 acc[`${candidate._id}_${candidate.electionId}`] = false;
                 return acc;
@@ -43,7 +54,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
         } catch (error) {
             console.log("Error fetching candidates:", error);
         } finally {
-            setLoading(false); // Stop loading
+            setLoading(false);
         }
     }
 
@@ -97,7 +108,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
             if (!response.ok) throw new Error(data.message);
 
             alert(data.message);
-            fetchPendingCandidates(); // Refresh the list
+            fetchPendingCandidates();
         } catch (error) {
             console.error("Error approving candidates:", error.message);
             alert("Failed to approve candidates. Please try again.");
@@ -111,18 +122,36 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
             ) : candidates.length === 0 ? (
                 <p>No candidates found.</p>
             ) : (
-                <div>
-                    {candidates.map((item) => (
-                        <div key={`${item._id}_${item.electionId}`}>
-                            <p>{item.fullName} - { /* {toggleStates[`${item._id}_${item.electionId}`] ? "On" : "Off"} */}</p>
-                            <p>{item.electionName}</p>
-                            <ToggleButton
-                                isOn={toggleStates[`${item._id}_${item.electionId}`]}
-                                onToggle={() => handleToggle(item._id, item.electionId)}
-                            />
-                        </div>
-                    ))}
-                    <Button onClick={handleBulkApprove}>Approve Selected Candidates</Button>
+                <div className={styles.wholeTable}>
+                    <table className={styles.tableDiv}>
+                        <thead>
+                            <tr>
+                                <th>Candidate Name</th>
+                                <th>Election Name</th>
+                                <th>Select</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {candidates.map((candidate) => {
+                                const candidateKey = `${candidate._id}_${candidate.electionId}`;
+                                return (
+                                    <tr key={candidateKey} className={styles.entry}>
+                                        <td>{candidate.fullName || "Unknown"}</td>
+                                        <td>{candidate.electionName}</td>
+                                        <td>
+                                            <ToggleButton
+                                                isOn={toggleStates[candidateKey]}
+                                                onToggle={() => handleToggle(candidate._id, candidate.electionId)}
+                                            />
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                    <Button className={styles.approveButton} onClick={handleBulkApprove}>
+                        Approve
+                    </Button>
                 </div>
             )}
         </div>

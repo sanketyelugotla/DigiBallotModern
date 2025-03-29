@@ -16,6 +16,13 @@ export default function Approve({ handleApprove }) {
     const filterRef = useRef(null);
     const [filterPosition, setFilterPosition] = useState({ top: 0, left: 0 });
 
+    const [isToggleAllActive, setIsToggleAllActive] = useState(false);
+
+    function handleToggleAll() {
+        setIsToggleAllActive(!isToggleAllActive);
+        toggleAll();
+    }
+
     function handleTab() {
         setActive(!active);
     }
@@ -35,17 +42,22 @@ export default function Approve({ handleApprove }) {
 
     const headings = ["User", "Candidate"];
     const content = [
-        <UserSide setExportData={setExportData} setExportHeaders={setExportHeaders} active={active} />,
-        <CandidateSide setExportData={setExportData} setExportHeaders={setExportHeaders} active={active} />
+        <UserSide setExportData={setExportData} setExportHeaders={setExportHeaders} active={active} isToggleAllActive={isToggleAllActive} />,
+        <CandidateSide setExportData={setExportData} setExportHeaders={setExportHeaders} active={active} isToggleAllActive={isToggleAllActive} />
     ];
-    const buttons =
+
+    const leftButtons =
         <div className={styleApprove.buttonsDiv}>
             <div ref={filterRef}><FaFilter className={styleApprove.link} onClick={handleFilter} /></div>
             <CSVLink data={exportData} headers={exportHeaders} filename='ExportData.csv'>
                 <LuDownload className={styleApprove.buttonItem} />
             </CSVLink>
+        </div>
+
+    const rightButtons =
+        <div className={styleApprove.buttonsDiv}>
             <div className={styleApprove.approveAll}>
-                <ToggleButton />
+                <ToggleButton isOn={isToggleAllActive} onToggle={handleToggleAll} />
                 <p>Approve all</p>
             </div>
         </div>;
@@ -59,7 +71,7 @@ export default function Approve({ handleApprove }) {
                 {({ handleClose }) => (
                     <div className={styleApprove.box}>
                         {/* SlideBar for switching between User & Candidate */}
-                        <SlideBar headings={headings} content={content} onTabChange={handleTab} buttons={buttons} />
+                        <SlideBar headings={headings} content={content} onTabChange={handleTab} rightButtons={rightButtons} leftButtons={leftButtons} />
                     </div>
                 )}
             </HoverDiv>

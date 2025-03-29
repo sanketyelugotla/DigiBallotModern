@@ -19,7 +19,8 @@
 }
 
 .on {
-    background-color: #4caf50;
+    /* background-color: #4caf50; */
+    background-color: var(--themeBlue);
 }
 
 .on .toggleCircle {

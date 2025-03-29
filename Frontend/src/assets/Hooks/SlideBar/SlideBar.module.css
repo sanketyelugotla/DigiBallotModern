@@ -13,10 +13,10 @@
     top: 5%;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between; /* Ensures even spacing */
     width: 100%;
     gap: 20px;
-    position: relative;
+    padding: 0 20px;
 }
 
 .header {
@@ -27,20 +27,17 @@
     justify-content: center;
     border: 1px solid #ccc;
     border-radius: 30px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
 }
 
+.leftButtonsDiv,
 .buttonsDiv {
     display: flex;
     align-items: center;
-    align-content: center;
     justify-content: center;
-    margin-left: auto;
-    position: absolute;
-    right: 0px;
+    flex-grow: 1; /* Ensures equal space distribution */
 }
+
 
 .tab {
     z-index: 5;

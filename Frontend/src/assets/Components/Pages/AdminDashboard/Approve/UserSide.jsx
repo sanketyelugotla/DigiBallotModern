@@ -3,17 +3,27 @@ import { ToggleButton, Button } from "../../../../Hooks/index";
 import { databaseContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import styles from "./Approve.module.css"
 
-export default function UserSide({ setExportData, setExportHeaders, active }) {
+export default function UserSide({ setExportData, setExportHeaders, active, isToggleAllActive }) {
     const { database_url } = useContext(databaseContext);
     const [users, setUsers] = useState([]);
     const [toggleStates, setToggleStates] = useState({});
-    const [loading, setLoading] = useState(true); // Loading state
+    const [loading, setLoading] = useState(true);
 
     const headersData = [
         { label: "Name", key: "name" },
         { label: "Id", key: "_id" },
         { label: "Election ID", key: "electionId" },
     ];
+
+    useEffect(() => {
+        setToggleStates((prev) => {
+            const newState = {};
+            Object.keys(prev).forEach((key) => {
+                newState[key] = isToggleAllActive; // Set all toggles to match the global toggle
+            });
+            return newState;
+        });
+    }, [isToggleAllActive]);
 
     async function fetchPendingUsers() {
         try {
@@ -104,7 +114,7 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
             ) : users.length === 0 ? (
                 <p>No users found.</p>
             ) : (
-                <>
+                <div className={styles.wholeTable}>
                     <table className={styles.tableDiv}>
                         <thead>
                             <tr>
@@ -132,9 +142,9 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
                         </tbody>
                     </table>
                     <Button className={styles.approveButton} onClick={handleBulkApprove}>
-                        Approve Selected Users
+                        Approve
                     </Button>
-                </>
+                </div>
             )
             }
         </div >

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styleSlide from "./SlideBar.module.css";
 
-export default function SlideBar({ headings, content, onTabChange, buttons }) {
+export default function SlideBar({ headings, content, onTabChange, leftButtons, rightButtons }) {
     const [activeTab, setActiveTab] = useState(0); // Default to first tab
     const handleTabChange = (index) => {
         setActiveTab(index);
@@ -15,6 +15,9 @@ export default function SlideBar({ headings, content, onTabChange, buttons }) {
         <div className={styleSlide.wrapper}>
             {/* Tabs Header */}
             <div className={styleSlide.completeHeader}>
+                <div className={styleSlide.leftButtonsDiv}>
+                    {leftButtons}
+                </div>
                 <header className={styleSlide.header}>
                     {headings.map((heading, index) => (
                         <label
@@ -37,7 +40,7 @@ export default function SlideBar({ headings, content, onTabChange, buttons }) {
                     </div>
                 </header>
                 <div className={styleSlide.buttonsDiv}>
-                    {buttons}
+                    {rightButtons}
                 </div>
             </div>
 
