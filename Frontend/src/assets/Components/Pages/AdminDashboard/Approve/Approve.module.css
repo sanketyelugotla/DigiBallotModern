@@ -12,51 +12,22 @@
     align-items: center;
 }
 
-.buttons {
-    margin-top: 2vh;
-    align-items: center;
-    justify-content: space-around;
-    width: 50%;
-    /* border: 1px solid grey; */
-    border-radius: 20px;
-    display: flex;
-    padding: 1vh 1vw;
-    position: relative;
-    background-color: white;
-    overflow: hidden;
-}
-
-.button {
-    border: none;
-    background-color: transparent;
-    color: var(--themeBlue);
-    padding: 0.5vh 1.5vw;
-    font-size: 1rem;
+.link {
     cursor: pointer;
-    transition: color 0.3s ease-in-out;
-    position: relative;
-    z-index: 2;
+    font-size: large;
 }
 
-.button.selected {
-    color: white;
-    background-color: transparent;
+.filter {
+    background-color: black;
+    height: 10vh;
+    width: 10vw;
 }
 
-.slider {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: 40%;
-    background-color: var(--themeBlue);
-    border-radius: 20px;
-    transition: transform 0.3s ease-in-out;
+.buttonsDiv {
+    display: flex;
+    gap: 30px;
 }
 
-.slider.left {
-    transform: translateX(-60%);
-}
-
-.slider.right {
-    transform: translateX(52%);
+.buttonItem {
+    font-size: 23px;
 }

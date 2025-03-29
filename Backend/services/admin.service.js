@@ -48,7 +48,7 @@ const getPendingCandidates = async () => {
                 }))
         );
 
-        console.log(expandedCandidates);
+        // console.log(expandedCandidates);
         return expandedCandidates;
     } catch (error) {
         throw new Error(error.message || "Failed to fetch pending candidates");

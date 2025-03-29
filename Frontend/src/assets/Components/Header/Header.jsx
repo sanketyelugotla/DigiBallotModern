@@ -78,8 +78,8 @@ export default function Header({ onLoginClick }) {
         if (usernameRef.current) {
             const rect = usernameRef.current.getBoundingClientRect();
             setProfilePosition({
-                top: rect.bottom + window.scrollY + 10, // Below the username
-                left: rect.left + window.scrollX, // Align with the username
+                top: rect.bottom + 10, // Below the username
+                left: rect.left, // Align with the username
             });
         }
     }

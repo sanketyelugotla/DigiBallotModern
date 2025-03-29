@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styleSlide from "./SlideBar.module.css";
 
-export default function SlideBar({ headings, content, onTabChange }) {
+export default function SlideBar({ headings, content, onTabChange, buttons }) {
     const [activeTab, setActiveTab] = useState(0); // Default to first tab
     const handleTabChange = (index) => {
         setActiveTab(index);
@@ -14,26 +14,32 @@ export default function SlideBar({ headings, content, onTabChange }) {
     return (
         <div className={styleSlide.wrapper}>
             {/* Tabs Header */}
-            <header className={styleSlide.header}>
-                {headings.map((heading, index) => (
-                    <label
-                        key={index}
-                        className={`${styleSlide.tab} ${activeTab === index ? styleSlide.activeTab : ""}`}
-                        onClick={() => handleTabChange(index)}
-                        style={{ width: `${sliderWidth}%` }} // Adjust width
+            <div className={styleSlide.completeHeader}>
+                <header className={styleSlide.header}>
+                    {headings.map((heading, index) => (
+                        <label
+                            key={index}
+                            className={`${styleSlide.tab} ${activeTab === index ? styleSlide.activeTab : ""}`}
+                            onClick={() => handleTabChange(index)}
+                            style={{ width: `${sliderWidth}%` }} // Adjust width
+                        >
+                            {heading}
+                        </label>
+                    ))}
+                    <div
+                        className={styleSlide.slider}
+                        style={{
+                            left: `${(activeTab * 100) / totalTabs}%`,
+                            width: `${sliderWidth}%`,
+                            transform: `translateX(0%)`, // Align properly
+                        }}
                     >
-                        {heading}
-                    </label>
-                ))}
-                <div
-                    className={styleSlide.slider}
-                    style={{
-                        left: `${(activeTab * 100) / totalTabs}%`,
-                        width: `${sliderWidth}%`,
-                        transform: `translateX(0%)`, // Align properly
-                    }}
-                ></div>
-            </header>
+                    </div>
+                </header>
+                <div className={styleSlide.buttonsDiv}>
+                    {buttons}
+                </div>
+            </div>
 
             {/* Content Area */}
             <div className={styleSlide.cardArea}>

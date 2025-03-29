@@ -19,6 +19,15 @@
     position: relative;
 }
 
+.completeHeader {
+    display: flex;
+    align-items: center;
+}
+
+.buttonsDiv {
+    margin-left: 30px;
+}
+
 .tab {
     z-index: 5;
     display: flex;

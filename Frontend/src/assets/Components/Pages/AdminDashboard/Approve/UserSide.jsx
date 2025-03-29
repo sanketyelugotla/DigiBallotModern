@@ -27,7 +27,6 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
 
             if (!response.ok) throw new Error("Failed to fetch users");
             const res = await response.json();
-            console.log(res);
 
             setUsers(res); // Store all entries
 
@@ -109,7 +108,8 @@ export default function UserSide({ setExportData, setExportHeaders, active }) {
                         const userKey = `${user._id}-${user.electionId}`;
                         return (
                             <div key={userKey}>
-                                <p>{user.name || "Unknown"} - {toggleStates[userKey] ? "On" : "Off"}</p>
+                                <p>{user.name || "Unknown"} - { /* {toggleStates[userKey] ? "On" : "Off"} */ }</p>
+                                <p>{user.electionName}</p>
                                 <ToggleButton isOn={toggleStates[userKey]} onToggle={() => handleToggle(userKey)} />
                             </div>
                         );

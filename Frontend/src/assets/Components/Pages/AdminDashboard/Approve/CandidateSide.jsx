@@ -32,7 +32,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
 
             // Initialize toggle states properly
             const initialStates = res.reduce((acc, candidate) => {
-                acc[`${candidate._id}_${candidate.electionId}`] = false; 
+                acc[`${candidate._id}_${candidate.electionId}`] = false;
                 return acc;
             }, {});
             setToggleStates(initialStates);
@@ -72,7 +72,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
                 .filter((candidate) => toggleStates[`${candidate._id}_${candidate.electionId}`])
                 .map((candidate) => ({
                     candidateId: candidate._id,
-                    electionId: candidate.electionId, 
+                    electionId: candidate.electionId,
                 }));
 
             if (candidatesToApprove.length === 0) {
@@ -96,7 +96,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
             const data = await response.json();
             if (!response.ok) throw new Error(data.message);
 
-            alert(data.message); 
+            alert(data.message);
             fetchPendingCandidates(); // Refresh the list
         } catch (error) {
             console.error("Error approving candidates:", error.message);
@@ -114,7 +114,8 @@ export default function CandidateSide({ setExportData, setExportHeaders, active 
                 <div>
                     {candidates.map((item) => (
                         <div key={`${item._id}_${item.electionId}`}>
-                            <p>{item.fullName} - {toggleStates[`${item._id}_${item.electionId}`] ? "On" : "Off"}</p>
+                            <p>{item.fullName} - { /* {toggleStates[`${item._id}_${item.electionId}`] ? "On" : "Off"} */}</p>
+                            <p>{item.electionName}</p>
                             <ToggleButton
                                 isOn={toggleStates[`${item._id}_${item.electionId}`]}
                                 onToggle={() => handleToggle(item._id, item.electionId)}

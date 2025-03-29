@@ -32,6 +32,29 @@
     pointer-events: none;
 }
 
+.login-overlay2 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+    z-index: 30;
+}
+
+.login-overlay2.light {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.login-overlay2.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
 .hoverdiv-loginForm {
     height: 85vh;
     width: 110vh;
