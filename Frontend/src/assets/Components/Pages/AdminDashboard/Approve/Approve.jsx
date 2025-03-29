@@ -14,7 +14,6 @@ export default function Approve({ handleApprove }) {
     const [active, setActive] = useState(false);
     const [isFilterOpen, setIsFilterOpen] = useState(false);
     const filterRef = useRef(null);
-    const [filterPosition, setFilterPosition] = useState({ top: 0, left: 0 });
 
     const [isToggleAllActive, setIsToggleAllActive] = useState(false);
 
@@ -29,15 +28,6 @@ export default function Approve({ handleApprove }) {
 
     function handleFilter() {
         setIsFilterOpen(!isFilterOpen);
-        if (filterRef.current) {
-            const rect1 = trailRef.current.getBoundingClientRect();
-            const rect = filterRef.current.getBoundingClientRect();
-            console.log(rect)
-            setFilterPosition({
-                top: rect1.top - rect.bottom + 10, // Below the username
-                left: 1317 - rect.right, // Align with the username
-            });
-        }
     }
 
     const headings = ["User", "Candidate"];
@@ -62,11 +52,9 @@ export default function Approve({ handleApprove }) {
             </div>
         </div>;
 
-    const trailRef = useRef(null);
-    trailRef && trailRef.current && console.log("Hover" + trailRef);
 
     return (
-        <div ref={trailRef}>
+        <div>
             <HoverDiv onClose={handleApprove} insideDiv={styleApprove.main}>
                 {({ handleClose }) => (
                     <div className={styleApprove.box}>
@@ -75,7 +63,7 @@ export default function Approve({ handleApprove }) {
                     </div>
                 )}
             </HoverDiv>
-            {isFilterOpen && <Filter handleFilter={handleFilter} filterPosition={filterPosition} />}
+            {isFilterOpen && <Filter handleFilter={handleFilter} filterPosition={filterRef} />}
         </div>
     );
 }
