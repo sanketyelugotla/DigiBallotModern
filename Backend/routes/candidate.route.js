@@ -63,7 +63,6 @@ candidate.get("/candimage/:userId", async (req, res) => {
     }
 })
 
-
 // 📌 GET: Retrieve Candidate Image
 candidate.get("/image/:imageId", async (req, res) => {
     try {

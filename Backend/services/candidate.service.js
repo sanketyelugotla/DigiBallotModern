@@ -35,10 +35,10 @@ const getCandidates = async () => {
 
 const getApprovedCandidates = async (electionId) => {
     const candidates = await Candidate.find({
-        elections: {
-            $elemMatch: { electionId, status: "approved" }
-        }
+        "elections._id": electionId,
+        "elections.status": "approved"
     }).lean();
+
     return candidates.length ? candidates : [];
 };
 
