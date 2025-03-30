@@ -3,11 +3,11 @@ import styleApprove from "./Approve.module.css";
 import { HoverDiv } from "../../../../Hooks";
 
 export default function Filter({ handleFilter, filterPosition }) {
-    let rect;
-    if (filterPosition.current) {
-        rect = filterPosition.current.getBoundingClientRect();
-    }
-    console.log(rect)
+    // let rect;
+    // if (filterPosition.current) {
+    //     rect = filterPosition.current.getBoundingClientRect();
+    // }
+    // console.log(rect)
     // style = {{ top: `${filterPosition.top}px`, left: `${filterPosition.left}px`, position: "absolute" }}
 
     return (

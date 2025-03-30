@@ -1,17 +1,25 @@
 import React, { useContext, useState } from 'react'
 import { userContext, databaseContext } from '../../../Hooks/ContextProvider/ContextProvider'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../../../Hooks';
 import Approve from './Approve/Approve';
 import styleDash from "./Admin.module.css";
+import { sectionsContext } from './AdminProfile/SectionsContextProvider';
 
 export default function AdminDashboard() {
     const { user } = useContext(userContext);
     const { database_url } = useContext(databaseContext);
     const [isApproveOpen, setIsApproveOpen] = useState(false);
+    const { setSections } = useContext(sectionsContext);
 
     function handleApprove() {
         setIsApproveOpen(!isApproveOpen);
+    }
+    const navigate = useNavigate();
+
+    function handleNavigateCreateElection() {
+        setSections("election");
+        navigate("/adminDashboard/profile")
     }
 
     if (!user) return <h1>Loading Admin details...</h1>;
@@ -26,9 +34,9 @@ export default function AdminDashboard() {
                     <div className="box right-box">
                         <img src="/pics/voteMachine.png" alt="voteMachine" />
                         <p>Create an election.</p>
-                        <Link to="/adminDashboard/createElection">
+                        <div onClick={handleNavigateCreateElection}>
                             <Button variant="light">Create</Button>
-                        </Link>
+                        </div>
                     </div>
                     <div className="box right-box">
                         <img className="lg" src="/pics/profile.png" alt="voteMachine" />

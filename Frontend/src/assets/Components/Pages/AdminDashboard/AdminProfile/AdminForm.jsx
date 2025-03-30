@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
-import styleForm from "./CandidateForm.module.css";
-import { sectionsContext } from "./SectionsContextProvider";
 import { databaseContext, userContext } from "../../../../Hooks/ContextProvider/ContextProvider";
-import { Personel, Party, Other, Declaration } from "../Forms";
+import styleForm from "./AdminForm.module.css";
+import { Election, Party, Personel } from "./Forms";
+import { sectionsContext } from "./SectionsContextProvider";
 
-export default function CandidateForm() {
+export default function AdminForm() {
     const { sections } = useContext(sectionsContext);
     const { database_url } = useContext(databaseContext);
     const { user } = useContext(userContext);
@@ -12,65 +12,56 @@ export default function CandidateForm() {
         fullName: "",
         email: "",
         mobile: "",
-        education: "",
         password: "",
         dob: "",
         gender: "",
         otp: "",
-        profession: "",
-        image: null,
-        party: "",
-        state: "",
-        manifesto: null,
-        spouse: "",
-        spouse_profession: "",
-        liabilities: "",
-        assets: ""
     });
 
-    async function fetchDetails() {
-        try {
-            const response = await fetch(`${database_url}/candidates/get/user/${user._id}`);
-            const res = await response.json();
+    // async function fetchDetails() {
+    //     try {
+    //         const response = await fetch(`${database_url}/candidates/get/user/${user._id}`);
+    //         const res = await response.json();
 
-            console.log(res);
+    //         console.log(res);
 
-            if (res) {
-                setFormData((prev) => ({
-                    ...prev,
-                    fullName: res.fullName || "",
-                    email: res.email || "",
-                    mobile: res.mobile || "",
-                    education: res.education || "",
-                    password: res.password,
-                    dob: res.dob || "",
-                    gender: res.gender || "",
-                    otp: "",
-                    profession: res.profession || "",
-                    image: res.image || null,
-                    party: res.party || "",
-                    state: res.state || "",
-                    manifesto: res.manifesto || null,
-                    spouse: res.spouse || "",
-                    spouse_profession: res.spouse_profession || "",
-                    liabilities: res.liabilities || "",
-                    assets: res.assets || "",
-                }));
-            } else {
-                console.error("Error fetching details:", res.message);
-            }
+    //         if (res) {
+    //             setFormData((prev) => ({
+    //                 ...prev,
+    //                 fullName: res.fullName || "",
+    //                 email: res.email || "",
+    //                 mobile: res.mobile || "",
+    //                 education: res.education || "",
+    //                 password: res.password,
+    //                 dob: res.dob || "",
+    //                 gender: res.gender || "",
+    //                 otp: "",
+    //                 profession: res.profession || "",
+    //                 image: res.image || null,
+    //                 party: res.party || "",
+    //                 state: res.state || "",
+    //                 manifesto: res.manifesto || null,
+    //                 spouse: res.spouse || "",
+    //                 spouse_profession: res.spouse_profession || "",
+    //                 liabilities: res.liabilities || "",
+    //                 assets: res.assets || "",
+    //             }));
+    //         } else {
+    //             console.error("Error fetching details:", res.message);
+    //         }
 
-        } catch (error) {
-            console.error("Fetch error:", error);
-        }
-    }
+    //     } catch (error) {
+    //         console.error("Fetch error:", error);
+    //     }
+    // }
 
 
-    useEffect(() => {
-        fetchDetails();
-    }, [user])
+    // useEffect(() => {
+    //     fetchDetails();
+    // }, [user])
 
     // Handle input changes
+
     const handleFormChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
@@ -101,7 +92,7 @@ export default function CandidateForm() {
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/candidates/details`, {
                 method: "POST",
-                headers: { "Authorization": token },
+                headers: { "auth": token },
                 body: formDataObj,
             });
 
@@ -125,10 +116,7 @@ export default function CandidateForm() {
                 <Party {...{ handleFormChange, handleFileSelect, formData }} />
 
                 {/* Other Information */}
-                <Other {...{ handleFormChange, handleFileSelect, formData }} />
-
-                {/* Declaration */}
-                <Declaration {...{ handleFormChange, handleFileSelect, handleSubmit, formData }} />
+                <Election {...{ handleFormChange, handleFileSelect, formData }} />
 
             </form>
         </div>

@@ -1,0 +1,49 @@
+.div {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    gap: 10vh;
+
+    input {
+        width: 35vh;
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.inp {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+}
+
+.decl {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 70%;
+}
+
+label {
+    cursor: pointer;
+}
+
+#upload-photo {
+    opacity: 0;
+    position: absolute;
+    z-index: -1;
+}
+
+
+.full {
+    flex: 80%;
+    /* width: 80vw; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}

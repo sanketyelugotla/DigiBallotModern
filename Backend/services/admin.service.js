@@ -1,10 +1,13 @@
 const { Election, Candidate, Voter, Vote, Admin } = require("../models");
 const mongoose = require("mongoose");
+const { uploadFile, getFileStream } = require("../utils/uploadUtils.js");
 
-const addElection = async (name, startDate, endDate, userId) => {
+const addElection = async (name, startDate, endDate, userId, files) => {
     try {
         const existing = await Election.findOne({ name });
         if (existing) throw new Error("Election already exists");
+
+        const imageId = await uploadFile(files.pic[0]);
 
         // Fetch the adminId from userId
         const user = await Admin.findOne({ userId });
@@ -15,7 +18,8 @@ const addElection = async (name, startDate, endDate, userId) => {
             name,
             startDate: new Date(startDate),
             endDate: new Date(endDate),
-            adminId // Add adminId to the election object
+            adminId,
+            image: imageId
         });
 
         await newElection.save();
@@ -24,6 +28,11 @@ const addElection = async (name, startDate, endDate, userId) => {
         throw new Error(error.message || "Failed to create election");
     }
 };
+
+const getElectionImage = async (imageId) => {
+    if (!mongoose.Types.ObjectId.isValid(imageId)) throw new Error("Invalid image ID");
+    return getFileStream(imageId);
+}
 
 
 // ✅ Get candidates who have at least one pending election
@@ -265,5 +274,6 @@ module.exports = {
     getPendingUsers,
     approveCandidatesBulk,
     approveVoter,
-    approveVotersBulk
+    approveVotersBulk,
+    getElectionImage
 };
