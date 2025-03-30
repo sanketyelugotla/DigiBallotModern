@@ -1,9 +1,8 @@
 const express = require("express");
 const voter = express.Router();
-const authenticate = require("../middleware/authenticate")
-const { voterService, adminService } = require("../services/index");
+const { voterService } = require("../services/index");
 
-voter.post("/vote", authenticate, async (req, res) => {
+voter.post("/vote", async (req, res) => {
     const { candidateId, electionId } = req.body;
     try {
         console.log(req.user);
@@ -26,7 +25,7 @@ voter.post("/getVotes/:electionId", async (req, res) => {
     }
 })
 
-voter.post("/register/:electionId", authenticate, async (req, res) => {
+voter.post("/register/:electionId", async (req, res) => {
     try {
         const user = await voterService.registerForElection(req.user, req.params.electionId);
         if (!user.success) throw new Error(user.message);
@@ -37,7 +36,7 @@ voter.post("/register/:electionId", authenticate, async (req, res) => {
     }
 })
 
-voter.get("/registeredElections", authenticate, async (req, res) => {
+voter.get("/registeredElections", async (req, res) => {
     try {
         const elections = await voterService.getRegisteredElections(req.user._id);
         if (!elections.success) throw new Error(elections.message);

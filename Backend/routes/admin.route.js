@@ -1,10 +1,9 @@
 const express = require("express");
-const authenticate = require("../middleware/authenticate")
 const { adminService } = require("../services")
 const { upload } = require("../config/multerConfig.js");
 const admin = express.Router();
 
-admin.post("/addElection", authenticate, upload.fields([{ name: "pic" }]), async (req, res) => {
+admin.post("/addElection", upload.fields([{ name: "pic" }]), async (req, res) => {
     const { name, startDate, endDate } = req.body;
     try {
         const election = await adminService.addElection(name, startDate, endDate, req.user._id, req.files);

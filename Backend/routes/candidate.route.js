@@ -1,13 +1,11 @@
 const express = require("express");
-const mongoose = require("mongoose");
-const authenticate = require("../middleware/authenticate.js");
 const { upload } = require("../config/multerConfig.js");
 const { candidateService, partyService } = require("../services/index.js")
 
 const candidate = express.Router();
 
 // 📌 POST: Upload image and update candidate details
-candidate.put("/updatecandidate", authenticate, upload.fields([{ name: "image" }, { name: "manifesto" }]), async (req, res) => {
+candidate.put("/updatecandidate", upload.fields([{ name: "image" }, { name: "manifesto" }]), async (req, res) => {
     try {
         const response = await candidateService.updateCandidatecandidate(req.user._id, req.files, req.body);
         return res.status(200).json({
@@ -75,7 +73,7 @@ candidate.get("/image/:imageId", async (req, res) => {
     }
 });
 
-candidate.post("/register", authenticate, async (req, res) => {
+candidate.post("/register", async (req, res) => {
     const { electionId } = req.body;
     try {
         const candidate = await candidateService.registerForElection(req.user, electionId);
