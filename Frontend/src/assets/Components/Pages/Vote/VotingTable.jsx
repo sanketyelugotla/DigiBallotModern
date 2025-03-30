@@ -50,7 +50,7 @@ export default function VotingTable({ data, selectButton, selectedParty }) {
                             <td className={styleVote.col}>
                                 <center>
                                     {party ? (
-                                        <img src={`${database_url}/party/image/${party._id}`} alt="Party Symbol" />
+                                        <img src={`${database_url}/image/party/image/${party._id}`} alt="Party Symbol" />
                                     ) : "Loading..."}
                                 </center>
                             </td>

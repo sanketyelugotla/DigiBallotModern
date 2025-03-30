@@ -5,5 +5,6 @@ module.exports = {
     admin: require("./admin.route.js"),
     election: require("./election.route.js"),
     voter: require("./voter.route.js"),
-    temp: require("./temp.route.js")
+    temp: require("./temp.route.js"),
+    image: require("./image.route.js")
 }

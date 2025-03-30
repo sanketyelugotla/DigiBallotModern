@@ -19,7 +19,7 @@ export default function CandidateCarousel({ data, handleShift, selectedIndex, se
                             className={`member-circle position-${position}`}
                             onClick={() => check(position)}
                         >
-                            <img src={`${database_url}/candidates/image/${item.image}`} alt={item.fullName} />
+                            <img src={`${database_url}/image/candidates/image/${item.image}`} alt={item.fullName} />
                         </div>
                     );
                 })}

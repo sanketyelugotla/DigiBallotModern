@@ -38,21 +38,6 @@ router.post("/addParty", upload.fields([{ name: "image" }]), async (req, res) =>
     }
 });
 
-// 📌 GET: Retrieve Party Image
-router.get("/image/:partyId", async (req, res) => {
-    const { partyId } = req.params;
-    console.log("Fetching image for Party ID:", partyId);
-
-    try {
-        const downloadStream = await partyService.getPartyImage(partyId);
-        res.set("Content-Type", "image/png");
-        downloadStream.pipe(res);
-    } catch (error) {
-        console.error("Error fetching party image:", error);
-        return res.status(400).json({ message: error.message });
-    }
-});
-
 router.post("/addCandidate", async (req, res) => {
     const { partyId, candidateId } = req.body;
     console.log(req.body)

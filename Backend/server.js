@@ -1,7 +1,7 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const cors = require("cors");
-const { auth, candidate, temp, party, admin, election, voter } = require("./routes/index.js");
+const { auth, candidate, temp, party, admin, election, voter, image } = require("./routes/index.js");
 const authenticate = require("./middleware/authenticate.js");
 const authenticateCandidate = require("./middleware/authenticateCandidate.js");
 const authenticateAdmin = require("./middleware/authenticateAdmin.js");
@@ -22,13 +22,14 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/auth", auth);
+app.use("/image", image);
 app.use(authenticate);
 app.use("/voter", voter)
 app.use("/party", party)
 app.use("/election", election)
-app.use(authenticateCandidate)
+// app.use(authenticateCandidate)
 app.use("/candidates", candidate)
-app.use(authenticateAdmin)
+// app.use(authenticateAdmin)
 app.use("/admin", admin)
 // app.use("/temp", temp)
 

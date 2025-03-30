@@ -61,18 +61,6 @@ candidate.get("/candimage/:userId", async (req, res) => {
     }
 })
 
-// 📌 GET: Retrieve Candidate Image
-candidate.get("/image/:imageId", async (req, res) => {
-    try {
-        const downloadStream = await candidateService.getCandidateImage(req.params.imageId);
-        res.set("Content-Type", "image/png");
-        downloadStream.pipe(res);
-    } catch (error) {
-        console.error("Error fetching candidate image:", error);
-        return res.status(400).json({ message: error.message });
-    }
-});
-
 candidate.post("/register", async (req, res) => {
     const { electionId } = req.body;
     try {

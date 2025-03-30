@@ -12,7 +12,7 @@ export default function CandidateDashboard() {
 
     return (
         <div>
-            <img src={`${database_url}/candidates/candimage/${user._id}`} alt={user.name} className={styleDash.pic} />
+            <img src={`${database_url}/image/candidates/candimage/${user._id}`} alt={user.name} className={styleDash.pic} />
             <div className="options">
                 <h1>Welcome! <br /> {user.name}</h1>
                 <h1>Please select to continue...</h1>
