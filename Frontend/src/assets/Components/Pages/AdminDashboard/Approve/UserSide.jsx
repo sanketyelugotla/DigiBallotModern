@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ToggleButton, Button } from "../../../../Hooks/index";
 import { databaseContext } from "../../../../Hooks/ContextProvider/ContextProvider";
-import styles from "./Approve.module.css"
+import styles from "./Approve.module.css";
 
 export default function UserSide({ setExportData, setExportHeaders, active, isToggleAllActive }) {
     const { database_url } = useContext(databaseContext);
@@ -27,7 +27,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
 
     async function fetchPendingUsers() {
         try {
-            setLoading(true); // Start loading before API call
+            setLoading(true);
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/users`, {
                 headers: {
@@ -39,22 +39,21 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
             if (!response.ok) throw new Error("Failed to fetch users");
             const res = await response.json();
 
-            setUsers(res); // Store all entries
+            setUsers(res);
 
             // Initialize toggle states
             const initialStates = res.reduce((acc, user) => {
-                acc[`${user._id}-${user.electionId}`] = false; // Ensure unique toggle states
+                acc[`${user._id}_${user.electionId}`] = false; // Ensure consistency with candidates
                 return acc;
             }, {});
             setToggleStates(initialStates);
 
-            // Set export data dynamically
             setExportData(res);
             setExportHeaders(headersData);
         } catch (error) {
             console.error("Error fetching users:", error.message);
         } finally {
-            setLoading(false); // Stop loading after API call completes
+            setLoading(false);
         }
     }
 
@@ -69,43 +68,52 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
         }
     }, [active]);
 
-    const handleToggle = (userKey) => {
+    const handleToggle = (userId, electionId) => {
+        const key = `${userId}_${electionId}`; // Ensure `_` is used as separator
         setToggleStates((prev) => ({
             ...prev,
-            [userKey]: !prev[userKey]
+            [key]: !prev[key]
         }));
     };
 
     const handleBulkApprove = async () => {
         try {
-            const usersToApprove = users.filter((user) => toggleStates[user._id]);
+            const usersToApprove = users
+                .filter((user) => toggleStates[`${user._id}_${user.electionId}`])
+                .map((user) => ({
+                    userId: user._id,
+                    electionId: user.electionId,
+                }));
+
             if (usersToApprove.length === 0) {
                 alert("No users selected for approval.");
                 return;
             }
 
-            const userIds = usersToApprove.map((user) => user._id);
+            const userIds = usersToApprove.map((user) => user.userId);
+            const electionIds = usersToApprove.map((user) => user.electionId);
 
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/approve-users-bulk`, {
-                method: "POST",
+                method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ userIds })
+                body: JSON.stringify({ userIds, electionIds }),
             });
 
             const data = await response.json();
             if (!response.ok) throw new Error(data.message);
 
-            alert(data.message); // Success message
-            fetchPendingUsers(); // Refresh the list of users
+            alert(data.message);
+            fetchPendingUsers();
         } catch (error) {
             console.error("Error approving users:", error.message);
             alert("Failed to approve users. Please try again.");
         }
     };
+
 
     return (
         <div>
@@ -125,7 +133,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                         </thead>
                         <tbody>
                             {users.map((user) => {
-                                const userKey = `${user._id}-${user.electionId}`;
+                                const userKey = `${user._id}_${user.electionId}`;
                                 return (
                                     <tr key={userKey} className={styles.entry}>
                                         <td>{user.name || "Unknown"}</td>
@@ -133,7 +141,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                                         <td>
                                             <ToggleButton
                                                 isOn={toggleStates[userKey]}
-                                                onToggle={() => handleToggle(userKey)}
+                                                onToggle={() => handleToggle(user._id, user.electionId)}
                                             />
                                         </td>
                                     </tr>
@@ -145,8 +153,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                         Approve
                     </Button>
                 </div>
-            )
-            }
-        </div >
+            )}
+        </div>
     );
 }

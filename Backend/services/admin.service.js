@@ -34,7 +34,6 @@ const getElectionImage = async (imageId) => {
     return getFileStream(imageId);
 }
 
-
 // ✅ Get candidates who have at least one pending election
 const getPendingCandidates = async () => {
     try {
@@ -161,8 +160,6 @@ const approveVotersBulk = async (voterIds, electionIds) => {
         throw new Error(error.message);
     }
 };
-
-
 
 // ✅ Approve a specific candidate for a specific election
 const approveCandidate = async (candidateId, electionId) => {

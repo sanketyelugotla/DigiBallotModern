@@ -61,7 +61,7 @@ export default function Other() {
     };
 
     return (
-        <FadeDiv fade_in={sections === "election"} fade_out={sections !== "election"} className={styleForm.name} variant="form">
+        <FadeDiv fade_in={sections === "election"} fade_out={sections !== "election"} className={styleForm.form} variant="form">
             <Input.Div variant="white" className={styleForm.div}>
                 <div className={styleForm.inp}>
                     <Input type="text" label="Election Name" name="name" value={formData.electionName} onChange={handleFormChange} />

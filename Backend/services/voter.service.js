@@ -80,6 +80,8 @@ const registerForElection = async (userId, electionId) => {
         const voter = await Voter.findOne({ userId });
         if (!voter) throw new Error("Voter not found");
 
+        console.log(voter)
+
         const { electionService } = require("./index.js");
 
         const election = await electionService.getElectionById(electionId);
@@ -92,8 +94,12 @@ const registerForElection = async (userId, electionId) => {
 
         // Check if voter is already registered
         const existingRegistration = voter.elections.find(
-            (e) => e.electionId.toString() === electionId
+            (e) => {
+                console.log(e)
+                return e._id.toString() === electionId
+            }
         );
+        console.log(existingRegistration)
         if (existingRegistration?.status === "approved") {
             throw new Error("You are already registered for this election");
         }
