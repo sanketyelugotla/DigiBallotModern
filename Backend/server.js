@@ -1,7 +1,10 @@
 const express = require("express");
 const connectDB = require("./config/db");
 const cors = require("cors");
-const { auth, candidate, temp, party, admin, election, voter } = require("./routes/index.js")
+const { auth, candidate, temp, party, admin, election, voter } = require("./routes/index.js");
+const authenticate = require("./middleware/authenticate.js");
+const authenticateCandidate = require("./middleware/authenticateCandidate.js");
+const authenticateAdmin = require("./middleware/authenticateAdmin.js");
 require("dotenv").config();
 
 const app = express();
@@ -13,18 +16,22 @@ app.use(cors());
 // Connect Database
 connectDB();
 
-// Routes
-app.use("/auth", auth);
-app.use("/candidates", candidate)
-app.use("/party", party)
-app.use("/admin", admin)
-app.use("/election", election)
-app.use("/voter", voter)
-app.use("/temp", temp)
-
 app.get("/", (req, res) => {
     res.send("Voting System API is running...");
 });
+
+// Routes
+app.use("/auth", auth);
+app.use(authenticate);
+app.use("/voter", voter)
+app.use("/party", party)
+app.use("/election", election)
+app.use(authenticateCandidate)
+app.use("/candidates", candidate)
+app.use(authenticateAdmin)
+app.use("/admin", admin)
+// app.use("/temp", temp)
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

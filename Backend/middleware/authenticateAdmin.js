@@ -1,7 +1,7 @@
 const { User } = require("../models");
 const authenticate = require("./authenticate");
 
-async function authenticateCandidate(req, res, next) {
+async function authenticateAdmin(req, res, next) {
     try {
         await authenticate(req, res, async () => {
             const user = await User.findById(req.user._id);
@@ -18,4 +18,4 @@ async function authenticateCandidate(req, res, next) {
     }
 }
 
-module.exports = authenticateCandidate;
+module.exports = authenticateAdmin;
