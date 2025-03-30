@@ -14,7 +14,7 @@ function authenticate(req, res, next) {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         if (decoded) {
             req.user = { _id: decoded.id };
-            console.log("success")
+            // console.log("success")
             next();
         } else {
             return res.status(401).json({ status: false, error: "Unauthorised" })

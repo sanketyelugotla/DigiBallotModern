@@ -20,7 +20,7 @@ app.use("/party", party)
 app.use("/admin", admin)
 app.use("/election", election)
 app.use("/voter", voter)
-// app.use("/temp", temp)
+app.use("/temp", temp)
 
 app.get("/", (req, res) => {
     res.send("Voting System API is running...");

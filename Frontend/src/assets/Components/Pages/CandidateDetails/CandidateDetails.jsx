@@ -11,6 +11,7 @@ export default function CandidateDetails() {
     const { database_url } = useContext(databaseContext);
     const { selectedElection, setSelectedElection } = useContext(electionDetails);
     const [party, setParty] = useState(null);
+    const token = localStorage.getItem("authToken");
 
     const handleShift = (direction) => {
         setSelectedIndex((prevIndex) => {
@@ -22,7 +23,9 @@ export default function CandidateDetails() {
 
     async function fetchCandidates() {
         try {
-            const response = await fetch(`${database_url}/candidates/${selectedElection._id}`);
+            const response = await fetch(`${database_url}/candidates/${selectedElection._id}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
             const res = await response.json();
             console.log("Fetched candidates:", res);
             setCandidatesData(res);
@@ -39,7 +42,9 @@ export default function CandidateDetails() {
 
         try {
             console.log(`Fetching party for partyId: ${partyId}`);
-            const response = await fetch(`${database_url}/party/${partyId}`);
+            const response = await fetch(`${database_url}/party/${partyId}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
             const res = await response.json();
             console.log("Fetched party:", res);
             setParty(res);

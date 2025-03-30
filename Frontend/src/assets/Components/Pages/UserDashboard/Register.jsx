@@ -10,10 +10,13 @@ export default function Register() {
     const { database_url } = useContext(databaseContext);
     const [elections, setElections] = useState([]);
     const [candidates, setCandidates] = useState({});
+    const token = localStorage.getItem("authToken");
 
     async function fetchElections() {
         try {
-            const response = await fetch(`${database_url}/election/all`);
+            const response = await fetch(`${database_url}/election/all`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
             const res = await response.json();
             setElections(res);
         } catch (error) {
@@ -23,7 +26,9 @@ export default function Register() {
 
     async function fetchCandidates(electionId) {
         try {
-            const response = await fetch(`${database_url}/candidates/${electionId}`);
+            const response = await fetch(`${database_url}/candidates/${electionId}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
             const res = await response.json();
             setCandidates((prev) => ({
                 ...prev,
@@ -53,7 +58,6 @@ export default function Register() {
 
     async function registerForElection(item) {
         try {
-            const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/voter/register/${item._id}`, {
                 method: "POST",
                 headers: {

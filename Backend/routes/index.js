@@ -4,5 +4,6 @@ module.exports = {
     party: require("./party.route.js"),
     admin: require("./admin.route.js"),
     election: require("./election.route.js"),
-    voter: require("./voter.route.js")
+    voter: require("./voter.route.js"),
+    temp: require("./temp.route.js")
 }

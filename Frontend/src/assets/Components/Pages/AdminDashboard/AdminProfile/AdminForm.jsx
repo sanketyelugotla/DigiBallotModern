@@ -92,7 +92,7 @@ export default function AdminForm() {
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/candidates/details`, {
                 method: "POST",
-                headers: { "auth": token },
+                headers: { "Authorization": `Bearer ${token}` },
                 body: formDataObj,
             });
 

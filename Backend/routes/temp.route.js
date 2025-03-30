@@ -2,6 +2,7 @@ const express = require("express");
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+const authenticateCandidate = require("../middleware/authenticateCandidate");
 
 const router = express.Router();
 
@@ -45,6 +46,10 @@ Image: ${imagePath}
         }
         res.json({ message: "Candidate saved successfully!", image: imagePath });
     });
+});
+
+router.get("/temp", authenticateCandidate, (req, res) => {
+    return res.status(200).json("Temp")
 });
 
 module.exports = router;

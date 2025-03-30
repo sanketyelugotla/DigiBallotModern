@@ -11,9 +11,12 @@ export default function Vote() {
     const [candidateDetails, setCandidateDetails] = useState();
     const { database_url } = useContext(databaseContext);
     const { selectedElection } = useContext(electionDetails);
+    const token = localStorage.getItem("authToken");
 
     async function fetchCandidates() {
-        const response = await fetch(`${database_url}/candidates/${selectedElection._id}`);
+        const response = await fetch(`${database_url}/candidates/${selectedElection._id}`, {
+            headers: { "Authorization": `Bearer ${token}` }
+        });
         const res = await response.json();
         setCandidateDetails(res);
     }

@@ -8,6 +8,7 @@ export default function CandidateForm() {
     const { sections } = useContext(sectionsContext);
     const { database_url } = useContext(databaseContext);
     const { user } = useContext(userContext);
+    const token = localStorage.getItem("authToken");
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -30,7 +31,9 @@ export default function CandidateForm() {
 
     async function fetchDetails() {
         try {
-            const response = await fetch(`${database_url}/candidates/get/user/${user._id}`);
+            const response = await fetch(`${database_url}/candidates/get/user/${user._id}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
             const res = await response.json();
 
             console.log(res);
@@ -98,10 +101,9 @@ export default function CandidateForm() {
         // console.log("Sending FormData:", [...formDataObj.entries()]);
 
         try {
-            const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/candidates/details`, {
                 method: "POST",
-                headers: { "Authorization": token },
+                headers: { "Authorization": `Bearer ${token}` },
                 body: formDataObj,
             });
 

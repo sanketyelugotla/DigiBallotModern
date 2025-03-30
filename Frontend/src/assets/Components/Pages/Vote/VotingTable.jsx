@@ -6,6 +6,7 @@ import { databaseContext } from '../../../Hooks/ContextProvider/ContextProvider'
 export default function VotingTable({ data, selectButton, selectedParty }) {
     const { database_url } = useContext(databaseContext);
     const [parties, setParties] = useState({});
+    const token = localStorage.getItem("authToken");
 
     useEffect(() => {
         async function fetchAllParties() {
@@ -13,7 +14,9 @@ export default function VotingTable({ data, selectButton, selectedParty }) {
             data && await Promise.all(data.map(async (item) => {
                 if (!item.partyId) return;
                 try {
-                    const response = await fetch(`${database_url}/party/${item.partyId}`);
+                    const response = await fetch(`${database_url}/party/${item.partyId}`, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
                     const res = await response.json();
                     partyData[item.partyId] = res; // Store party data by partyId
                 } catch (error) {

@@ -11,12 +11,14 @@ export default function Results() {
     const { database_url } = useContext(databaseContext);
     const { selectedElection } = useContext(electionDetails);
     const [votes, setVotes] = useState([]);
+    const token = localStorage.getItem("authToken");
 
     const totalVotes = votes.reduce((acc, curr) => acc + curr.votes, 0);
 
     async function fetchVotes() {
         try {
             const response = await fetch(`${database_url}/voter/getVotes/${selectedElection._id}`, {
+                headers: { "Authorization": `Bearer ${token}` },
                 method: "POST",
             });
             const res = await response.json();
@@ -31,7 +33,9 @@ export default function Results() {
             const candidatesWithVotes = await Promise.all(
                 res.votes.map(async (vote) => {
                     console.log(vote)
-                    const candidateResponse = await fetch(`${database_url}/candidates/get/${vote._id}`);
+                    const candidateResponse = await fetch(`${database_url}/candidates/get/${vote._id}`, {
+                        headers: { "Authorization": `Bearer ${token}` }
+                    });
                     const candidateData = await candidateResponse.json();
                     console.log(candidateData)
                     return {

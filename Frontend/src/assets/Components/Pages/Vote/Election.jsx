@@ -11,6 +11,7 @@ export default function Election() {
     const [elections, setElections] = useState();
     const { selectedElection, setSelectedElection } = useContext(electionDetails);
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+    const token = localStorage.getItem("authToken");
 
     function onClose() {
         setIsConfirmOpen(!isConfirmOpen);
@@ -18,7 +19,9 @@ export default function Election() {
 
     async function fetchElections() {
         try {
-            const response = await fetch(`${database_url}/election`);
+            const response = await fetch(`${database_url}/election`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
             const res = await response.json();
             setElections(res.elections);
         } catch (error) {
