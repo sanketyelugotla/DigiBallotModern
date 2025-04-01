@@ -1,5 +1,5 @@
 const express = require("express");
-const connectDB = require("./config/db");
+const connectDB = require("./config/db.js");
 const cors = require("cors");
 const { auth, candidate, temp, party, admin, election, voter, image } = require("./routes/index.js");
 const authenticate = require("./middleware/authenticate.js");

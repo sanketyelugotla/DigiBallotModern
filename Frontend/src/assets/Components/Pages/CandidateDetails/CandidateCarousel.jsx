@@ -8,7 +8,7 @@ export default function CandidateCarousel({ data, handleShift, selectedIndex, se
             <img className="pn-btn" src="/pics/prev.png" alt="Prev" onClick={() => handleShift("left")} />
             <div className="carousel">
                 {data.map((item, index) => {
-                    console.log(item)
+                    // console.log(item)
                     let position = (index - selectedIndex + data.length) % data.length;
                     if (data.length === 1) position += 2;
                     else if (data.length === 2) position += 2;

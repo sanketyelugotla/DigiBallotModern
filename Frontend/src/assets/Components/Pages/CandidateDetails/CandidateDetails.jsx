@@ -46,7 +46,7 @@ export default function CandidateDetails() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            console.log("Fetched party:", res);
+            // console.log("Fetched party:", res);
             setParty(res);
         } catch (error) {
             console.error("Error fetching party:", error);
