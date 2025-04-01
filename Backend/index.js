@@ -10,7 +10,7 @@ require("dotenv").config();
 const app = express();
 
 const corsOptions = {
-    origin: 'https://digi-ballot.vercel.app', //Allow your front end origin.
+    origin: ['https://digi-ballot.vercel.app', 'http://localhost:5173'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
 };
@@ -20,6 +20,7 @@ app.options('*', cors(corsOptions));
 
 // Middleware to parse JSON data
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 
 // Connect to Database
 connectDB();
