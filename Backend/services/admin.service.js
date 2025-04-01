@@ -1,7 +1,7 @@
 const { Election, Candidate, Voter, Vote, Admin, User } = require("../models");
 const mongoose = require("mongoose");
 const { uploadFile, getFileStream } = require("../utils/uploadUtils.js");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 const updateDetails = async (fullname, dob, email, gender, number, password, req) => {
     try {
