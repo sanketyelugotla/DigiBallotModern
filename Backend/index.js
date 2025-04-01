@@ -9,28 +9,14 @@ require("dotenv").config();
 
 const app = express();
 
-// Custom CORS Middleware
-app.use((req, res, next) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    console.log('CORS headers set for:', req.method);
-    next();
-});
-
-// CORS Options (Optional if you want specific origin control)
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://digi-ballot.vercel.app'],  // Add both local and deployed URLs
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    origin: 'https://digi-ballot.vercel.app', //Allow your front end origin.
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,  // Allow cookies to be sent along with requests (if needed)
 };
 
-// Apply CORS Middleware (Optional, if using specific origins)
 app.use(cors(corsOptions));
-
-// Explicitly handle preflight requests (OPTIONS)
-app.options('*', cors(corsOptions));  // Handle preflight for all routes
+app.options('*', cors(corsOptions));
 
 // Middleware to parse JSON data
 app.use(express.json());
