@@ -30,4 +30,15 @@ image.get("/party/image/:partyId", async (req, res) => {
     }
 });
 
+image.get("/candimage/:userId", async (req, res) => {
+    try {
+        const downloadStream = await candidateService.getCandidateImageByUserId(req.params.userId);
+        res.set("Content-Type", "image/png");
+        downloadStream.pipe(res);
+    } catch (error) {
+        console.error("Error fetching candidate image:", error);
+        return res.status(400).json({ message: error.message });
+    }
+})
+
 module.exports = image;

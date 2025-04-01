@@ -51,7 +51,7 @@ export default function SelectElection() {
 
     const navigate = useNavigate();
     function handleClick(item) {
-        console.log(item);
+        // console.log(item);
         setSelectedElection(item);
         navigate('/candidate/details');
     }
@@ -83,7 +83,7 @@ export default function SelectElection() {
                                 className={styleElection.button}
                                 onClick={() => handleClick(item)}
                             >
-                                {console.log(item)}
+                                {/* {console.log(item)} */}
                                 Details
                             </Button>
                         </div>

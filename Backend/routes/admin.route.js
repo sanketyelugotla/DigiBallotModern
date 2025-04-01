@@ -24,6 +24,16 @@ admin.get("/details", async(req, res) => {
     }
 })
 
+admin.post("/addParty", upload.fields([{ name: "image" }]), async(req, res) => {
+        try {
+        const admin = await adminService.createParty(req);
+        res.status(200).json({ message: "Party created successfully", user: admin.data })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: error.message })
+    }
+})
+
 admin.post("/addElection", upload.fields([{ name: "pic" }]), async (req, res) => {
     const { name, startDate, endDate } = req.body;
     try {

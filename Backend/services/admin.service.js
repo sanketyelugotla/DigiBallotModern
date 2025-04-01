@@ -69,6 +69,10 @@ const getDetails = async (req) => {
     }
 };
 
+const createParty = async () => {
+
+}
+
 const addElection = async (name, startDate, endDate, userId, files) => {
     try {
         const existing = await Election.findOne({ name });
@@ -334,6 +338,7 @@ module.exports = {
     updateDetails,
     getDetails,
     addElection,
+    createParty,
     getImage,
     getPendingCandidates,
     approveCandidate,
