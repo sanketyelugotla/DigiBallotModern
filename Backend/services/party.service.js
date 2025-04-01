@@ -28,17 +28,17 @@ const getParty = async (partyId) => {
 }
 
 // 📌 Service to Add a Party
-const addParty = async (partyName, imageFile) => {
+const addParty = async(electionId, adminId, state, partyName, imageFile) => {
     if (!imageFile) {
         throw new Error("Image is required");
     }
-
     const imageId = await uploadFile(imageFile);
-    console.log("Upload Finished: Image ID:", imageId);
-
     const newParty = new Party({
+        electionId,
+        adminId,
+        state,
         partyName,
-        partyImage: imageId,
+        partyImage: imageId
     });
 
     const createdParty = await newParty.save();
@@ -92,6 +92,6 @@ const getPartyImage = async (partyId) => {
     }
 
     return getFileStream(party.partyImage);
-};
+}; 
 
 module.exports = { getParties, addParty, getPartyImage, addCandidate, getParty };

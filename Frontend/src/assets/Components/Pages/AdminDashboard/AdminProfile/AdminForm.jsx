@@ -69,15 +69,15 @@ export default function AdminForm() {
 
     // Handle file selection dynamically
     const handleFileSelect = (file, name) => {
-        console.log(file)
-        console.log(name)
+            console.log(file)
+            console.log(name)
         setFormData((prev) => ({ ...prev, [name]: file }));
     };
 
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData)
+        // console.log(formData)
         const formDataObj = new FormData();
 
         Object.keys(formData).forEach((key) => {

@@ -438,6 +438,7 @@ section .details span {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .dropdown-heading {
@@ -448,47 +449,60 @@ section .details span {
 
 /* Dropdown Container */
 .dropdown {
-    position: relative;
-    width: 200px;
-    font-family: Arial, sans-serif;
+    width: 350px;
+    font-family: Montserrat;
 }
 
 /* Header (Selected Option) */
 .dropdown-header {
     background: transparent;
-    border: 1px solid white;
+    border: 1px solid black;
     font-size: 14px;
-    color: white;
-    padding: 10px;
+    color: black;
+    padding: 17px 50px;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-radius: 5px;
+    border-radius: 7px;
+}
+
+.dropdown-label {
+    font-family: Montserrat;
+    background-color: white;
+    padding: 10px;
+    font-size: 11px;
+    position: relative;
+    top: 10px;
+    left: 20px;
+    letter-spacing: 1px;
 }
 
 /* Arrow Icon */
 .arrow {
+    align-self: flex-end;
+    color: black;
     transition: transform 0.3s ease-in-out;
 }
 
 .arrow.up {
+    align-self: flex-end;
     transform: rotate(180deg);
 }
 
 /* Dropdown Menu */
 .dropdown-menu {
     position: absolute;
-    width: 100%;
+    width: 50%;
     background: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    margin-top: 5px;
+    border: 1px solid black;
+    border-radius: 3px;
+    margin-top: 3px;
     z-index: 10;
     list-style: none;
     padding: 0;
     opacity: 0;
-    transform: scaleY(0);
+    transform: scaleY(10%);
     transform-origin: top;
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
@@ -502,6 +516,7 @@ section .details span {
 /* Dropdown Items */
 .dropdown-item {
     padding: 10px;
+    font-size: 15px;
     cursor: pointer;
     transition: background 0.2s ease;
 }

@@ -12,6 +12,16 @@ election.get("/", async (req, res) => {
     }
 })
 
+election.get("/elections", async (req, res) => {
+    try {
+        const elections = await electionService.getElectionsForAdmin(req);
+        return res.status(200).json({ messsage: "Elections", elections })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: error.message })
+    }
+})
+
 election.get("/all", async (req, res) => {
     try {
         const elections = await electionService.getAllElections();
