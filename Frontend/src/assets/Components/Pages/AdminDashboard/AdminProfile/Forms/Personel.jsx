@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { FadeDiv, Input, Button } from '../../../../../Hooks';
 import { sectionsContext } from '../SectionsContextProvider';
 import styleForm from "../AdminForm.module.css";
@@ -26,9 +26,34 @@ export default function Personel() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
+    const getData = async () => {
+        try {
+            const token = localStorage.getItem("authToken");
+            const response = await fetch(`${database_url}/admin/details`, {
+                headers: { "Authorization": `Bearer ${token}` },
+            });
+
+            if (response.ok) {
+                const res = await response.json();
+
+                if (res.user.dob) {
+                    res.user.dob = res.user.dob.split("T")[0]; // Extract only date part
+                }
+                const user = res.user;
+                setFormData(res.user);
+            }
+        } catch (error) {
+            console.log("Error fetching details", error);
+        }
+    };
+
+
+    useEffect(() => {
+        getData();
+    }, [database_url])
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         const formDataObj = new FormData();
         Object.keys(formData).forEach((key) => {
@@ -37,7 +62,6 @@ export default function Personel() {
             }
         });
 
-        console.log("Sending FormData:", [...formDataObj.entries()]);
 
         try {
             const token = localStorage.getItem("authToken");

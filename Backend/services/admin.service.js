@@ -40,6 +40,35 @@ const updateDetails = async (fullname, dob, email, gender, number, password, req
     }
 };
 
+const getDetails = async (req) => {
+    try {
+        const id = req.user._id;
+
+        const user = await User.findById(id).select("name email");
+        const admin = await Admin.findOne({ userId: id }).select("dob gender number image");
+
+        if (!user || !admin) {
+            return { success: false, message: "User not found" };
+        }
+
+        return {
+            success: true,
+            data: {
+                _id : id,
+                name: user.name,
+                email: user.email,
+                dob: admin.dob,
+                gender: admin.gender,
+                number: admin.number,
+                image: admin.image
+            }
+        };
+    } catch (error) {
+        console.error("Error fetching details:", error);
+        return { success: false, error: error.message };
+    }
+};
+
 const addElection = async (name, startDate, endDate, userId, files) => {
     try {
         const existing = await Election.findOne({ name });
@@ -67,7 +96,7 @@ const addElection = async (name, startDate, endDate, userId, files) => {
     }
 };
 
-const getElectionImage = async (imageId) => {
+const getImage = async (imageId) => {
     if (!mongoose.Types.ObjectId.isValid(imageId)) throw new Error("Invalid image ID");
     return getFileStream(imageId);
 }
@@ -303,7 +332,9 @@ const declareElection = async (electionId) => {
 
 module.exports = {
     updateDetails,
+    getDetails,
     addElection,
+    getImage,
     getPendingCandidates,
     approveCandidate,
     declareElection,
@@ -311,5 +342,4 @@ module.exports = {
     approveCandidatesBulk,
     approveVoter,
     approveVotersBulk,
-    getElectionImage
 };

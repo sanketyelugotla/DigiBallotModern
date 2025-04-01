@@ -20,7 +20,6 @@ export default function Other() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    console.log(formData);
 
     const handleFileSelect = (file, name) => {
         console.log(file)
@@ -30,7 +29,6 @@ export default function Other() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
 
         const formDataObj = new FormData();
         Object.keys(formData).forEach((key) => {
@@ -39,7 +37,6 @@ export default function Other() {
             }
         });
 
-        console.log("Sending FormData:", [...formDataObj.entries()]);
 
         try {
             const token = localStorage.getItem("authToken");
