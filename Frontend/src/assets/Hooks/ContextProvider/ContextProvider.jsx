@@ -42,7 +42,7 @@ export default function ContextProvider({ children }) {
     }
 
     // const database_url = "http://localhost:5000"
-    const database_url = "https://digi-ballot-modern.vercel.app/"
+    const database_url = "https://digi-ballot-modern.vercel.app"
 
     return (
         <loggedContext.Provider value={{ isLogged, setIsLogged }}>
