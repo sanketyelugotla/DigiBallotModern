@@ -9,7 +9,7 @@ const updateDetails = async (fullname, dob, email, gender, number, password, req
 
         let imageUrl = null;
         if (req.files && req.files.image) {
-            const file = req.files.image;
+            const file = req.files.image[0];
             imageUrl = await uploadFile(file);
         }
 
@@ -36,10 +36,9 @@ const updateDetails = async (fullname, dob, email, gender, number, password, req
         return { success: true, admin, user };
     } catch (error) {
         console.error("Error updating details:", error);
-        return { success: false, error: error.message };
+        throw new Error(error.message);
     }
 };
-
 
 const addElection = async (name, startDate, endDate, userId, files) => {
     try {
