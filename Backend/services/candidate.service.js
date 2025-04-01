@@ -84,8 +84,9 @@ const registerForElection = async (user, electionId, partyId) => {
         if (!election) throw new Error("No election found");
 
         // Check if the candidate is already registered for this election
-        const isAlreadyRegistered = candidate.elections.some(e => e._id.toString() === electionId.toString());
-        if (isAlreadyRegistered) throw new Error("Already registered for this election");
+        const isAlreadyRegistered = candidate.elections.filter(e => e._id.toString() === electionId.toString());
+        if (isAlreadyRegistered[0].status === "pending") throw new Error("Please wait for admin approval");
+        else if (isAlreadyRegistered[0].status === "approved") throw new Error("Already registered for this election");
 
         // Add election registration entry
         candidate.elections.push({
