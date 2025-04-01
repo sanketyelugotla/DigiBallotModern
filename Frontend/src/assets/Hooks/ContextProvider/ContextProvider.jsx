@@ -41,7 +41,8 @@ export default function ContextProvider({ children }) {
         "admin": "#0A8F6A"
     }
 
-    const database_url = "http://localhost:5000"
+    // const database_url = "http://localhost:5000"
+    const database_url = "https://digi-ballot-modern.vercel.app/"
 
     return (
         <loggedContext.Provider value={{ isLogged, setIsLogged }}>
