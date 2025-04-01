@@ -12,10 +12,10 @@ const app = express();
 // Middleware
 app.use(express.json());
 const corsOptions = {
-    origin: ['http://localhost:5173', 'https://digi-ballot-modern.vercel.app'],  // Add both local and deployed URLs
+    origin: ['http://localhost:5173', 'https://digi-ballot.vercel.app'],  // Add both local and deployed URLs
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, 
+    credentials: true,  // Allow cookies to be sent along with requests (if needed)
 };
 
 app.use(cors(corsOptions));
