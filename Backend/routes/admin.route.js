@@ -3,6 +3,17 @@ const { adminService } = require("../services")
 const { upload } = require("../config/multerConfig.js");
 const admin = express.Router();
 
+admin.post("/update", upload.fields("image"), async(req, res) => {
+    const {fullname, dob, email, gender, number, password} = req.body;
+    try {
+        const admin = await adminService.updateDetails(fullname, dob, email, gender, number, password, req);
+        res.status(201).json({ message: "Details updated successfully", admin })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: error.message })
+    }
+})
+
 admin.post("/addElection", upload.fields([{ name: "pic" }]), async (req, res) => {
     const { name, startDate, endDate } = req.body;
     try {

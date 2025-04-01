@@ -1,6 +1,45 @@
-const { Election, Candidate, Voter, Vote, Admin } = require("../models");
+const { Election, Candidate, Voter, Vote, Admin, User } = require("../models");
 const mongoose = require("mongoose");
 const { uploadFile, getFileStream } = require("../utils/uploadUtils.js");
+const bcrypt = require("bcrypt");
+
+const updateDetails = async (fullname, dob, email, gender, number, password, req) => {
+    try {
+        const id = req.user._id;
+
+        let imageUrl = null;
+        if (req.files && req.files.image) {
+            const file = req.files.image;
+            imageUrl = await uploadFile(file);
+        }
+
+        const hashedPassword = password ? await bcrypt.hash(password, 10) : undefined;
+
+        const adminUpdate = { dob, gender, number };
+        if (imageUrl) adminUpdate.image = imageUrl;
+
+        const admin = await Admin.findOneAndUpdate(
+            { userId: id },
+            adminUpdate,
+            { new: true, runValidators: true }
+        );
+
+        const userUpdate = { name: fullname, email };
+        if (hashedPassword) userUpdate.password = hashedPassword;
+
+        const user = await User.findByIdAndUpdate(
+            id,
+            userUpdate,
+            { new: true, runValidators: true }
+        );
+
+        return { success: true, admin, user };
+    } catch (error) {
+        console.error("Error updating details:", error);
+        return { success: false, error: error.message };
+    }
+};
+
 
 const addElection = async (name, startDate, endDate, userId, files) => {
     try {
@@ -264,6 +303,7 @@ const declareElection = async (electionId) => {
 };
 
 module.exports = {
+    updateDetails,
     addElection,
     getPendingCandidates,
     approveCandidate,
