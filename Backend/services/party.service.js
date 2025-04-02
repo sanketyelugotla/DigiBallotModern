@@ -27,8 +27,18 @@ const getParty = async (partyId) => {
     }
 }
 
+const getPartyByElectionId = async (electionId) => {
+    try {
+        const parties = await Party.find({ electionId: electionId });
+        if (!parties) return [];
+        return parties;
+    } catch (error) {
+
+    }
+}
+
 // 📌 Service to Add a Party
-const addParty = async(electionId, adminId, state, partyName, imageFile) => {
+const addParty = async (electionId, adminId, state, partyName, imageFile) => {
     if (!imageFile) {
         throw new Error("Image is required");
     }
@@ -92,6 +102,6 @@ const getPartyImage = async (partyId) => {
     }
 
     return getFileStream(party.partyImage);
-}; 
+};
 
-module.exports = { getParties, addParty, getPartyImage, addCandidate, getParty };
+module.exports = { getParties, addParty, getPartyImage, addCandidate, getParty, getPartyByElectionId };

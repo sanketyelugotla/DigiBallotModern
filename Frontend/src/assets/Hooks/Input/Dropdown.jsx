@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function Dropdown({ options, header, children, label, button, action, onChange, setSelectedElection }) {
+export default function Dropdown({ options, header, children, label, button, action, onChange, setSelectedItem }) {
     const [isOpen, setIsOpen] = useState(false);
     const [selected, setSelected] = useState(header);
 
@@ -17,17 +17,17 @@ export default function Dropdown({ options, header, children, label, button, act
 
                 {/* Dropdown Options */}
                 <ul className={`dropdown-menu ${isOpen ? "show" : ""}`}>
-                    {options.map((item, index) => (
+                    {options && options.map((item, index) => (
                         <li
                             key={item._id ? item._id : index}
                             className="dropdown-item"
                             onClick={() => {
-                                setSelectedElection && setSelectedElection(item)
-                                setSelected(item.name);
+                                setSelectedItem && setSelectedItem(item)
+                                setSelected(item.name ? item.name : item.partyName);
                                 setIsOpen(false);
                             }}
                         >
-                            {item.name ? item.name : item}
+                            {item.name ? item.name : item.partyName ? item.partyName : item}
                         </li>
                     ))}
                     {button && (

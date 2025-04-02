@@ -16,13 +16,11 @@ const getElectionsForAdmin = async (req) => {
     try {
         const adminId = req.user._id;
 
-        // Fetch admin details using userId
         const admin = await Admin.findOne({ userId: adminId });
         if (!admin) {
             throw new Error("Admin not found");
         }
 
-        // Fetch elections for the admin
         const elections = await Election.find({ adminId: admin._id });
 
         return elections;

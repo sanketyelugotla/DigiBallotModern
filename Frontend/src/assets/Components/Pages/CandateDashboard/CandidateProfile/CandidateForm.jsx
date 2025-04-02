@@ -31,12 +31,12 @@ export default function CandidateForm() {
 
     async function fetchDetails() {
         try {
-            const response = await fetch(`${database_url}/candidates/get/user/${user._id}`, {
+            const response = await fetch(`${database_url}/candidates/get/user`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
 
-            console.log(res);
+            // console.log(res);
 
             if (res) {
                 setFormData((prev) => ({
@@ -46,10 +46,10 @@ export default function CandidateForm() {
                     mobile: res.mobile || "",
                     education: res.education || "",
                     password: res.password,
-                    dob: res.dob || "",
+                    dob: res.dob.slice(0, 10) || "",
                     gender: res.gender || "",
                     otp: "",
-                    profession: res.profession || "",
+                    profession: res.self_profession || "",
                     image: res.image || null,
                     party: res.party || "",
                     state: res.state || "",

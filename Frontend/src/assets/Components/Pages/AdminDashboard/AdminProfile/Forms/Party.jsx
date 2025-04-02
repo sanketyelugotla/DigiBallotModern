@@ -37,10 +37,6 @@ export default function Party() {
         getElections();
     }, [])
 
-    useEffect(() => {
-        console.log(selectedElection);
-    }, [selectedElection])
-
     const handleFormChange = (e) => {
         const { name, value } = e.target;
         setParty((prev) => ({ ...prev, [name]: value }));

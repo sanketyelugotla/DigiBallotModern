@@ -28,10 +28,9 @@ candidate.get("/:electionId", async (req, res) => {
     }
 });
 
-candidate.get("/get/user/:id", async (req, res) => {
+candidate.get("/get/user", async (req, res) => {
     try {
-        const { id } = req.params;
-        const candidates = await candidateService.getCandidateDetailsByUserId(id);
+        const candidates = await candidateService.getCandidateDetailsByUserId(req.user._id);
         return res.status(200).json(candidates);
     } catch (error) {
         console.log(error);

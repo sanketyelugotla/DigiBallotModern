@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { FadeDiv, Input } from '../../../../Hooks/index'
+import { Button, FadeDiv, Input } from '../../../../Hooks/index'
 import { sectionsContext } from "../CandidateProfile/SectionsContextProvider";
 import styleForm from "../CandidateProfile/CandidateForm.module.css";
 
@@ -26,6 +26,7 @@ export default function Personel({ handleFileSelect, handleFormChange, formData 
 
             {/* File Upload */}
             <Input.File title="Upload your photo here" name="image" type="image" label="Max photo size: 5MB" onFileSelect={handleFileSelect} />
+            <Button size="lg">Save</Button>
         </FadeDiv>
     )
 }
