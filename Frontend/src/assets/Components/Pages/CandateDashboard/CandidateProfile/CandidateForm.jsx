@@ -9,6 +9,7 @@ export default function CandidateForm() {
     const { database_url } = useContext(databaseContext);
     const { user } = useContext(userContext);
     const token = localStorage.getItem("authToken");
+    const [completeData, setCompleteData] = useState();
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -36,8 +37,8 @@ export default function CandidateForm() {
             });
             const res = await response.json();
 
-            console.log(res);
-
+            // console.log(res);
+            setCompleteData(res);
             if (res) {
                 setFormData((prev) => ({
                     ...prev,
@@ -121,7 +122,7 @@ export default function CandidateForm() {
                 <Personel {...{ handleFormChange, handleFileSelect, formData, handleSubmit }} />
 
                 {/* Party Information */}
-                <Party {...{ handleFormChange, handleFileSelect, formData }} />
+                <Party {...{ handleFormChange, handleFileSelect, completeData }} />
 
                 {/* Other Information */}
                 <Other {...{ handleFormChange, handleFileSelect, formData, handleSubmit }} />

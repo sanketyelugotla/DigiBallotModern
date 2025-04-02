@@ -4,7 +4,8 @@ import { sectionsContext } from "../CandidateProfile/SectionsContextProvider";
 import styleForm from "../CandidateProfile/CandidateForm.module.css";
 import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 
-export default function Party({ formData }) {
+export default function Party({ completeData }) {
+    console.log(completeData)
     const { sections } = useContext(sectionsContext);
     const [elections, setElections] = useState([]);
     const { database_url } = useContext(databaseContext);
@@ -77,10 +78,9 @@ export default function Party({ formData }) {
         }
     }
 
-
     return (
         <FadeDiv fade_in={sections === "party"} fade_out={sections !== "party"} className={styleForm.form} variant="form">
-            {/* {formData && formData.elections && (
+            {completeData && completeData.elections && (
                 <table>
                     <thead>
                         <tr>
@@ -90,15 +90,16 @@ export default function Party({ formData }) {
                         </tr>
                     </thead>
                     <tbody>
-                        {formData.elections.map((election, index) => (
+                        {completeData.elections.map((election, index) => (
                             <tr key={index}>
                                 <td>{election._id.name}</td>
-
+                                <td>{election.partyId.partyName}</td>
+                                <td>{election.status}</td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-            )} */}
+            )}
             <Input.Div variant="white" className={styleForm.div}>
                 <div className={styleForm.inp}>
                     <Input.Dropdown
