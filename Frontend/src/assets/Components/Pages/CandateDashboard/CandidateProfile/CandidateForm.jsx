@@ -36,7 +36,7 @@ export default function CandidateForm() {
             });
             const res = await response.json();
 
-            // console.log(res);
+            console.log(res);
 
             if (res) {
                 setFormData((prev) => ({
@@ -51,8 +51,6 @@ export default function CandidateForm() {
                     otp: "",
                     profession: res.self_profession || "",
                     image: res.image || null,
-                    party: res.party || "",
-                    state: res.state || "",
                     manifesto: res.manifesto || null,
                     spouse: res.spouse || "",
                     spouse_profession: res.spouse_profession || "",
@@ -67,7 +65,6 @@ export default function CandidateForm() {
             console.error("Fetch error:", error);
         }
     }
-
 
     useEffect(() => {
         fetchDetails();
@@ -101,8 +98,8 @@ export default function CandidateForm() {
         // console.log("Sending FormData:", [...formDataObj.entries()]);
 
         try {
-            const response = await fetch(`${database_url}/candidates/details`, {
-                method: "POST",
+            const response = await fetch(`${database_url}/candidates/updatecandidate`, {
+                method: "PUT",
                 headers: { "Authorization": `Bearer ${token}` },
                 body: formDataObj,
             });
@@ -121,16 +118,16 @@ export default function CandidateForm() {
         <div className={styleForm.full}>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 {/* Personal Information */}
-                <Personel {...{ handleFormChange, handleFileSelect, formData }} />
+                <Personel {...{ handleFormChange, handleFileSelect, formData, handleSubmit }} />
 
                 {/* Party Information */}
                 <Party {...{ handleFormChange, handleFileSelect, formData }} />
 
                 {/* Other Information */}
-                <Other {...{ handleFormChange, handleFileSelect, formData }} />
+                <Other {...{ handleFormChange, handleFileSelect, formData, handleSubmit }} />
 
                 {/* Declaration */}
-                <Declaration {...{ handleFormChange, handleFileSelect, handleSubmit, formData }} />
+                {/* <Declaration {...{ handleFormChange, handleFileSelect, handleSubmit, formData }} /> */}
 
             </form>
         </div>

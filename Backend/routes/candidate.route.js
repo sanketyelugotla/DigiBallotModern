@@ -7,7 +7,7 @@ const candidate = express.Router();
 // 📌 POST: Upload image and update candidate details
 candidate.put("/updatecandidate", upload.fields([{ name: "image" }, { name: "manifesto" }]), async (req, res) => {
     try {
-        const response = await candidateService.updateCandidatecandidate(req.user._id, req.files, req.body);
+        const response = await candidateService.updateCandidateDetails(req.user._id, req.files, req.body);
         return res.status(200).json({
             message: "Candidate updated successfully",
             ...response,
@@ -50,9 +50,9 @@ candidate.get("/get/:id", async (req, res) => {
 })
 
 candidate.post("/register", async (req, res) => {
-    const { electionId } = req.body;
+    const { electionId, partyId } = req.body;
     try {
-        const candidate = await candidateService.registerForElection(req.user, electionId);
+        const candidate = await candidateService.registerForElection(req.user, electionId, partyId);
         if (!candidate.success) throw new Error(candidate.message);
         return res.status(201).json({ success: true, status: "pending", message: candidate.message })
     } catch (error) {

@@ -4,7 +4,7 @@ import { sectionsContext } from "../CandidateProfile/SectionsContextProvider";
 import styleForm from "../CandidateProfile/CandidateForm.module.css";
 import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 
-export default function Party({ handleFileSelect, handleFormChange, formData }) {
+export default function Party({ formData }) {
     const { sections } = useContext(sectionsContext);
     const [elections, setElections] = useState([]);
     const { database_url } = useContext(databaseContext);
@@ -55,8 +55,50 @@ export default function Party({ handleFileSelect, handleFormChange, formData }) 
         selectedElection && getPaties();
     }, [selectedElection])
 
+    async function handleRegister(e) {
+        e.preventDefault();
+        try {
+            const response = await fetch(`${database_url}/candidates/register`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    electionId: selectedElection._id,
+                    partyId: selectedParty._id
+                }),
+            });
+            const res = await response.json();
+            if (res.success) window.alert(res.message);
+            else window.alert(res.message)
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
     return (
         <FadeDiv fade_in={sections === "party"} fade_out={sections !== "party"} className={styleForm.form} variant="form">
+            {/* {formData && formData.elections && (
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Election</th>
+                            <th>Party</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {formData.elections.map((election, index) => (
+                            <tr key={index}>
+                                <td>{election._id.name}</td>
+
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )} */}
             <Input.Div variant="white" className={styleForm.div}>
                 <div className={styleForm.inp}>
                     <Input.Dropdown
@@ -65,23 +107,22 @@ export default function Party({ handleFileSelect, handleFormChange, formData }) 
                         label="Select election"
                         setSelectedItem={setSelectedElection}
                     />
-                    {/* <Input type="text" label="Party Name" name="partyName" value={formData.partyName} onChange={handleFormChange} /> */}
+                </div>
+
+                <div className={styleForm.inp}>
                     <Input.Dropdown
                         options={parties}
                         header="Select Party"
                         label="Select Party"
                         setSelectedItem={setSelectedParty}
+                        defaultValue="No parties available"
                     />
-                </div>
-
-                <div className={styleForm.inp}>
-                    <Input type="text" label="State" name="state" value={formData.state} onChange={handleFormChange} />
                 </div>
             </Input.Div>
 
             {/* File Upload */}
-            <Input.File title="Upload your party symbol here" label="Max photo size: 5MB" onFileSelect={handleFileSelect} />
-            <Button size="lg">Register for election</Button>
+            {/* <Input.File title="Upload your party symbol here" label="Max photo size: 5MB" onFileSelect={handleFileSelect} /> */}
+            <Button size="lg" onClick={handleRegister}>Register for election</Button>
         </FadeDiv>
     )
 }

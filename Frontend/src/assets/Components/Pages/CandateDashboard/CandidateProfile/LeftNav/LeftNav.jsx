@@ -37,13 +37,13 @@ export default function LeftNav({ handleSelectionChange }) {
                 <TbListDetails className={styleNav.icon} />
                 Other details
             </p>
-            <p id='declaration'
+            {/* <p id='declaration'
                 className={`${styleNav.para} ${sections === "declaration" && styleNav.highlight}`}
                 onClick={handleClick}
             >
                 <CiCircleCheck className={styleNav.icon} />
                 Declaration
-            </p>
+            </p> */}
         </div>
     )
 }
