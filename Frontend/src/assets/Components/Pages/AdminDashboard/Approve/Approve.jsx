@@ -19,7 +19,7 @@ export default function Approve({ handleApprove }) {
 
     function handleToggleAll() {
         setIsToggleAllActive(!isToggleAllActive);
-        toggleAll();
+        // toggleAll();
     }
 
     function handleTab() {

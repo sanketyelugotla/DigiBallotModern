@@ -38,6 +38,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
 
             if (!response.ok) throw new Error("Failed to fetch candidates");
             const res = await response.json();
+            console.log(res)
 
             setCandidates(res);
 
@@ -128,6 +129,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
                             <tr>
                                 <th>Candidate Name</th>
                                 <th>Election Name</th>
+                                <th>Party Name</th>
                                 <th>Select</th>
                             </tr>
                         </thead>
@@ -138,6 +140,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
                                     <tr key={candidateKey} className={styles.entry}>
                                         <td>{candidate.fullName || "Unknown"}</td>
                                         <td>{candidate.electionName}</td>
+                                        <td>{candidate.partyName}</td>
                                         <td>
                                             <ToggleButton
                                                 isOn={toggleStates[candidateKey]}

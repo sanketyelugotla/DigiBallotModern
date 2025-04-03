@@ -54,7 +54,7 @@ const getDetails = async (req) => {
         return {
             success: true,
             data: {
-                _id : id,
+                _id: id,
                 name: user.name,
                 email: user.email,
                 dob: admin.dob,
@@ -111,7 +111,8 @@ const getPendingCandidates = async () => {
         const candidates = await Candidate.find({
             "elections.status": "pending"
         })
-        .populate("elections._id", "name"); // Fetch election name from Election schema
+            .populate("elections._id", "name")
+            .populate("elections.partyId", "partyName"); // Fetch election name from Election schema
 
         // Flatten candidates so that each candidate-election pair is separate
         const expandedCandidates = candidates.flatMap(candidate =>
@@ -123,7 +124,9 @@ const getPendingCandidates = async () => {
                     email: candidate.email,
                     electionId: election._id?._id || election._id, // Ensure only the ObjectId is stored
                     electionName: election._id?.name || "Unknown", // Extract election name directly
-                    status: election.status
+                    status: election.status,
+                    partyId: election.partyId._id,
+                    partyName: election.partyId?.partyName
                 }))
         );
 
