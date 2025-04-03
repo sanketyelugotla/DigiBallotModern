@@ -1,7 +1,7 @@
 import { useContext, useState } from "react"
 import { Input } from "../../../Hooks/index"
 import { replace, useNavigate } from "react-router-dom";
-import { databaseContext } from "../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
 
 export default function LoginSide({ changeSide, handleClose, fetchUserDetails }) {
     const { database_url } = useContext(databaseContext);
@@ -10,6 +10,7 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
         password: ""
     });
     const [isWrong, setIsWrong] = useState(false);
+    const { setLoading } = useContext(loadingContext);
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -19,6 +20,7 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
     const navigate = useNavigate();
 
     async function handleSubmit(event) {
+        setLoading(true);
         event.preventDefault();
 
         const { email, password } = fomrData;
@@ -61,6 +63,8 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
             }
         } catch (error) {
             console.error("Error logging in:", error);
+        } finally {
+            setLoading(false);
         }
     }
 

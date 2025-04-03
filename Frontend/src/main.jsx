@@ -7,6 +7,7 @@ import SectionsContextProvider1 from './assets/Components/Pages/AdminDashboard/A
 import SectionsContextProvider from './assets/Components/Pages/CandateDashboard/CandidateProfile/SectionsContextProvider.jsx'
 
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom"
+import Loading from './assets/Components/Loading.jsx'
 
 
 createRoot(document.getElementById('root')).render(
@@ -16,6 +17,7 @@ createRoot(document.getElementById('root')).render(
         <SectionsContextProvider>
           <SectionsContextProvider1>
             <App />
+            <Loading />
           </SectionsContextProvider1>
         </SectionsContextProvider>
       </ContextProvider>

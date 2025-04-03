@@ -1,8 +1,8 @@
 import "./Header.css";
 import { Button } from "../../Hooks/index";
-import { loggedContext, stateContext, loginColorState, databaseContext, userContext } from "../../Hooks/ContextProvider/ContextProvider";
+import { loggedContext, stateContext, loginColorState, databaseContext, userContext, loadingContext } from "../../Hooks/ContextProvider/ContextProvider";
 import { useContext, useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 import { CgProfile } from "react-icons/cg";
 import { HoverDiv } from "../../Hooks/index";
 import { FaAngleDown } from "react-icons/fa";
@@ -17,25 +17,39 @@ export default function Header({ onLoginClick }) {
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [profilePosition, setProfilePosition] = useState({ top: 0, left: 0 });
 
-    const usernameRef = useRef(null); // Reference for user.name
+    const { setLoading} = useContext(loadingContext);
+
+    const usernameRef = useRef(null);
+
 
     async function fetchUserDetails() {
+        setLoading(true);
+
         const token = localStorage.getItem("authToken");
 
-        const response = await fetch(`${database_url}/auth/details`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            }
-        });
-        const res = await response.json();
+        try {
+            const response = await fetch(`${database_url}/auth/details`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
 
-        if (!res.status) {
-            navigate("/");
+            const res = await response.json();
+            if (!res.status) {
+                navigate("/");
+            } else {
+                setUser(res.user);
+            }
+        } catch (error) {
+            navigate("/", replace);
+            console.error("Error fetching user details:", error);
+        } finally {
+            setLoading(false);
         }
-        setUser(res.user);
     }
+
 
     useEffect(() => {
         if (!user) fetchUserDetails();
