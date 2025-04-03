@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { databaseContext, electionDetails, userContext } from "../../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, electionDetails, userContext, loadingContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import styleElection from "../../CandidateDetails/Election.module.css";
 import { Button } from "../../../../Hooks";
-import { useNavigate, loadingContext } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterElection() {
     const { user } = useContext(userContext);
