@@ -4,7 +4,7 @@ import {
 } from "recharts";
 import styleResults from "./Results.module.css";
 import { getTotal } from "../../../Data/Results";
-import { databaseContext, electionDetails } from "../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, electionDetails, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
 
 export default function Results() {
     const colors = ["#1e3a8a", "#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
@@ -12,11 +12,13 @@ export default function Results() {
     const { selectedElection } = useContext(electionDetails);
     const [votes, setVotes] = useState([]);
     const token = localStorage.getItem("authToken");
+    const { setLoading } = useContext(loadingContext)
 
     const totalVotes = votes.reduce((acc, curr) => acc + curr.votes, 0);
 
     async function fetchVotes() {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/voter/getVotes/${selectedElection._id}`, {
                 headers: { "Authorization": `Bearer ${token}` },
                 method: "POST",
@@ -47,6 +49,8 @@ export default function Results() {
             setVotes(candidatesWithVotes);
         } catch (error) {
             console.error("Error fetching votes:", error);
+        } finally {
+            setLoading(false);
         }
     }
 

@@ -1,6 +1,6 @@
 import { Input } from "../../../Hooks/index"
 import { useContext, useState } from "react"
-import { databaseContext, userTypeContext } from "../../../Hooks/ContextProvider/ContextProvider"
+import { databaseContext, userTypeContext, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider"
 import { useNavigate } from "react-router-dom";
 
 export default function SignupSide({ changeSide, handleLogin, handleClose, fetchUserDetails }) {
@@ -12,6 +12,7 @@ export default function SignupSide({ changeSide, handleLogin, handleClose, fetch
     })
     const { userType } = useContext(userTypeContext);
     const { database_url } = useContext(databaseContext);
+    const { setLoading } = useContext(loadingContext)
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -21,6 +22,7 @@ export default function SignupSide({ changeSide, handleLogin, handleClose, fetch
     const navigate = useNavigate();
 
     async function handleSubmit(event) {
+        setLoading(true);
         event.preventDefault();
         const { name, email, number, password } = formData;
         try {
@@ -57,9 +59,10 @@ export default function SignupSide({ changeSide, handleLogin, handleClose, fetch
                 // setIsWrong(true);
                 console.error("SignUp failed:", res.message);
             }
-
         } catch (error) {
             console.log("Signup failed ", error);
+        } finally {
+            setLoading(false);
         }
     }
 

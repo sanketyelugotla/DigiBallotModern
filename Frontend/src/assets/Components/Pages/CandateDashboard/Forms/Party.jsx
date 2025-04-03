@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { FadeDiv, Input, Button } from '../../../../Hooks/index'
 import { sectionsContext } from "../CandidateProfile/SectionsContextProvider";
 import styleForm from "../CandidateProfile/CandidateForm.module.css";
-import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
+import { databaseContext, loadingContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 import PartyTable from './PartyTable';
 
 export default function Party({ completeData, fetchDetails }) {
@@ -13,8 +13,10 @@ export default function Party({ completeData, fetchDetails }) {
     const [selectedParty, setSelectedParty] = useState(null);
     const token = localStorage.getItem("authToken");
     const [parties, setParties] = useState([]);
+    const { setLoading } = useContext(loadingContext)
 
     const getElections = async (e) => {
+        setLoading(true);
         try {
             const response = await fetch(`${database_url}/election/all`, {
                 headers: { "Authorization": `Bearer ${token}` }
@@ -28,10 +30,13 @@ export default function Party({ completeData, fetchDetails }) {
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
     const getPaties = async () => {
+        setLoading(true);
         try {
             const response = await fetch(`${database_url}/party/election/${selectedElection._id}`, {
                 headers: { "Authorization": `Bearer ${token}` }
@@ -45,6 +50,8 @@ export default function Party({ completeData, fetchDetails }) {
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -58,6 +65,7 @@ export default function Party({ completeData, fetchDetails }) {
 
     async function handleRegister(e) {
         e.preventDefault();
+        setLoading(true);
         try {
             const response = await fetch(`${database_url}/candidates/register`, {
                 method: "POST",
@@ -78,6 +86,8 @@ export default function Party({ completeData, fetchDetails }) {
             else window.alert(res.message)
         } catch (error) {
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     }
 

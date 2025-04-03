@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./MemberCarousel.css";
-import { databaseContext, electionDetails } from "../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, electionDetails, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
 import CandidateTable from "./CandidateTable";
 import CandidateCarousel from "./CandidateCarousel";
 
@@ -12,6 +12,7 @@ export default function CandidateDetails() {
     const { selectedElection, setSelectedElection } = useContext(electionDetails);
     const [party, setParty] = useState(null);
     const token = localStorage.getItem("authToken");
+    const { setLoading } = useContext(loadingContext)
 
     const handleShift = (direction) => {
         setSelectedIndex((prevIndex) => {
@@ -23,6 +24,7 @@ export default function CandidateDetails() {
 
     async function fetchCandidates() {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/candidates/${selectedElection._id}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -31,12 +33,16 @@ export default function CandidateDetails() {
             setCandidatesData(res);
         } catch (error) {
             console.error("Error fetching candidates:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
     async function fetchParty(partyId) {
+        setLoading(true);
         if (!partyId) {
             console.warn("fetchParty called with null partyId");
+            setLoading(false);
             return;
         }
 
@@ -50,6 +56,8 @@ export default function CandidateDetails() {
             setParty(res);
         } catch (error) {
             console.error("Error fetching party:", error);
+        } finally {
+            setLoading(false);
         }
     }
 

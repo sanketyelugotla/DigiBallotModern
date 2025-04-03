@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import { FadeDiv, Input, Button } from '../../../../../Hooks';
 import { sectionsContext } from '../SectionsContextProvider';
 import styleForm from "../AdminForm.module.css";
-import { databaseContext } from '../../../../../Hooks/ContextProvider/ContextProvider';
+import { databaseContext, loadingContext } from '../../../../../Hooks/ContextProvider/ContextProvider';
 
 export default function Other() {
     const { sections } = useContext(sectionsContext)
@@ -14,6 +14,7 @@ export default function Other() {
         endDate: "",
         pic: ""
     });
+    const { setLoading } = useContext(loadingContext);
 
     const handleFormChange = (e) => {
         const { name, value } = e.target;
@@ -28,6 +29,7 @@ export default function Other() {
     };
 
     const handleSubmit = async (e) => {
+        setLoading(true);
         e.preventDefault();
 
         const formDataObj = new FormData();
@@ -54,6 +56,8 @@ export default function Other() {
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
 

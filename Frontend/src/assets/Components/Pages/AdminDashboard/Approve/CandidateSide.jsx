@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ToggleButton, Button } from '../../../../Hooks/index';
-import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
+import { databaseContext, loadingContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 import styles from "./Approve.module.css"
 
 export default function CandidateSide({ setExportData, setExportHeaders, active, isToggleAllActive }) {
     const { database_url } = useContext(databaseContext);
     const [candidates, setCandidates] = useState([]);
     const [toggleStates, setToggleStates] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading1, setloading1] = useState(true);
+    const { setLoading } = useContext(loadingContext)
 
     const headersData = [
         { label: "Name", key: "fullName" },
@@ -26,7 +27,9 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
     }, [isToggleAllActive]);
 
     async function fetchPendingCandidates() {
+        setloading1(true);
         setLoading(true);
+
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/candidates`, {
@@ -55,6 +58,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
         } catch (error) {
             console.log("Error fetching candidates:", error);
         } finally {
+            setloading1(false);
             setLoading(false);
         }
     }
@@ -79,6 +83,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
     };
 
     const handleBulkApprove = async () => {
+        setLoading(true);
         try {
             const candidatesToApprove = candidates
                 .filter((candidate) => toggleStates[`${candidate._id}_${candidate.electionId}`])
@@ -113,13 +118,15 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
         } catch (error) {
             console.error("Error approving candidates:", error.message);
             alert("Failed to approve candidates. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <div>
-            {loading ? (
-                <p>Loading Candidates...</p>
+            {loading1 ? (
+                <p>loading Candidates...</p>
             ) : candidates.length === 0 ? (
                 <p>No candidates found.</p>
             ) : (

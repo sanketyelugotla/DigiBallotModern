@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { FadeDiv, Input, Button } from '../../../../../Hooks';
 import styleForm from "../AdminForm.module.css";
-import { databaseContext } from '../../../../../Hooks/ContextProvider/ContextProvider';
+import { databaseContext, loadingContext } from '../../../../../Hooks/ContextProvider/ContextProvider';
 import { sectionsContext } from '../SectionsContextProvider';
 
 export default function Party() {
@@ -14,8 +14,10 @@ export default function Party() {
         partyImage: "",
         state: ""
     });
+    const { setLoading } = useContext(loadingContext);
 
     const getElections = async (e) => {
+        setLoading(true);
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/election/elections`, {
@@ -30,6 +32,8 @@ export default function Party() {
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -51,6 +55,7 @@ export default function Party() {
     };
 
     async function createParty(e) {
+        setLoading(true);
         e.preventDefault();
         const formDataObj = new FormData();
 
@@ -59,7 +64,6 @@ export default function Party() {
                 formDataObj.append(key, party[key]);
             }
         });
-        console.log(selectedElection)
         formDataObj.append("adminId", selectedElection.adminId);
         formDataObj.append("electionId", selectedElection._id);
 
@@ -78,6 +82,9 @@ export default function Party() {
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        }
+        finally {
+            setLoading(false);
         }
     }
 

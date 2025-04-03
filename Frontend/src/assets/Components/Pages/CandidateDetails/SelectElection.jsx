@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { databaseContext, electionDetails } from "../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, electionDetails, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
 import styleElection from "./Election.module.css";
 import { Button } from "../../../Hooks";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +10,11 @@ export default function SelectElection() {
     const [elections, setElections] = useState([]);
     const [candidates, setCandidates] = useState({});
     const token = localStorage.getItem("authToken");
+    const { setLoading } = useContext(loadingContext)
 
     async function fetchElections() {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/election/all`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -20,11 +22,14 @@ export default function SelectElection() {
             setElections(res);
         } catch (error) {
             console.error("Error fetching elections:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
     async function fetchCandidates(electionId) {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/candidates/${electionId}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -35,6 +40,8 @@ export default function SelectElection() {
             }));
         } catch (error) {
             console.error("Error fetching candidates:", error);
+        } finally {
+            setLoading(false);
         }
     }
 

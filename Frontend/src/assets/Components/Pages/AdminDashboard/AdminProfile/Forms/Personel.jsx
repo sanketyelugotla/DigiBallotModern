@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { FadeDiv, Input, Button } from '../../../../../Hooks';
 import { sectionsContext } from '../SectionsContextProvider';
 import styleForm from "../AdminForm.module.css";
-import { databaseContext } from '../../../../../Hooks/ContextProvider/ContextProvider';
+import { databaseContext, loadingContext } from '../../../../../Hooks/ContextProvider/ContextProvider';
 
 export default function Personel() {
     const { database_url } = useContext(databaseContext);
@@ -16,6 +16,7 @@ export default function Personel() {
         otp: "",
         image: ""
     });
+    const { setLoading } = useContext(loadingContext);
 
     const handleFileSelect = (file, name) => {
         setFormData((prev) => ({ ...prev, [name]: file }));
@@ -27,6 +28,7 @@ export default function Personel() {
     };
 
     const getData = async () => {
+        setLoading(true);
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/details`, {
@@ -44,6 +46,8 @@ export default function Personel() {
             }
         } catch (error) {
             console.log("Error fetching details", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -53,6 +57,7 @@ export default function Personel() {
     }, [database_url])
 
     const handleSubmit = async (e) => {
+        setLoading(true);
         e.preventDefault();
 
         const formDataObj = new FormData();
@@ -79,6 +84,8 @@ export default function Personel() {
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
 

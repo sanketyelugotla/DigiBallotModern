@@ -2,31 +2,38 @@ import React, { useContext, useState } from 'react'
 import styleVote from "./Vote.module.css"
 import { Link } from 'react-router-dom'
 import { HoverDiv, Button, FadeDiv } from '../../../Hooks/index'
-import { partiesContext, databaseContext, electionDetails } from '../../../Hooks/ContextProvider/ContextProvider'
+import { partiesContext, databaseContext, electionDetails, loadingContext } from '../../../Hooks/ContextProvider/ContextProvider'
 
 export default function ConfirmVote({ onClose }) {
     const { selectedParty } = useContext(partiesContext);
     const [isOpted, setIsopted] = useState(false);
     const { database_url } = useContext(databaseContext);
     const { selectedElection } = useContext(electionDetails);
+    const { setLoading } = useContext(loadingContext)
 
     function handleIsopted() {
         setIsopted(!isOpted);
     }
 
     async function handleVote() {
-        const authToken = localStorage.getItem("authToken");
-        const response = await fetch(`${database_url}/voter/vote`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${authToken}`,
-            },
-            body: JSON.stringify({ candidateId: selectedParty.candidateId, electionId: selectedElection._id })
-        });
-        const res = await response.json();
-        console.log(res);
-        handleIsopted();
+        setLoading(true);
+        try {
+            const authToken = localStorage.getItem("authToken");
+            const response = await fetch(`${database_url}/voter/vote`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authToken}`,
+                },
+                body: JSON.stringify({ candidateId: selectedParty.candidateId, electionId: selectedElection._id })
+            });
+            const res = await response.json();
+            handleIsopted();
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
     }
 
 

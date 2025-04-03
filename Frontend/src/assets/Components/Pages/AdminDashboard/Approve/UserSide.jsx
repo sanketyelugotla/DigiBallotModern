@@ -1,13 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ToggleButton, Button } from "../../../../Hooks/index";
-import { databaseContext } from "../../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, loadingContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import styles from "./Approve.module.css";
 
 export default function UserSide({ setExportData, setExportHeaders, active, isToggleAllActive }) {
     const { database_url } = useContext(databaseContext);
     const [users, setUsers] = useState([]);
     const [toggleStates, setToggleStates] = useState({});
-    const [loading, setLoading] = useState(true);
+    const [loading1, setloading1] = useState(true);
+    const { setLoading } = useContext(loadingContext)
 
     const headersData = [
         { label: "Name", key: "name" },
@@ -28,6 +29,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
     async function fetchPendingUsers() {
         try {
             setLoading(true);
+            setloading1(true);
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/users`, {
                 headers: {
@@ -53,6 +55,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
         } catch (error) {
             console.error("Error fetching users:", error.message);
         } finally {
+            setloading1(false);
             setLoading(false);
         }
     }
@@ -78,6 +81,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
 
     const handleBulkApprove = async () => {
         try {
+            setLoading(true);
             const usersToApprove = users
                 .filter((user) => toggleStates[`${user._id}_${user.electionId}`])
                 .map((user) => ({
@@ -111,14 +115,16 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
         } catch (error) {
             console.error("Error approving users:", error.message);
             alert("Failed to approve users. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
 
     return (
         <div>
-            {loading ? (
-                <p>Loading Users...</p>
+            {loading1 ? (
+                <p>loading Users...</p>
             ) : users.length === 0 ? (
                 <p>No users found.</p>
             ) : (

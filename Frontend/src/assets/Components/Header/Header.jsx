@@ -24,9 +24,7 @@ export default function Header({ onLoginClick }) {
 
     async function fetchUserDetails() {
         setLoading(true);
-
         const token = localStorage.getItem("authToken");
-
         try {
             const response = await fetch(`${database_url}/auth/details`, {
                 method: "GET",
@@ -35,7 +33,6 @@ export default function Header({ onLoginClick }) {
                     "Content-Type": "application/json"
                 }
             });
-
             const res = await response.json();
             if (!res.status) {
                 navigate("/");
@@ -49,7 +46,6 @@ export default function Header({ onLoginClick }) {
             setLoading(false);
         }
     }
-
 
     useEffect(() => {
         if (!user) fetchUserDetails();

@@ -3,10 +3,11 @@ import "./LoginPage.css";
 import { HoverDiv } from "../../../Hooks/index";
 import LoginSide from "./LoginSide";
 import SignupSide from "./SignupSide";
-import { databaseContext, userContext } from "../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, userContext, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
 
 export default function Login({ onClose }) {
     const [isLeft, setIsLeft] = useState(true);
+    const { setLoading } = useContext(loadingContext)
 
     function changeSide() {
         setIsLeft(!isLeft);
@@ -15,20 +16,25 @@ export default function Login({ onClose }) {
     const { user, setUser } = useContext(userContext);
 
     async function fetchUserDetails() {
-        const token = localStorage.getItem("authToken");
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("authToken");
 
-        const response = await fetch(`${database_url}/auth/details`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
-            }
-        });
-        const res = await response.json();
-        console.log(res)
-        setUser(res.user);
-
-        if (!res.status) navigate("/");
+            const response = await fetch(`${database_url}/auth/details`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                }
+            });
+            const res = await response.json();
+            setUser(res.user);
+            if (!res.status) navigate("/");
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (

@@ -10,6 +10,7 @@ export default function CandidateForm() {
     const { user } = useContext(userContext);
     const token = localStorage.getItem("authToken");
     const [completeData, setCompleteData] = useState();
+    const { setLoading } = useContext(loadingContext)
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -31,6 +32,7 @@ export default function CandidateForm() {
     });
 
     async function fetchDetails() {
+        setLoading(true);
         try {
             const response = await fetch(`${database_url}/candidates/get/user`, {
                 headers: { "Authorization": `Bearer ${token}` }
@@ -64,6 +66,8 @@ export default function CandidateForm() {
 
         } catch (error) {
             console.error("Fetch error:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -86,8 +90,8 @@ export default function CandidateForm() {
 
     // Handle form submission
     const handleSubmit = async (e) => {
+        setLoading(true);
         e.preventDefault();
-        console.log(formData)
         const formDataObj = new FormData();
 
         Object.keys(formData).forEach((key) => {
@@ -95,9 +99,6 @@ export default function CandidateForm() {
                 formDataObj.append(key, formData[key]); // Append all fields dynamically
             }
         });
-
-        // console.log("Sending FormData:", [...formDataObj.entries()]);
-
         try {
             const response = await fetch(`${database_url}/candidates/updatecandidate`, {
                 method: "PUT",
@@ -112,6 +113,8 @@ export default function CandidateForm() {
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
 

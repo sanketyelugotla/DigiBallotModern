@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { databaseContext, electionDetails, userContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import styleElection from "../../CandidateDetails/Election.module.css";
 import { Button } from "../../../../Hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, loadingContext } from "react-router-dom";
 
 export default function RegisterElection() {
     const { user } = useContext(userContext);
@@ -11,9 +11,11 @@ export default function RegisterElection() {
     const [elections, setElections] = useState([]);
     const [candidates, setCandidates] = useState({});
     const token = localStorage.getItem("authToken");
+    const { setLoading } = useContext(loadingContext)
 
     async function fetchElections() {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/election/all`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -21,11 +23,14 @@ export default function RegisterElection() {
             setElections(res);
         } catch (error) {
             console.error("Error fetching elections:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
     async function fetchCandidates(electionId) {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/candidates/${electionId}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
@@ -36,6 +41,8 @@ export default function RegisterElection() {
             }));
         } catch (error) {
             console.error("Error fetching candidates:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -59,6 +66,7 @@ export default function RegisterElection() {
 
     async function registerForElection(item) {
         try {
+            setLoading(true);
             const token = localStorage.getItem("authToken");
             console.log(item)
             const response = await fetch(`${database_url}/candidates/register`, {
@@ -76,6 +84,8 @@ export default function RegisterElection() {
             else window.alert(res.message)
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 

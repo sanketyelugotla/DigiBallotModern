@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { databaseContext, userContext } from "../../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, userContext, loadingContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import styleForm from "./AdminForm.module.css";
 import { Election, Party, Personel } from "./Forms";
 import { sectionsContext } from "./SectionsContextProvider";
@@ -17,50 +17,7 @@ export default function AdminForm() {
         gender: "",
         otp: "",
     });
-
-    // async function fetchDetails() {
-    //     try {
-    //         const response = await fetch(`${database_url}/candidates/get/user/${user._id}`);
-    //         const res = await response.json();
-
-    //         console.log(res);
-
-    //         if (res) {
-    //             setFormData((prev) => ({
-    //                 ...prev,
-    //                 fullName: res.fullName || "",
-    //                 email: res.email || "",
-    //                 mobile: res.mobile || "",
-    //                 education: res.education || "",
-    //                 password: res.password,
-    //                 dob: res.dob || "",
-    //                 gender: res.gender || "",
-    //                 otp: "",
-    //                 profession: res.profession || "",
-    //                 image: res.image || null,
-    //                 party: res.party || "",
-    //                 state: res.state || "",
-    //                 manifesto: res.manifesto || null,
-    //                 spouse: res.spouse || "",
-    //                 spouse_profession: res.spouse_profession || "",
-    //                 liabilities: res.liabilities || "",
-    //                 assets: res.assets || "",
-    //             }));
-    //         } else {
-    //             console.error("Error fetching details:", res.message);
-    //         }
-
-    //     } catch (error) {
-    //         console.error("Fetch error:", error);
-    //     }
-    // }
-
-
-    // useEffect(() => {
-    //     fetchDetails();
-    // }, [user])
-
-    // Handle input changes
+    const { setLoading } = useContext(loadingContext);
 
     const handleFormChange = (e) => {
         const { name, value } = e.target;
@@ -69,15 +26,15 @@ export default function AdminForm() {
 
     // Handle file selection dynamically
     const handleFileSelect = (file, name) => {
-            console.log(file)
-            console.log(name)
+        console.log(file)
+        console.log(name)
         setFormData((prev) => ({ ...prev, [name]: file }));
     };
 
     // Handle form submission
     const handleSubmit = async (e) => {
+        setLoading(true);
         e.preventDefault();
-        // console.log(formData)
         const formDataObj = new FormData();
 
         Object.keys(formData).forEach((key) => {
@@ -85,8 +42,6 @@ export default function AdminForm() {
                 formDataObj.append(key, formData[key]); // Append all fields dynamically
             }
         });
-
-        // console.log("Sending FormData:", [...formDataObj.entries()]);
 
         try {
             const token = localStorage.getItem("authToken");
@@ -103,6 +58,8 @@ export default function AdminForm() {
             }
         } catch (error) {
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
 

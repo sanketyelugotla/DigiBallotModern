@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styleVote from "./Vote.module.css"
 import { Button } from '../../../Hooks/index'
-import { partiesContext, databaseContext, electionDetails } from '../../../Hooks/ContextProvider/ContextProvider'
+import { partiesContext, databaseContext, electionDetails, loadingContext } from '../../../Hooks/ContextProvider/ContextProvider'
 import ConfirmVote from './ConfirmVote'
 import VotingTable from './VotingTable'
 
@@ -12,13 +12,21 @@ export default function Vote() {
     const { database_url } = useContext(databaseContext);
     const { selectedElection } = useContext(electionDetails);
     const token = localStorage.getItem("authToken");
+    const { setLoading } = useContext(loadingContext)
 
     async function fetchCandidates() {
-        const response = await fetch(`${database_url}/candidates/${selectedElection._id}`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        const res = await response.json();
-        setCandidateDetails(res);
+        try {
+            setLoading(true);
+            const response = await fetch(`${database_url}/candidates/${selectedElection._id}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const res = await response.json();
+            setCandidateDetails(res);
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
