@@ -3,9 +3,9 @@ import { FadeDiv, Input, Button } from '../../../../Hooks/index'
 import { sectionsContext } from "../CandidateProfile/SectionsContextProvider";
 import styleForm from "../CandidateProfile/CandidateForm.module.css";
 import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
+import PartyTable from './PartyTable';
 
 export default function Party({ completeData }) {
-    console.log(completeData)
     const { sections } = useContext(sectionsContext);
     const [elections, setElections] = useState([]);
     const { database_url } = useContext(databaseContext);
@@ -77,29 +77,10 @@ export default function Party({ completeData }) {
             console.error(error);
         }
     }
-
+    
     return (
         <FadeDiv fade_in={sections === "party"} fade_out={sections !== "party"} className={styleForm.form} variant="form">
-            {completeData && completeData.elections && (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Election</th>
-                            <th>Party</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {completeData.elections.map((election, index) => (
-                            <tr key={index}>
-                                <td>{election._id.name}</td>
-                                <td>{election.partyId.partyName}</td>
-                                <td>{election.status}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            )}
+            <PartyTable completeData={completeData}/>
             <Input.Div variant="white" className={styleForm.div}>
                 <div className={styleForm.inp}>
                     <Input.Dropdown
@@ -123,7 +104,9 @@ export default function Party({ completeData }) {
 
             {/* File Upload */}
             {/* <Input.File title="Upload your party symbol here" label="Max photo size: 5MB" onFileSelect={handleFileSelect} /> */}
-            <Button size="lg" onClick={handleRegister}>Register for election</Button>
+            <Button size="lg" className={styleForm.button} onClick={handleRegister}>Register for election</Button>
+
+            {/* <PartyTable completeData={completeData}/> */}
         </FadeDiv>
     )
 }
