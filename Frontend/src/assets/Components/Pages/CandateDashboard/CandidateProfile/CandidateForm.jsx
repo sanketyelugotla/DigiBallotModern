@@ -122,7 +122,7 @@ export default function CandidateForm() {
                 <Personel {...{ handleFormChange, handleFileSelect, formData, handleSubmit }} />
 
                 {/* Party Information */}
-                <Party {...{ handleFormChange, handleFileSelect, completeData }} />
+                <Party {...{ handleFormChange, handleFileSelect, completeData, fetchDetails }} />
 
                 {/* Other Information */}
                 <Other {...{ handleFormChange, handleFileSelect, formData, handleSubmit }} />

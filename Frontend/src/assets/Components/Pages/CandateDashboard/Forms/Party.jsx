@@ -5,7 +5,7 @@ import styleForm from "../CandidateProfile/CandidateForm.module.css";
 import { databaseContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 import PartyTable from './PartyTable';
 
-export default function Party({ completeData }) {
+export default function Party({ completeData, fetchDetails }) {
     const { sections } = useContext(sectionsContext);
     const [elections, setElections] = useState([]);
     const { database_url } = useContext(databaseContext);
@@ -71,16 +71,19 @@ export default function Party({ completeData }) {
                 }),
             });
             const res = await response.json();
-            if (res.success) window.alert(res.message);
+            if (res.success) {
+                fetchDetails();
+                window.alert(res.message);
+            }
             else window.alert(res.message)
         } catch (error) {
             console.error(error);
         }
     }
-    
+
     return (
         <FadeDiv fade_in={sections === "party"} fade_out={sections !== "party"} className={styleForm.form} variant="form">
-            <PartyTable completeData={completeData}/>
+            <PartyTable completeData={completeData} />
             <Input.Div variant="white" className={styleForm.div}>
                 <div className={styleForm.inp}>
                     <Input.Dropdown
@@ -106,7 +109,6 @@ export default function Party({ completeData }) {
             {/* <Input.File title="Upload your party symbol here" label="Max photo size: 5MB" onFileSelect={handleFileSelect} /> */}
             <Button size="lg" className={styleForm.button} onClick={handleRegister}>Register for election</Button>
 
-            {/* <PartyTable completeData={completeData}/> */}
         </FadeDiv>
     )
 }
