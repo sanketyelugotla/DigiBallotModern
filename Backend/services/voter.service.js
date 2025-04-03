@@ -87,8 +87,6 @@ const registerForElection = async (userId, electionId) => {
         const voter = await Voter.findOne({ userId });
         if (!voter) throw new Error("Voter not found");
 
-        console.log(voter)
-
         const { electionService } = require("./index.js");
 
         const election = await electionService.getElectionById(electionId);
@@ -102,16 +100,17 @@ const registerForElection = async (userId, electionId) => {
         // Check if voter is already registered
         const existingRegistration = voter.elections.find(
             (e) => {
-                console.log(e)
                 return e._id.toString() === electionId
             }
         );
-        console.log(existingRegistration)
         if (existingRegistration?.status === "approved") {
             throw new Error("You are already registered for this election");
         }
         if (existingRegistration?.status === "pending") {
             throw new Error("Please wait for admin approval");
+        }
+        if (existingRegistration?.status === "cast") {
+            throw new Error("Already cast an vote in this election");
         }
 
         // Push new election registration
@@ -147,11 +146,32 @@ const getRegisteredElections = async (userId) => {
     }
 };
 
+const isRegistered = async (userId, electionId) => {
+    try {
+        const voter = await Voter.findOne({ userId });
+
+        if (!voter) return { status: false, message: "Voter not found" };
+        if (!voter.elections || voter.elections.length === 0)
+            return { status: false, message: "You are not registered for this election" };
+
+        const election = voter.elections.find(e => e._id.toString() === electionId);
+        if (!election) return { status: false, message: "You are not registered for this election" };
+        if (election.status === "pending") return { status: false, message: "Approval pending from Admin" };
+        if (election.status === "cast") return { status: false, message: "You already casted your vote in this election" };
+
+        return { status: true, message: "Eligible to vote" };
+    } catch (error) {
+        return { status: false, message: error };
+    }
+};
+
+
 
 module.exports = {
     voteCandidate,
     getVotes,
     getVoterIdFromUserId,
     registerForElection,
-    getRegisteredElections
+    getRegisteredElections,
+    isRegistered
 };

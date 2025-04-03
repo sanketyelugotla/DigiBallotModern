@@ -38,29 +38,6 @@ export default function CandidateDetails() {
         }
     }
 
-    async function fetchParty(partyId) {
-        setLoading(true);
-        if (!partyId) {
-            console.warn("fetchParty called with null partyId");
-            setLoading(false);
-            return;
-        }
-
-        try {
-            // console.log(`Fetching party for partyId: ${partyId}`);
-            const response = await fetch(`${database_url}/party/${partyId}`, {
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            const res = await response.json();
-            // console.log("Fetched party:", res);
-            setParty(res);
-        } catch (error) {
-            console.error("Error fetching party:", error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
         fetchCandidates();
     }, [database_url]);
@@ -71,18 +48,9 @@ export default function CandidateDetails() {
             if (candidatesData.length === 3) ind += 1;
             else if (candidatesData.length > 3) ind += 2;
             let selected = candidatesData[(ind) % candidatesData.length];
-            // console.log("Selected candidate:", selected);
             setSelectedData(selected);
         }
     }, [selectedIndex, candidatesData]);
-
-    useEffect(() => {
-        if (selectedData && selectedData.partyId) { 
-            fetchParty(selectedData.partyId);
-        } else {
-            console.warn("No partyId found in selectedData");
-        }
-    }, [selectedData]);
 
     function check(position) {
         if (position === 1 || position === 0) {
@@ -104,8 +72,8 @@ export default function CandidateDetails() {
                         selectedData={selectedData}
                         check={check}
                     />
-                    {selectedData && party ? (
-                        <CandidateTable selectedData={selectedData} party={party} />
+                    {selectedData ? (
+                        <CandidateTable selectedData={selectedData} />
                     ) : (
                         <p>Loading candidate details...</p>
                     )}

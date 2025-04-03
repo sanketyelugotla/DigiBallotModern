@@ -27,7 +27,6 @@ export default function Header({ onLoginClick }) {
         const token = localStorage.getItem("authToken");
         try {
             const response = await fetch(`${database_url}/auth/details`, {
-                method: "GET",
                 headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"

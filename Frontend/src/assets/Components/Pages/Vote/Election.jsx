@@ -49,13 +49,36 @@ export default function Election() {
         else onClose();
     }
 
-    function handleChange() {
-        navigate("/userDashboard/vote")
+    async function handleChange() {
+        try {
+            setLoading(true);
+            const response = await fetch(`${database_url}/voter/isEligible`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ electionId: selectedElection._id })
+            });
+            const res = await response.json();
+            if (res.status) {
+                navigate("/userDashboard/vote");
+            } else {
+                alert(res.message);
+                setIsConfirmOpen(false);
+                console.error(res.message);
+            }
+        } catch (error) {
+            console.error("Error checking eligibility:", error);
+        } finally {
+            setLoading(false);
+        }
     }
+
 
     return (
         <div className={styleElection.main}>
-            <h2>Active Elections</h2>
+            <h2 className={styleVote.head}>Active Elections</h2>
             <table className={styleVote.table} id={styleElection.table} border={1}>
                 <thead>
                     <tr className={styleVote.row}>
@@ -86,7 +109,7 @@ export default function Election() {
                     })}
                 </tbody>
             </table>
-            <Button onClick={handleClick}>Proceed</Button>
+            <Button size="lg" onClick={handleClick}>Proceed</Button>
             {isConfirmOpen &&
                 <HoverDiv onClose={onClose} variant="voteBox">
                     {({ handleClose }) => (

@@ -57,6 +57,12 @@
     }
 }
 
+.head {
+    font-family: Volkhov;
+    font-size: 35px;
+    color: var(--themeBlue);
+}
+
 .note {
     font-size: 17px;
     margin-bottom: 2vh;
