@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import { databaseContext, electionDetails, loadingContext } from '../../../Hooks/ContextProvider/ContextProvider'
 import styleVote from "./Vote.module.css"
 import { Button, HoverDiv } from '../../../Hooks';
+import { toast } from "react-toastify";
 
 import styleElection from "./Election.module.css"
 import { useNavigate } from 'react-router-dom';
@@ -25,9 +26,10 @@ export default function Election() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setElections(res.elections);
+            if (res.success) setElections(res.elections);
+            else toast.error(res.message)
         } catch (error) {
-            console.log(error)
+            toast.error(error);
         } finally {
             setLoading(false);
         }
@@ -64,12 +66,11 @@ export default function Election() {
             if (res.status) {
                 navigate("/userDashboard/vote");
             } else {
-                alert(res.message);
+                toast.warning(res.message);
                 setIsConfirmOpen(false);
-                console.error(res.message);
             }
         } catch (error) {
-            console.error("Error checking eligibility:", error);
+            toast.error(error);
         } finally {
             setLoading(false);
         }

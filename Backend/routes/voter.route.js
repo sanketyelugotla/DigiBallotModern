@@ -5,13 +5,11 @@ const { voterService } = require("../services/index");
 voter.post("/vote", async (req, res) => {
     const { candidateId, electionId } = req.body;
     try {
-        console.log(req.user);
         const voterId = await voterService.getVoterIdFromUserId(req.user._id);
         const vote = await voterService.voteCandidate(voterId, candidateId, electionId);
-        return res.status(201).json({ message: vote.message });
+        return res.status(201).json({ success: true, message: vote.message });
     } catch (error) {
-        console.log(error.message);
-        return res.status(500).json(error.message)
+        return res.status(500).json({succcess: false, message: error.message})
     }
 })
 

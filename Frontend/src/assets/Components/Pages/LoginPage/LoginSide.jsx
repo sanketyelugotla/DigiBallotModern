@@ -2,6 +2,7 @@ import { useContext, useState } from "react"
 import { Input } from "../../../Hooks/index"
 import { replace, useNavigate } from "react-router-dom";
 import { databaseContext, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
+import { toast } from "react-toastify";
 
 export default function LoginSide({ changeSide, handleClose, fetchUserDetails }) {
     const { database_url } = useContext(databaseContext);
@@ -33,13 +34,11 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
                 },
                 body: JSON.stringify({ email, password })
             });
-
             const res = await response.json();
-
-            if (response.ok) {
+            if (res.success) {
+                toast.success("Login successfull");
                 localStorage.setItem("authToken", res.token);
                 fetchUserDetails();
-
 
                 handleClose();
                 switch (res.role) {
@@ -59,6 +58,7 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
                 }
             } else {
                 setIsWrong(true);
+                toast.error(res.message)
                 console.error("Login failed:", res.message);
             }
         } catch (error) {
@@ -81,7 +81,7 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
                     <div className="link">
                         <a href="#">Forgot password?</a>
                     </div>
-                    <Input.Danger on={isWrong}>Incorrect VoterId or Password</Input.Danger>
+                    {/* <Input.Danger on={isWrong}>Incorrect VoterId or Password</Input.Danger> */}
                     <Input.Submit variant="formbtn" onClick={handleSubmit}>Login</Input.Submit>
                 </Input.Form>
             </ Input.Div>

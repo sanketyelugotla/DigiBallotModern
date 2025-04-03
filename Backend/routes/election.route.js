@@ -5,30 +5,29 @@ const { electionService } = require("../services/index");
 election.get("/", async (req, res) => {
     try {
         const elections = await electionService.getActiveElections();
-        return res.status(200).json({ messsage: "Active elections", elections })
+        return res.status(200).json({ success: true, messsage: "Active elections", elections })
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: error.message })
+        return res.status(500).json({ success: false, message: error.message })
     }
 })
 
 election.get("/elections", async (req, res) => {
     try {
         const elections = await electionService.getElectionsForAdmin(req);
-        return res.status(200).json({ messsage: "Elections", elections })
+        return res.status(200).json({ seccess: true, messsage: "Elections", elections })
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: error.message })
+        return res.status(500).json({ success: false, message: error.message })
     }
 })
 
 election.get("/all", async (req, res) => {
     try {
         const elections = await electionService.getAllElections();
-        return res.status(200).json(elections);
+        return res.status(200).json({success: true, message: "Fetched elections successfully", elections});
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: error.message })
+        return res.status(500).json({ success: false, message: error.message })
     }
 })
 
