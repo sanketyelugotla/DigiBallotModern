@@ -15,9 +15,7 @@ export default function ConfirmVote({ onClose }) {
     }
 
     async function handleVote() {
-        console.log(selectedParty);
         const authToken = localStorage.getItem("authToken");
-        console.log(authToken)
         const response = await fetch(`${database_url}/voter/vote`, {
             method: "POST",
             headers: {

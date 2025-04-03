@@ -1,34 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
-import styleVote from "./Vote.module.css";
+import React, { useContext } from 'react';
 import { Button } from "../../../Hooks/index";
+import styleVote from "./Vote.module.css";
 import { databaseContext } from '../../../Hooks/ContextProvider/ContextProvider';
 
 export default function VotingTable({ data, selectButton, selectedParty }) {
     const { database_url } = useContext(databaseContext);
-    const [parties, setParties] = useState({});
-    const token = localStorage.getItem("authToken");
-
-    useEffect(() => {
-        async function fetchAllParties() {
-            const partyData = {};
-            data && await Promise.all(data.map(async (item) => {
-                if (!item.partyId) return;
-                try {
-                    const response = await fetch(`${database_url}/party/${item.partyId}`, {
-                        headers: { "Authorization": `Bearer ${token}` }
-                    });
-                    const res = await response.json();
-                    partyData[item.partyId] = res; // Store party data by partyId
-                } catch (error) {
-                    console.error("Error fetching party:", error);
-                }
-            }));
-            setParties(partyData);
-        }
-
-        fetchAllParties();
-    }, [data, database_url]);
-
     return (
         <table className={styleVote.table} border={1}>
             <thead>
@@ -41,17 +17,13 @@ export default function VotingTable({ data, selectButton, selectedParty }) {
             </thead>
             <tbody>
                 {data && data.map((item) => {
-                    const party = parties[item.partyId];
-
                     return (
-                        <tr className={styleVote.row} key={item.partyId}>
+                        <tr className={styleVote.row} key={item.election.partyId._id}>
                             <td className={styleVote.col}>{item.fullName}</td>
-                            <td className={styleVote.col}>{party ? party.partyName : "Loading..."}</td>
+                            <td className={styleVote.col}>{item.election.partyId.partyName}</td>
                             <td className={styleVote.col}>
                                 <center>
-                                    {party ? (
-                                        <img src={`${database_url}/image/party/image/${party._id}`} alt="Party Symbol" />
-                                    ) : "Loading..."}
+                                    <img src={`${database_url}/image/party/image/${item.election.partyId._id}`} alt="Party Symbol" />
                                 </center>
                             </td>
                             <td className={styleVote.col}>
@@ -60,10 +32,10 @@ export default function VotingTable({ data, selectButton, selectedParty }) {
                                         variant="light"
                                         radius="sharp"
                                         name={item.partyId}
-                                        onClick={(event) => selectButton(event, item, party)}
-                                        active={selectedParty.party === party?.partyName}
+                                        onClick={(event) => selectButton(event, item)}
+                                        active={selectedParty.party === item.election.partyId.partyName}
                                     >
-                                        {selectedParty.party === party?.partyName ? "Deselect" : "Select"}
+                                        {selectedParty.party === item.election.partyId.partyName ? "Deselect" : "Select"}
                                     </Button>
                                 </center>
                             </td>

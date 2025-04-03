@@ -40,10 +40,21 @@ const getApprovedCandidates = async (electionId) => {
     const candidates = await Candidate.find({
         "elections._id": electionId,
         "elections.status": "approved"
-    }).lean();
+    })
+        .populate("elections._id", "name")
+        .populate("elections.partyId", "partyName partyImage")
+        .lean();
 
-    return candidates.length ? candidates : [];
+    return candidates.map(candidate => {
+        const selectedElection = candidate.elections.find(e => e._id._id.toString() === electionId);
+        console.log(selectedElection)
+        return {
+            ...candidate,
+            election: selectedElection
+        };
+    });
 };
+
 
 const getCandidateDetails = async (candidateId) => {
     if (!mongoose.Types.ObjectId.isValid(candidateId)) throw new Error("Invalid candidateId");
@@ -120,8 +131,10 @@ const isCandidateRegistered = async (candidateId, electionId) => {
     try {
         const candidate = await Candidate.findById(candidateId);
         if (!candidate) throw new Error("Candidate not found");
-
-        const isRegistered = candidate.elections.some(e => e.electionId.toString() === electionId.toString() && e.status === "approved");
+        console.log(candidate)
+        console.log(electionId)
+        const isRegistered = candidate.elections.some(e => e._id.toString() === electionId.toString() && e.status === "approved");
+        console.log(isRegistered)
 
         return { candidate, status: isRegistered };
     } catch (error) {

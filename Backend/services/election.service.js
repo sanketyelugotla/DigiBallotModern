@@ -55,7 +55,7 @@ const getAllElections = async () => {
 const isElectionActive = async (electionId) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(electionId)) throw new Error("Invalid election ID");
-        
+
         const election = await Election.findById(electionId);
         if (!election) throw new Error("Election not found");
 

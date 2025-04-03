@@ -22,7 +22,7 @@ const voteCandidate = async (voterId, candidateId, electionId) => {
 
         const { isElectionActive } = require("./election.service");
         const election = await isElectionActive(electionId);
-        if (!election.status) throw new Error("Election is not active.");
+        if (!election) throw new Error("Election is not active.");
 
         const voter = await Voter.findById(voterId);
         if (!voter) throw new Error("Voter not found.");
@@ -44,7 +44,14 @@ const voteCandidate = async (voterId, candidateId, electionId) => {
         await vote.save();
 
         // Update voter elections list
-        voter.elections.push({ electionId, status: "cast" });
+        const index = voter.elections.findIndex(e => e._id.toString() === electionId);
+
+        if (index !== -1) {
+            voter.elections[index].status = "cast";
+        } else {
+            voter.elections.push({ _id: electionId, status: "cast" });
+        }
+
         await voter.save();
 
         return { message: "Vote successfully cast" };
