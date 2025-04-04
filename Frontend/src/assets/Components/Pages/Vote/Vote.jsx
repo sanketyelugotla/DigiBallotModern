@@ -4,6 +4,7 @@ import { Button } from '../../../Hooks/index'
 import { partiesContext, databaseContext, electionDetails, loadingContext } from '../../../Hooks/ContextProvider/ContextProvider'
 import ConfirmVote from './ConfirmVote'
 import VotingTable from './VotingTable'
+import { toast } from 'react-toastify'
 
 export default function Vote() {
     const { selectedParty, setSelectedParty } = useContext(partiesContext);
@@ -21,8 +22,10 @@ export default function Vote() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setCandidateDetails(res);
+            if (res.success) setCandidateDetails(res);
+            else toast.warn("Error fetching candidates", res.message);
         } catch (error) {
+            toast.warn("Error fetching candidates", error.message);
             console.error(error)
         } finally {
             setLoading(false);
