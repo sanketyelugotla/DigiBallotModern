@@ -1,4 +1,4 @@
-const { Election, Admin } = require("../models");
+const { Election, Admin, Candidate } = require("../models");
 const mongoose = require("mongoose");
 
 const getElectionById = async (electionId) => {
@@ -52,6 +52,32 @@ const getAllElections = async () => {
     }
 };
 
+async function getElectionsWithCandidates() {
+    const elections = await Election.find().lean();
+
+    const candidatesByElection = await Candidate.aggregate([
+        { $unwind: "$elections" },
+        {
+            $group: {
+                _id: "$elections._id",
+                candidates: { $push: "$$ROOT" }
+            }
+        }
+    ]);
+
+    const candidatesMap = {};
+    candidatesByElection.forEach(group => {
+        candidatesMap[group._id.toString()] = group.candidates;
+    });
+
+    const electionsWithCandidates = elections.map(election => ({
+        ...election,
+        candidates: candidatesMap[election._id.toString()] || []
+    }));
+
+    return electionsWithCandidates;
+}
+
 const isElectionActive = async (electionId) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(electionId)) throw new Error("Invalid election ID");
@@ -74,5 +100,6 @@ module.exports = {
     getElectionsForAdmin,
     getActiveElections,
     isElectionActive,
-    getAllElections
+    getAllElections,
+    getElectionsWithCandidates
 };

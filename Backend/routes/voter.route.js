@@ -47,7 +47,7 @@ voter.post("/register/:electionId", async (req, res) => {
         return res.status(201).json({ success: true, status: "pending", message: user.message })
     } catch (error) {
         console.log(error);
-        return res.status(500).json(error.message)
+        return res.status(500).json({ success: false, message: error.message })
     }
 })
 
