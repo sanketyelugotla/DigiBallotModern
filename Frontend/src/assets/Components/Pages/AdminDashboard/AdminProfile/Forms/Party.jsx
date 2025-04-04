@@ -3,6 +3,7 @@ import { FadeDiv, Input, Button } from '../../../../../Hooks';
 import styleForm from "../AdminForm.module.css";
 import { databaseContext, loadingContext } from '../../../../../Hooks/ContextProvider/ContextProvider';
 import { sectionsContext } from '../SectionsContextProvider';
+import { toast } from 'react-toastify';
 
 export default function Party() {
     const [elections, setElections] = useState([]);
@@ -23,15 +24,14 @@ export default function Party() {
             const response = await fetch(`${database_url}/election/elections`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
-
-            if (response.ok) {
-                const res = await response.json();
+            const res = await response.json();
+            if (res.success) {
                 setElections(res.elections);
             } else {
-                console.log(response);
+                toast.error(res.message)
             }
         } catch (error) {
-            console.error("Error submitting form:", error);
+            toast.error(error.message)
         } finally {
             setLoading(false);
         }
@@ -75,14 +75,14 @@ export default function Party() {
                 headers: { "Authorization": `Bearer ${token}` },
                 body: formDataObj,
             });
-
-            if (response.ok) {
-                alert("Party created successfully!");
+            const res = await response.json();
+            if (res.success) {
+                toast.success(res.message);
             } else {
-                alert("Submission failed!");
+                toast.error(res.message);
             }
         } catch (error) {
-            console.error("Error submitting form:", error);
+            toast.error(error.message);
         }
         finally {
             setLoading(false);

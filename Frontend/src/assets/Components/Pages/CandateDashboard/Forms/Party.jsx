@@ -4,6 +4,7 @@ import { sectionsContext } from "../CandidateProfile/SectionsContextProvider";
 import styleForm from "../CandidateProfile/CandidateForm.module.css";
 import { databaseContext, loadingContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 import PartyTable from './PartyTable';
+import { toast } from 'react-toastify';
 
 export default function Party({ completeData, fetchDetails }) {
     const { sections } = useContext(sectionsContext);
@@ -21,15 +22,15 @@ export default function Party({ completeData, fetchDetails }) {
             const response = await fetch(`${database_url}/election/all`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
-            if (response.ok) {
-                const res = await response.json();
-                console.log(res)
+            const res = await response.json();
+            if (res.success) {
                 setElections(res.elections);
             } else {
+                toast.warn(res.message);
                 console.log(response);
             }
         } catch (error) {
-            console.error("Error submitting form:", error);
+            toast.error("Error fetching elections", error);
         } finally {
             setLoading(false);
         }
@@ -41,15 +42,15 @@ export default function Party({ completeData, fetchDetails }) {
             const response = await fetch(`${database_url}/party/election/${selectedElection._id}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
-
-            if (response.ok) {
-                const res = await response.json();
-                setParties(res);
+            const res = await response.json();
+            if (res.success) {
+                setParties(res.party);
             } else {
+                toast.warn("Error fetching parties");
                 console.error(response);
             }
         } catch (error) {
-            console.error("Error submitting form:", error);
+            toast.error("Error fetching parties");
         } finally {
             setLoading(false);
         }
@@ -81,10 +82,11 @@ export default function Party({ completeData, fetchDetails }) {
             const res = await response.json();
             if (res.success) {
                 fetchDetails();
-                window.alert(res.message);
+                toast.success(res.message);
             }
-            else window.alert(res.message)
+            else toast.warn(res.message)
         } catch (error) {
+            toast.error(error.message);
             console.error(error);
         } finally {
             setLoading(false);

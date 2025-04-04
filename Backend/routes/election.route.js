@@ -14,9 +14,8 @@ election.get("/", async (req, res) => {
 election.get("/elections", async (req, res) => {
     try {
         const elections = await electionService.getElectionsForAdmin(req);
-        return res.status(200).json({ seccess: true, messsage: "Elections", elections })
+        return res.status(200).json({ success: true, messsage: "Elections fetched successfully", elections })
     } catch (error) {
-        console.log(error)
         return res.status(500).json({ success: false, message: error.message })
     }
 })

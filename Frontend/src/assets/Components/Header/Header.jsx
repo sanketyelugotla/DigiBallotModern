@@ -33,7 +33,7 @@ export default function Header({ onLoginClick }) {
                 }
             });
             const res = await response.json();
-            if (!res.status) {
+            if (!res.success) {
                 navigate("/");
             } else {
                 setUser(res.user);

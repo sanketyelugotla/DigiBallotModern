@@ -1,8 +1,9 @@
-import React, { useContext, useState } from 'react'
-import { FadeDiv, Input, Button } from '../../../../../Hooks';
-import { sectionsContext } from '../SectionsContextProvider';
-import styleForm from "../AdminForm.module.css";
+import React, { useContext, useState } from 'react';
+import { Button, FadeDiv, Input } from '../../../../../Hooks';
 import { databaseContext, loadingContext } from '../../../../../Hooks/ContextProvider/ContextProvider';
+import styleForm from "../AdminForm.module.css";
+import { sectionsContext } from '../SectionsContextProvider';
+import { toast } from 'react-toastify';
 
 export default function Other() {
     const { sections } = useContext(sectionsContext)
@@ -21,7 +22,6 @@ export default function Other() {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-
     const handleFileSelect = (file, name) => {
         console.log(file)
         console.log(name)
@@ -39,7 +39,6 @@ export default function Other() {
             }
         });
 
-
         try {
             const token = localStorage.getItem("authToken");
             const response = await fetch(`${database_url}/admin/addElection`, {
@@ -47,15 +46,14 @@ export default function Other() {
                 headers: { "Authorization": `Bearer ${token}` }, // Ensure Bearer token
                 body: formDataObj, // FormData automatically sets Content-Type
             });
-
-            if (response.ok) {
-                alert("Election created successfully!");
+            const res = await response.json();
+            if (res.success) {
+                toast.success("Election created successfully!");
             } else {
-                alert("Submission failed!");
-                console.log(response);
+                toast.error(res.message);
             }
         } catch (error) {
-            console.error("Error submitting form:", error);
+            toast.error(res.message)
         } finally {
             setLoading(false);
         }

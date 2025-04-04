@@ -3,6 +3,7 @@ import { FadeDiv, Input, Button } from '../../../../../Hooks';
 import { sectionsContext } from '../SectionsContextProvider';
 import styleForm from "../AdminForm.module.css";
 import { databaseContext, loadingContext } from '../../../../../Hooks/ContextProvider/ContextProvider';
+import { toast } from 'react-toastify';
 
 export default function Personel() {
     const { database_url } = useContext(databaseContext);
@@ -34,10 +35,8 @@ export default function Personel() {
             const response = await fetch(`${database_url}/admin/details`, {
                 headers: { "Authorization": `Bearer ${token}` },
             });
-
-            if (response.ok) {
-                const res = await response.json();
-
+            const res = await response.json();
+            if (res.success) {
                 if (res.user.dob) {
                     res.user.dob = res.user.dob.split("T")[0]; // Extract only date part
                 }
@@ -45,7 +44,7 @@ export default function Personel() {
                 setFormData(res.user);
             }
         } catch (error) {
-            console.log("Error fetching details", error);
+            toast.error(error.message);
         } finally {
             setLoading(false);
         }
@@ -75,12 +74,12 @@ export default function Personel() {
                 headers: { "Authorization": `Bearer ${token}` }, // Ensure Bearer token
                 body: formDataObj, // FormData automatically sets Content-Type
             });
-
-            if (response.ok) {
-                alert("Details updated successfully!");
+            const res = await response.json();
+            if (res.success) {
+                toast.success("Details updated successfully!");
             } else {
-                alert("Submission failed!");
-                console.log(response);
+                toast.error("Submission failed!");
+                console.log(res);
             }
         } catch (error) {
             console.error("Error submitting form:", error);

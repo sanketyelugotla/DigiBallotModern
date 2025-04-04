@@ -3,6 +3,7 @@ import { databaseContext, electionDetails, userContext, loadingContext } from ".
 import styleElection from "../../CandidateDetails/Election.module.css";
 import { Button } from "../../../../Hooks";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function RegisterElection() {
     const { user } = useContext(userContext);
@@ -20,8 +21,12 @@ export default function RegisterElection() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setElections(res);
+            if (res.success) setElections(res.elections);
+            else {
+                toast.warn(res.message)
+            }
         } catch (error) {
+            toast.error(error.message);;
             console.error("Error fetching elections:", error);
         } finally {
             setLoading(false);
@@ -35,10 +40,13 @@ export default function RegisterElection() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setCandidates((prev) => ({
-                ...prev,
-                [electionId]: res,
-            }));
+            if (!res.success) toast.warn(res.message)
+            else {
+                setCandidates((prev) => ({
+                    ...prev,
+                    [electionId]: res.candidates,
+                }));
+            }
         } catch (error) {
             console.error("Error fetching candidates:", error);
         } finally {
@@ -92,7 +100,7 @@ export default function RegisterElection() {
 
     return (
         <div className={styleElection.main}>
-            {elections.length > 0 ? (
+            {elections && elections.length > 0 ? (
                 elections.map((item, index) => (
                     <div key={index} className={styleElection.electionItem}>
                         <p className={styleElection.name}>{item.name}</p>

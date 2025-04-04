@@ -27,10 +27,10 @@ router.get("/:partyId", async (req, res) => {
 router.get("/election/:electionId", async (req, res) => {
     try {
         const party = await partyService.getPartyByElectionId(req.params.electionId);
-        return res.status(200).json(party);
+        return res.status(200).json({ success: true, message: "Paties fetched successfully", party: party });
     } catch (error) {
         console.error("Error fetching parties:", error);
-        return res.status(400).json({ message: error.message });
+        return res.status(400).json({ success: false, message: error.message });
     }
 })
 
@@ -40,10 +40,10 @@ router.post("/addParty", upload.fields([{ name: "partyImage" }]), async (req, re
     console.log(req.body)
     try {
         const createdParty = await partyService.addParty(electionId, adminId, state, partyName, req.files?.partyImage?.[0]);
-        return res.status(200).json({ message: "Party created successfully", createdParty });
+        return res.status(200).json({ success: true, message: "Party created successfully", createdParty });
     } catch (error) {
         console.error("Error creating party:", error);
-        return res.status(400).json({ message: error.message });
+        return res.status(400).json({ success: false, message: error.message });
     }
 });
 

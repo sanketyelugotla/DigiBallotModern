@@ -29,7 +29,7 @@ router.post("/login", async (req, res) => {
 router.get("/details", authenticate, async (req, res) => {
     try {
         const user = await authService.getUserDetails(req);
-        res.status(200).json({ status: true, message: "User verified successfully", user });
+        res.status(200).json({ success: true, message: "User verified successfully", user });
     } catch (error) {
         console.error("Error Getting details:", error);
         res.status(400).json({ success: false, message: error.message });

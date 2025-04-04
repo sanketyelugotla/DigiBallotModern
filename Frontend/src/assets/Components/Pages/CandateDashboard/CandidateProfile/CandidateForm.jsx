@@ -3,6 +3,7 @@ import styleForm from "./CandidateForm.module.css";
 import { sectionsContext } from "./SectionsContextProvider";
 import { databaseContext, userContext, loadingContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import { Personel, Party, Other, Declaration } from "../Forms";
+import { toast } from "react-toastify";
 
 export default function CandidateForm() {
     const { sections } = useContext(sectionsContext);
@@ -37,29 +38,32 @@ export default function CandidateForm() {
             const response = await fetch(`${database_url}/candidates/get/user`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
-            const res = await response.json();
-
-            // console.log(res);
-            setCompleteData(res);
-            if (res) {
-                setFormData((prev) => ({
-                    ...prev,
-                    fullName: res.fullName || "",
-                    email: res.email || "",
-                    mobile: res.mobile || "",
-                    education: res.education || "",
-                    password: res.password,
-                    dob: res.dob.slice(0, 10) || "",
-                    gender: res.gender || "",
-                    otp: "",
-                    profession: res.self_profession || "",
-                    image: res.image || null,
-                    manifesto: res.manifesto || null,
-                    spouse: res.spouse || "",
-                    spouse_profession: res.spouse_profession || "",
-                    liabilities: res.liabilities || "",
-                    assets: res.assets || "",
-                }));
+            const data = await response.json();
+            if (data.success) {
+                const res = data.candidates
+                setCompleteData(res);
+                if (res) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        fullName: res.fullName || "",
+                        email: res.email || "",
+                        mobile: res.mobile || "",
+                        education: res.education || "",
+                        password: res.password,
+                        dob: res.dob.slice(0, 10) || "",
+                        gender: res.gender || "",
+                        otp: "",
+                        profession: res.self_profession || "",
+                        image: res.image || null,
+                        manifesto: res.manifesto || null,
+                        spouse: res.spouse || "",
+                        spouse_profession: res.spouse_profession || "",
+                        liabilities: res.liabilities || "",
+                        assets: res.assets || "",
+                    }));
+                } else {
+                    toast.warn("Error fetching candidate details")
+                }
             } else {
                 console.error("Error fetching details:", res.message);
             }
@@ -83,8 +87,6 @@ export default function CandidateForm() {
 
     // Handle file selection dynamically
     const handleFileSelect = (file, name) => {
-        console.log(file)
-        console.log(name)
         setFormData((prev) => ({ ...prev, [name]: file }));
     };
 
@@ -105,13 +107,14 @@ export default function CandidateForm() {
                 headers: { "Authorization": `Bearer ${token}` },
                 body: formDataObj,
             });
-
-            if (response.ok) {
-                alert("Candidate registered successfully!");
+            const res = await response.json();
+            if (res.success) {
+                toast.success("Candidate details updated successfully!");
             } else {
-                alert("Submission failed!");
+                toast.warn("Submission failed!");
             }
         } catch (error) {
+            toast.error("Error submitting form:", error);
             console.error("Error submitting form:", error);
         } finally {
             setLoading(false);

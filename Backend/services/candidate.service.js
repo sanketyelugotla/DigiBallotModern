@@ -5,30 +5,34 @@ const { uploadFile, getFileStream } = require("../utils/uploadUtils.js");
 // 📌 Update Candidate Details
 const updateCandidateDetails = async (userId, files, details) => {
     // if (!files.image || !files.manifesto) throw new Error("Both image and manifesto files are required");
-
-    let imageId;
-    let manifestoId;
-
-    if (files.image) imageId = await uploadFile(files.image[0]);
-    if (files.manifesto) manifestoId = await uploadFile(files.manifesto[0]);
-
-    // console.log("Upload Finished: Image ID:", imageId, "Manifesto ID:", manifestoId);
-
-    const updatedCandidate = await Candidate.findOneAndUpdate(
-        { userId },
-        {
-            ...details,
-            ...(details.profession && { self_profession: details.profession }),
-            ...(imageId && { image: imageId }),
-            ...(manifestoId && { manifesto: manifestoId }),
-        },
-        { new: true, runValidators: true }
-    );
-    if (!updatedCandidate) throw new Error("Candidate not found");
-    return {
-        candidate: updatedCandidate,
-        fileIds: { image: imageId, manifesto: manifestoId },
-    };
+    try {
+        let imageId;
+        let manifestoId;
+    
+        if (files.image) imageId = await uploadFile(files.image[0]);
+        if (files.manifesto) manifestoId = await uploadFile(files.manifesto[0]);
+    
+        // console.log("Upload Finished: Image ID:", imageId, "Manifesto ID:", manifestoId);
+    
+        const updatedCandidate = await Candidate.findOneAndUpdate(
+            { userId },
+            {
+                ...details,
+                ...(details.profession && { self_profession: details.profession }),
+                ...(imageId && { image: imageId }),
+                ...(manifestoId && { manifesto: manifestoId }),
+            },
+            { new: true, runValidators: true }
+        );
+        if (!updatedCandidate) throw new Error("Candidate not found");
+        return {
+            candidate: updatedCandidate,
+            fileIds: { image: imageId, manifesto: manifestoId },
+        };
+    } catch (error) {
+        console.log(error);
+        throw new Error(error.message);
+    }
 };
 
 const getCandidates = async () => {

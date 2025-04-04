@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { ToggleButton, Button } from '../../../../Hooks/index';
 import { databaseContext, loadingContext } from '../../../../Hooks/ContextProvider/ContextProvider';
 import styles from "./Approve.module.css"
+import { toast } from 'react-toastify';
 
 export default function CandidateSide({ setExportData, setExportHeaders, active, isToggleAllActive }) {
     const { database_url } = useContext(databaseContext);
@@ -38,24 +39,23 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
                     "Authorization": `Bearer ${token}`
                 },
             });
-
-            if (!response.ok) throw new Error("Failed to fetch candidates");
             const res = await response.json();
-            console.log(res)
+            if (!res.success) toast.error(res.message);
 
-            setCandidates(res);
+            setCandidates(res.candidates);
 
             // Initialize toggle states
-            const initialStates = res.reduce((acc, candidate) => {
+            const initialStates = res.candidates.reduce((acc, candidate) => {
                 acc[`${candidate._id}_${candidate.electionId}`] = false;
                 return acc;
             }, {});
             setToggleStates(initialStates);
 
             // Set export data dynamically
-            setExportData(res);
+            setExportData(res.candidates);
             setExportHeaders(headersData);
         } catch (error) {
+            toast.error("Error fetching candidates: ", error.message);
             console.log("Error fetching candidates:", error);
         } finally {
             setloading1(false);
@@ -93,7 +93,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
                 }));
 
             if (candidatesToApprove.length === 0) {
-                alert("No candidates selected for approval.");
+                toast.warn("No candidates selected for approval.");
                 return;
             }
 
@@ -111,13 +111,13 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
             });
 
             const data = await response.json();
-            if (!response.ok) throw new Error(data.message);
+            if (!data.success) toast.error(data.message);
 
-            alert(data.message);
+            toast.success(data.message);
             fetchPendingCandidates();
         } catch (error) {
             console.error("Error approving candidates:", error.message);
-            alert("Failed to approve candidates. Please try again.");
+            toast.error("Error approving candidates: ", error.message);
         } finally {
             setLoading(false);
         }
@@ -126,9 +126,9 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
     return (
         <div>
             {loading1 ? (
-                <p>loading Candidates...</p>
+                <p className={styles.noData}>loading Candidates...</p>
             ) : candidates.length === 0 ? (
-                <p>No candidates found.</p>
+                <p className={styles.noData}>No candidates found.</p>
             ) : (
                 <div className={styles.wholeTable}>
                     <table className={styles.tableDiv}>

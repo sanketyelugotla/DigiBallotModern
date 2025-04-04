@@ -42,6 +42,8 @@ const addParty = async (electionId, adminId, state, partyName, imageFile) => {
     if (!imageFile) {
         throw new Error("Image is required");
     }
+    const existing = await Party.findOne({ partyName });
+    if (existing) throw new Error("Party already exists");
     const imageId = await uploadFile(imageFile);
     const newParty = new Party({
         electionId,

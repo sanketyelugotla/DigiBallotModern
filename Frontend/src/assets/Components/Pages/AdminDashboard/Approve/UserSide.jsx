@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { ToggleButton, Button } from "../../../../Hooks/index";
 import { databaseContext, loadingContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import styles from "./Approve.module.css";
+import { toast } from "react-toastify";
 
 export default function UserSide({ setExportData, setExportHeaders, active, isToggleAllActive }) {
     const { database_url } = useContext(databaseContext);
@@ -38,21 +39,22 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                 }
             });
 
-            if (!response.ok) throw new Error("Failed to fetch users");
             const res = await response.json();
+            if (!res.success) toast.error("Failed to fetch users");
 
-            setUsers(res);
+            setUsers(res.users);
 
             // Initialize toggle states
-            const initialStates = res.reduce((acc, user) => {
-                acc[`${user._id}_${user.electionId}`] = false; // Ensure consistency with candidates
+            const initialStates = res.users.reduce((acc, user) => {
+                acc[`${user._id}_${user.electionId}`] = false;
                 return acc;
             }, {});
             setToggleStates(initialStates);
 
-            setExportData(res);
+            setExportData(res.users);
             setExportHeaders(headersData);
         } catch (error) {
+            toast.warn("Error fetching users: ", res.message)
             console.error("Error fetching users:", error.message);
         } finally {
             setloading1(false);
@@ -90,7 +92,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                 }));
 
             if (usersToApprove.length === 0) {
-                alert("No users selected for approval.");
+                toast.warn("No users selected for approval.");
                 return;
             }
 
@@ -108,25 +110,24 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
             });
 
             const data = await response.json();
-            if (!response.ok) throw new Error(data.message);
+            if (!data.success) toast.error(data.message);
 
-            alert(data.message);
+            toast.success(data.message);
             fetchPendingUsers();
         } catch (error) {
             console.error("Error approving users:", error.message);
-            alert("Failed to approve users. Please try again.");
+            toast.error(error.message);
         } finally {
             setLoading(false);
         }
     };
 
-
     return (
         <div>
             {loading1 ? (
-                <p>loading Users...</p>
+                <p className={styles.noData}>loading Users...</p>
             ) : users.length === 0 ? (
-                <p>No users found.</p>
+                <p className={styles.noData}>No users found.</p>
             ) : (
                 <div className={styles.wholeTable}>
                     <table className={styles.tableDiv}>
