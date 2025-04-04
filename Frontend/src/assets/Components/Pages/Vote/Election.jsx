@@ -63,7 +63,7 @@ export default function Election() {
                 body: JSON.stringify({ electionId: selectedElection._id })
             });
             const res = await response.json();
-            if (res.status) {
+            if (res.success) {
                 navigate("/userDashboard/vote");
             } else {
                 toast.warning(res.message);

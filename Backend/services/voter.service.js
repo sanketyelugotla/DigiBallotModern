@@ -159,9 +159,9 @@ const isRegistered = async (userId, electionId) => {
         if (election.status === "pending") return { status: false, message: "Approval pending from Admin" };
         if (election.status === "cast") return { status: false, message: "You already casted your vote in this election" };
 
-        return { status: true, message: "Eligible to vote" };
+        return { success: true, message: "Eligible to vote" };
     } catch (error) {
-        return { status: false, message: error };
+        return { success: false, message: error };
     }
 };
 

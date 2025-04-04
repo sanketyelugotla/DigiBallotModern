@@ -22,6 +22,7 @@ export default function Dropdown({ options, header, children, label, button, act
                             key={item._id ? item._id : index}
                             className="dropdown-item"
                             onClick={() => {
+                                console.log(item)
                                 setSelectedItem && setSelectedItem(item)
                                 setSelected(item.name ? item.name : item.partyName);
                                 setIsOpen(false);

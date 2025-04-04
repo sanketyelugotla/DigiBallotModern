@@ -20,7 +20,7 @@ export default function Register() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setElections(res);
+            setElections(res.elections);
         } catch (error) {
             console.error("Error fetching elections:", error);
         } finally {
@@ -74,7 +74,7 @@ export default function Register() {
                 }
             });
             const res = await response.json();
-            if (res.success) window.alert("Registeres successfylly! Please wait for admin approval");
+            if (res.success) window.alert("Registered successfylly! Please wait for admin approval");
             else window.alert(res)
         } catch (error) {
             console.log(error);

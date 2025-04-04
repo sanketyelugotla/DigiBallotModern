@@ -48,7 +48,7 @@ voter.get("/registeredElections", async (req, res) => {
 voter.post("/isEligible", async (req, res) => {
     try {
         const elections = await voterService.isRegistered(req.user._id, req.body.electionId);
-        if (!elections.succcess) return res.status(400).json({ succcess: false, message: elections.message })
+        if (!elections.success) return res.status(400).json({ succcess: false, message: elections.message })
         return res.status(201).json({ success: true, message: elections.message })
     } catch (error) {
         console.log(error)

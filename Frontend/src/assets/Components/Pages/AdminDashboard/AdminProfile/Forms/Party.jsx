@@ -64,6 +64,7 @@ export default function Party() {
                 formDataObj.append(key, party[key]);
             }
         });
+        console.log(selectedElection)
         formDataObj.append("adminId", selectedElection.adminId);
         formDataObj.append("electionId", selectedElection._id);
 
@@ -98,7 +99,7 @@ export default function Party() {
                         label="Select election"
                         button="Create Election"
                         action={changeToElection}
-                        setSelectedElection={setSelectedElection}
+                        setSelectedItem={setSelectedElection}
                     />
                     <Input type="text" label="Party Name" name="partyName" value={party.partyName} onChange={handleFormChange} />
                 </div>

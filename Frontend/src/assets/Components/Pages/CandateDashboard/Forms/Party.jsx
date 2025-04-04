@@ -21,10 +21,10 @@ export default function Party({ completeData, fetchDetails }) {
             const response = await fetch(`${database_url}/election/all`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
-
             if (response.ok) {
                 const res = await response.json();
-                setElections(res);
+                console.log(res)
+                setElections(res.elections);
             } else {
                 console.log(response);
             }
