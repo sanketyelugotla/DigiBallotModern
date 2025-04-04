@@ -74,7 +74,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
     }, [active]);
 
     const handleToggle = (userId, electionId) => {
-        const key = `${userId}_${electionId}`; // Ensure `_` is used as separator
+        const key = `${userId}_${electionId}`;
         setToggleStates((prev) => ({
             ...prev,
             [key]: !prev[key]
@@ -123,7 +123,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
     };
 
     return (
-        <div>
+        <div className={styles.wholeDiv}>
             {loading1 ? (
                 <p className={styles.noData}>loading Users...</p>
             ) : users.length === 0 ? (

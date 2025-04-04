@@ -68,11 +68,13 @@
     }
 }
 
-.tableDiv th, .tableDiv td {
+.tableDiv th,
+.tableDiv td {
+    font-size: 16px;
     padding: 12px 15px;
     text-align: center;
     border-bottom: 1px solid #ddd;
-    white-space: nowrap;  /* Prevents text from breaking */
+    /* white-space: nowrap; */
 }
 
 .tableDiv th {
@@ -87,8 +89,8 @@
 }
 
 .entry td {
-    font-size: 14px;
-    color: #333;
+    font-size: 15px;
+    /* color: #333; */
 }
 
 .entry:last-child td {
