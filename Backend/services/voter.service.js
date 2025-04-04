@@ -82,6 +82,50 @@ const getVotes = async (electionId) => {
     }
 };
 
+const getVotesWithCandidateDetails = async (req) => {
+    const { electionId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(electionId)) {
+        throw new Error("Invalid electionId");
+    }
+
+    const election = await Election.findById(electionId);
+    if (!election) {
+        throw new Error("Election not found");
+    }
+
+    // Aggregate votes and join with candidate data
+    const result = await Vote.aggregate([
+        { $match: { electionId: new mongoose.Types.ObjectId(electionId) } },
+        {
+            $group: {
+                _id: "$candidateId",
+                votes: { $sum: 1 },
+            }
+        },
+        {
+            $lookup: {
+                from: "candidates",
+                localField: "_id",
+                foreignField: "_id",
+                as: "candidate"
+            }
+        },
+        { $unwind: "$candidate" },
+        {
+            $project: {
+                _id: 0,
+                candidateId: "$_id",
+                name: "$candidate.fullName",
+                votes: 1
+            }
+        },
+        { $sort: { votes: -1 } }
+    ]);
+
+    return result; // simply return result here
+};
+
 const registerForElection = async (userId, electionId) => {
     try {
         const voter = await Voter.findOne({ userId });
@@ -173,5 +217,6 @@ module.exports = {
     getVoterIdFromUserId,
     registerForElection,
     getRegisteredElections,
-    isRegistered
+    isRegistered,
+    getVotesWithCandidateDetails
 };

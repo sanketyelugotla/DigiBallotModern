@@ -23,6 +23,23 @@ voter.post("/getVotes/:electionId", async (req, res) => {
     }
 })
 
+voter.post("/getVotesWithDetails/:electionId", async (req, res) => {
+    try {
+        const votes = await voterService.getVotesWithCandidateDetails(req);
+        return res.status(200).json({
+            success: true,
+            message: "Votes fetched successfully",
+            votes
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+});
+
 voter.post("/register/:electionId", async (req, res) => {
     try {
         const user = await voterService.registerForElection(req.user, req.params.electionId);

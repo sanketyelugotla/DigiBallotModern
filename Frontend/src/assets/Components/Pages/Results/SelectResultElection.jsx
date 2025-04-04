@@ -3,6 +3,7 @@ import { databaseContext, electionDetails, loadingContext } from "../../../Hooks
 import styleElection from "../CandidateDetails/Election.module.css";
 import { Button } from "../../../Hooks";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function SelectResultElection() {
     const { selectedElection, setSelectedElection } = useContext(electionDetails);
@@ -19,8 +20,10 @@ export default function SelectResultElection() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setElections(res);
+            if (res.success) setElections(res.elections);
+            else toast.warn("Error fetching elections:", res.message)
         } catch (error) {
+            toast.error("Error fetching elections:", error.message);
             console.error("Error fetching elections:", error);
         } finally {
             setLoading(false);
@@ -34,11 +37,14 @@ export default function SelectResultElection() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setCandidates((prev) => ({
-                ...prev,
-                [electionId]: res,
-            }));
+            if (res.success) {
+                setCandidates((prev) => ({
+                    ...prev,
+                    [electionId]: res.candidates,
+                }));
+            } else toast.warn("Error fetching candidates", res.message);
         } catch (error) {
+            toast.error("Error fetching candidates:", error.message)
             console.error("Error fetching candidates:", error);
         } finally {
             setLoading(false);

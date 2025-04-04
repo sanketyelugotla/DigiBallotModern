@@ -20,34 +20,18 @@ export default function Results() {
     async function fetchVotes() {
         try {
             setLoading(true);
-            const response = await fetch(`${database_url}/voter/getVotes/${selectedElection._id}`, {
+            const response = await fetch(`${database_url}/voter/getVotesWithDetails/${selectedElection._id}`, {
                 headers: { "Authorization": `Bearer ${token}` },
                 method: "POST",
             });
             const res = await response.json();
             if (res.success) {
                 if (!res.votes || res.votes.length === 0) {
-                    toast.warn("No votes found")
+                    toast.warn("No votes found");
                     setVotes([]);
                     return;
                 }
-
-                // Fetch candidate details for each vote
-                const candidatesWithVotes = await Promise.all(
-                    res.votes.map(async (vote) => {
-                        console.log(vote)
-                        const candidateResponse = await fetch(`${database_url}/candidates/get/${vote._id}`, {
-                            headers: { "Authorization": `Bearer ${token}` }
-                        });
-                        const candidateData = await candidateResponse.json();
-                        console.log(candidateData)
-                        return {
-                            name: candidateData.fullName,
-                            votes: vote.votes,
-                        };
-                    })
-                );
-                setVotes(candidatesWithVotes);
+                setVotes(res.votes);
             } else {
                 toast.warn("Error fetching votes", res.message);
             }
