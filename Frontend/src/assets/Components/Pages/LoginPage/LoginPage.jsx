@@ -29,7 +29,7 @@ export default function Login({ onClose }) {
             });
             const res = await response.json();
             setUser(res.user);
-            if (!res.status) navigate("/");
+            if (!res.success) navigate("/");
         } catch (error) {
             console.error(error)
         } finally {

@@ -5,6 +5,7 @@ import {
 import styleResults from "./Results.module.css";
 import { getTotal } from "../../../Data/Results";
 import { databaseContext, electionDetails, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
+import { toast } from "react-toastify";
 
 export default function Results() {
     const colors = ["#1e3a8a", "#3b82f6", "#10b981", "#f59e0b", "#ef4444"];
@@ -24,30 +25,34 @@ export default function Results() {
                 method: "POST",
             });
             const res = await response.json();
+            if (res.success) {
+                if (!res.votes || res.votes.length === 0) {
+                    toast.warn("No votes found")
+                    setVotes([]);
+                    return;
+                }
 
-            if (!res.votes || res.votes.length === 0) {
-                console.log("No votes found");
-                setVotes([]);
-                return;
+                // Fetch candidate details for each vote
+                const candidatesWithVotes = await Promise.all(
+                    res.votes.map(async (vote) => {
+                        console.log(vote)
+                        const candidateResponse = await fetch(`${database_url}/candidates/get/${vote._id}`, {
+                            headers: { "Authorization": `Bearer ${token}` }
+                        });
+                        const candidateData = await candidateResponse.json();
+                        console.log(candidateData)
+                        return {
+                            name: candidateData.fullName,
+                            votes: vote.votes,
+                        };
+                    })
+                );
+                setVotes(candidatesWithVotes);
+            } else {
+                toast.warn("Error fetching votes", res.message);
             }
-
-            // Fetch candidate details for each vote
-            const candidatesWithVotes = await Promise.all(
-                res.votes.map(async (vote) => {
-                    console.log(vote)
-                    const candidateResponse = await fetch(`${database_url}/candidates/get/${vote._id}`, {
-                        headers: { "Authorization": `Bearer ${token}` }
-                    });
-                    const candidateData = await candidateResponse.json();
-                    console.log(candidateData)
-                    return {
-                        name: candidateData.fullName,
-                        votes: vote.votes,
-                    };
-                })
-            );
-            setVotes(candidatesWithVotes);
         } catch (error) {
+            toast.error("Error fetching votes:", error.message);
             console.error("Error fetching votes:", error);
         } finally {
             setLoading(false);

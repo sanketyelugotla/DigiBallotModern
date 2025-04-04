@@ -9,17 +9,17 @@ voter.post("/vote", async (req, res) => {
         const vote = await voterService.voteCandidate(voterId, candidateId, electionId);
         return res.status(201).json({ success: true, message: vote.message });
     } catch (error) {
-        return res.status(500).json({succcess: false, message: error.message})
+        return res.status(500).json({ succcess: false, message: error.message })
     }
 })
 
 voter.post("/getVotes/:electionId", async (req, res) => {
     try {
         const votes = await voterService.getVotes(req.params.electionId);
-        return res.status(200).json({ message: "votes fetched successfylly", votes })
+        return res.status(200).json({ success: true, message: "votes fetched successfylly", votes })
     } catch (error) {
         console.log(error.message);
-        return res.status(500).json(error.message)
+        return res.status(500).json({ success: false, message: error.message })
     }
 })
 

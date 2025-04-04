@@ -62,6 +62,7 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
                 console.error("Login failed:", res.message);
             }
         } catch (error) {
+            toast.error("Error logging in:", error);
             console.error("Error logging in:", error);
         } finally {
             setLoading(false);

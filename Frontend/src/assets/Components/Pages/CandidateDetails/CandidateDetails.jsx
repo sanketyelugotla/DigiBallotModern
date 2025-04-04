@@ -3,6 +3,7 @@ import "./MemberCarousel.css";
 import { databaseContext, electionDetails, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
 import CandidateTable from "./CandidateTable";
 import CandidateCarousel from "./CandidateCarousel";
+import { toast } from "react-toastify";
 
 export default function CandidateDetails() {
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -29,9 +30,13 @@ export default function CandidateDetails() {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            // console.log("Fetched candidates:", res);
-            setCandidatesData(res);
+            if (res.success) {
+                setCandidatesData(res.candidates);
+            } else {
+                toast.warn("Error fetching candidates");
+            }
         } catch (error) {
+            toast.error("Error fetching candidates", error.message);
             console.error("Error fetching candidates:", error);
         } finally {
             setLoading(false);
