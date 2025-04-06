@@ -5,7 +5,7 @@ import { MdKeyboardArrowRight } from "react-icons/md";
 import useElectionData from "../../../../Hooks/ContextProvider/useElectionData";
 import { SelectedElectionContext, SelectedStatusContext } from "../../../../Hooks/ContextProvider/FilterContext";
 
-export default function Filter({ handleFilter }) {
+export default function Filter({ handleFilter, position }) {
     const [statusOpen, setStatusOpen] = useState(false);
     const [electionOpen, setElectionOpen] = useState(false);
 
@@ -40,7 +40,7 @@ export default function Filter({ handleFilter }) {
                 if (isElection) {
                     setSelected(elections ? ["all", ...elections.map(e => e._id)] : ["all"]);
                 } else {
-                    setSelected(["All", "Approved", "Pending", "Rejected"]);
+                    setSelected(["All", "approved", "pending", "rejected"]);
                 }
             }
             return;
@@ -75,7 +75,11 @@ export default function Filter({ handleFilter }) {
         <HoverDiv.Mini
             onClose={handleFilter}
             insideDiv={styleApprove.filter}
-            style={{ top: "23vh", left: "31vw", position: "absolute" }}
+            style={{
+                top: `${position?.top || "18vh"}`,
+                left: `${position?.left || "31vw"}`,
+                position: "absolute"
+            }}
         >
             {({ handleClose }) => (
                 <div className={styleApprove.mainFilter}>

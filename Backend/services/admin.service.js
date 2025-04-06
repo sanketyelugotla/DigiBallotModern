@@ -23,7 +23,6 @@ const updateDetails = async (fullname, dob, email, gender, number, password, req
             adminUpdate,
             { new: true, runValidators: true }
         );
-
         const userUpdate = { name: fullname, email };
         if (hashedPassword) userUpdate.password = hashedPassword;
 

@@ -135,7 +135,7 @@ export default function Header({ onLoginClick }) {
             </ul>
             <div className="profile">
                 {user ? (
-                    <div className="profile-container" onClick={handleProfileOpen}>
+                    <div className="profile-container" onClick={handleProfileOpen}> 
                         <CgProfile className="icon" />
                         <p ref={usernameRef} className="username">{user.name}</p>
                         <FaAngleDown className="right-icon" />
