@@ -33,7 +33,6 @@ election.get("/all", async (req, res) => {
 election.get("/allDetails", async (req, res) => {
     try {
         const electionsWithCandidates = await electionService.getElectionsWithCandidates();
-        console.log(electionsWithCandidates);
         res.json({ success: true, message: "Fetched elections successfully", elections: electionsWithCandidates });
     } catch (err) {
         console.error(err);

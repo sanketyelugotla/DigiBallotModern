@@ -17,12 +17,6 @@
     font-size: large;
 }
 
-.filter {
-    background-color: black;
-    height: 10vh;
-    width: 10vw;
-}
-
 .buttonsDiv {
     display: flex;
     align-items: center;
@@ -126,4 +120,96 @@
     flex: 1;
     justify-content: center;
     align-items: center;
+}
+
+
+
+/* Filter */
+
+.filter {
+    position: relative;
+    /* 👈 Add this */
+    background-color: white;
+    height: fit-content;
+    width: fit-content;
+}
+
+.subMenu {
+    width: auto;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    transform: translateX(-50%);
+    /* Start slightly left */
+    padding: 9px 18px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+    white-space: nowrap;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.subMenuVisible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.mainFilter {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 4px 0;
+}
+
+
+.borderBottom {
+    border-bottom: 1px solid #ddd;
+}
+
+.indFilterWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.indFilter {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 18px;
+
+    p {
+        font-size: 18px;
+    }
+}
+
+.icon {
+    padding-left: 4px;
+    font-size: 25px;
+}
+
+.highlight {
+    background-color: #ddddddda;
+}
+
+.subMenuVisible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.checkbox {
+    margin: 8px 0;
+}
+
+.insideDiv {
+    font-size: 20px;
 }

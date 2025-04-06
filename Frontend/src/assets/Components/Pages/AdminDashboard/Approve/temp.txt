@@ -1,0 +1,24 @@
+    // let rect;
+    // if (filterPosition.current) {
+    //     rect = filterPosition.current.getBoundingClientRect();
+    // }
+    // console.log(rect)
+    // style = {{ top: `${filterPosition.top}px`, left: `${filterPosition.left}px`, position: "absolute" }}
+
+
+
+
+
+
+
+
+
+
+    {/* <Input.checkbox size="large">All</Input.checkbox>
+    <Input.checkbox size="large">Approved</Input.checkbox>
+                    <Input.checkbox size="large">Pending</Input.checkbox>
+{
+    elections.map((election) => (
+        <Input.checkbox size="large">{election.name}</Input.checkbox>
+    ))
+} */}
