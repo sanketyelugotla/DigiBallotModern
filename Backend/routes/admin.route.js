@@ -77,6 +77,45 @@ admin.post("/approve-candidates-bulk", async (req, res) => {
     }
 });
 
+// Updated Admin Routes
+admin.post('/users/filter', async (req, res) => {
+    try {
+        const { statuses, electionIds } = req.body;
+
+        const users = await adminService.getFilteredUsers({ statuses, electionIds });
+        return res.status(200).json({
+            success: true,
+            message: "Users fetched successfully",
+            users
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Failed to fetch users"
+        });
+    }
+});
+
+admin.post('/candidates/filter', async (req, res) => {
+    try {
+        const { statuses, electionIds } = req.body;
+
+        const candidates = await adminService.getFilteredCandidates({ statuses, electionIds });
+        return res.status(200).json({
+            success: true,
+            message: "Candidates fetched successfully",
+            candidates
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Failed to fetch candidates"
+        });
+    }
+});
+
 admin.get("/candidates", async (req, res) => {
     try {
         const candidates = await adminService.getPendingCandidates();
@@ -90,7 +129,7 @@ admin.get("/candidates", async (req, res) => {
 admin.get("/users", async (req, res) => {
     try {
         const users = await adminService.getPendingUsers();
-        return res.status(200).json({success: true, message: "Fetched users successfully", users: users});
+        return res.status(200).json({ success: true, message: "Fetched users successfully", users: users });
     } catch (error) {
         console.log(error)
         return res.status(500).json({ success: false, message: error.message });

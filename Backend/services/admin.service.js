@@ -164,6 +164,61 @@ const getPendingUsers = async () => {
     }
 };
 
+const getFilteredUsers = async ({ statuses, electionIds }) => {
+    const query = {};
+
+    if (statuses?.length) {
+        query["elections.status"] = { $in: statuses };
+    }
+
+    if (electionIds?.length) {
+        query["elections._id"] = { $in: electionIds };
+    }
+
+    const users = await Voter.find(query)
+        .populate("userId", "name")
+        .populate("elections._id", "name")
+        .populate("elections.partyId", "partyName");
+
+    return users.flatMap(user =>
+        user.elections
+            .filter(election =>
+                (!statuses?.length || statuses.includes(election.status)) &&
+                (!electionIds?.length || electionIds.some(id => election._id.equals(id)))
+            )
+            .map(election => ({
+                // ... same mapping as before
+            }))
+    );
+};
+
+const getFilteredCandidates = async ({ statuses, electionIds }) => {
+    const query = {};
+
+    if (statuses?.length) {
+        query["elections.status"] = { $in: statuses };
+    }
+
+    if (electionIds?.length) {
+        query["elections._id"] = { $in: electionIds };
+    }
+
+    const candidates = await Candidate.find(query)
+        .populate("elections._id", "name")
+        .populate("elections.partyId", "partyName");
+
+    return candidates.flatMap(candidate =>
+        candidate.elections
+            .filter(election =>
+                (!statuses?.length || statuses.includes(election.status)) &&
+                (!electionIds?.length || electionIds.some(id => election._id.equals(id)))
+            )
+            .map(election => ({
+                // ... same mapping as before
+            }))
+    );
+};
+
 const approveVoter = async (voterId, electionId) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(voterId)) throw new Error("Invalid voter ID");
@@ -350,4 +405,6 @@ module.exports = {
     approveCandidatesBulk,
     approveVoter,
     approveVotersBulk,
+    getFilteredUsers,
+    getFilteredCandidates
 };
