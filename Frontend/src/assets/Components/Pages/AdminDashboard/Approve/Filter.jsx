@@ -3,7 +3,7 @@ import styleApprove from "./Approve.module.css";
 import { HoverDiv, Input } from "../../../../Hooks";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import useElectionData from "../../../../Hooks/ContextProvider/useElectionData";
-import { selectedElectionContext, selectedStatusContext } from "../../../../Hooks/ContextProvider/FilterContext";
+import { SelectedElectionContext, SelectedStatusContext } from "../../../../Hooks/ContextProvider/FilterContext";
 
 export default function Filter({ handleFilter }) {
     const [statusOpen, setStatusOpen] = useState(false);
@@ -14,8 +14,8 @@ export default function Filter({ handleFilter }) {
     const statusTimeout = useRef(null);
     const electionTimeout = useRef(null);
 
-    const [selectedStatuses, setSelectedStatuses] = useContext(selectedStatusContext);
-    const [selectedElections, setSelectedElections] = useContext(selectedElections);
+    const { selectedStatuses, setSelectedStatuses } = useContext(SelectedStatusContext);
+    const { selectedElections, setSelectedElections } = useContext(SelectedElectionContext);
 
     const statusOptions = ["All", "Approved", "Pending", "Rejected"];
     const electionOptions = elections ? [{ _id: "all", name: "All" }, ...elections] : [];

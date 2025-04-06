@@ -1,24 +1,23 @@
-import React, { createContext, useState } from 'react'
+// FilterContext.js
+import React, { createContext, useState } from 'react';
 
-const selectedStatusContext = createContext();
-const selectedElectionContext = createContext();
-
+const SelectedStatusContext = createContext();
+const SelectedElectionContext = createContext();
 
 export default function FilterContext({ children }) {
-
     const [selectedStatuses, setSelectedStatuses] = useState(["All"]);
     const [selectedElections, setSelectedElections] = useState(["all"]);
 
     return (
-        <selectedStatusContext.Provider value={{ selectedStatuses, setSelectedStatuses }}>
-            <selectedElectionContext.Provider value={{ selectedStatuses, setSelectedStatuses }}>
+        <SelectedStatusContext.Provider value={{ selectedStatuses, setSelectedStatuses }}>
+            <SelectedElectionContext.Provider value={{ selectedElections, setSelectedElections }}>
                 {children}
-            </selectedElectionContext.Provider>
-        </selectedStatusContext.Provider>
+            </SelectedElectionContext.Provider>
+        </SelectedStatusContext.Provider>
     )
 }
 
 export {
-    selectedElectionContext,
-    selectedStatusContext
+    SelectedElectionContext,
+    SelectedStatusContext
 }
