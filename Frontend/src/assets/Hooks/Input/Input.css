@@ -212,6 +212,12 @@ input[type=checkbox] {
     font-size: 17px;
 }
 
+.checkbox {
+    font-weight: lighter;
+    color: var(--themeBlue);
+    margin-right: 1rem;
+}
+
 
 ::selection {
     color: #fff;

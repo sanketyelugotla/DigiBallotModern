@@ -17,10 +17,12 @@ export default function Filter({ handleFilter }) {
     const [selectedElections, setSelectedElections] = useState([]);
 
     const statusOptions = ["All", "Approved", "Pending", "Rejected"];
+    const electionOptions = elections ? [{ _id: "all", name: "All" }, ...elections] : [];
 
     useEffect(() => {
         console.log("Statuses:", selectedStatuses);
         console.log("Elections:", selectedElections);
+        // You can call your filter function here with the selected values
     }, [selectedStatuses, selectedElections]);
 
     const handleFilterOpen = (setFn, timeoutRef) => {
@@ -34,12 +36,44 @@ export default function Filter({ handleFilter }) {
         }, 100);
     };
 
-    const handleCheckboxToggle = (value, selected, setSelected) => {
-        setSelected(prev =>
-            prev.includes(value)
-                ? prev.filter(v => v !== value)
-                : [...prev, value]
-        );
+    const handleCheckboxToggle = (value, selected, setSelected, isElection = false) => {
+        if (value === "all" || value === "All") {
+            // Toggle "All" selection
+            if (selected.includes("all") || selected.includes("All")) {
+                setSelected([]);
+            } else {
+                if (isElection) {
+                    setSelected(elections ? ["all", ...elections.map(e => e._id)] : ["all"]);
+                } else {
+                    setSelected(["All", "Approved", "Pending", "Rejected"]);
+                }
+            }
+            return;
+        }
+
+        setSelected(prev => {
+            // Remove "all" if any other option is selected
+            let newSelected = [...prev];
+            if (isElection && newSelected.includes("all")) {
+                newSelected = newSelected.filter(v => v !== "all");
+            } else if (!isElection && newSelected.includes("All")) {
+                newSelected = newSelected.filter(v => v !== "All");
+            }
+
+            // Toggle the current selection
+            return newSelected.includes(value)
+                ? newSelected.filter(v => v !== value)
+                : [...newSelected, value];
+        });
+    };
+
+    const isAllSelected = (selected, isElection = false) => {
+        if (isElection) {
+            return elections
+                ? selected.length === elections.length + 1 && selected.includes("all")
+                : selected.includes("all");
+        }
+        return selected.length === 4 && selected.includes("All");
     };
 
     return (
@@ -67,10 +101,8 @@ export default function Filter({ handleFilter }) {
                                     value={status}
                                     className={styleApprove.checkbox}
                                     size="medium"
-                                    checked={selectedStatuses.includes(status)}
-                                    onChange={(val) =>
-                                        handleCheckboxToggle(val, selectedStatuses, setSelectedStatuses)
-                                    }
+                                    checked={selectedStatuses.includes(status) || isAllSelected(selectedStatuses)}
+                                    onChange={(val) => handleCheckboxToggle(val, selectedStatuses, setSelectedStatuses)}
                                 >
                                     {status}
                                 </Input.checkbox>
@@ -89,16 +121,14 @@ export default function Filter({ handleFilter }) {
                             <MdKeyboardArrowRight className={styleApprove.icon} />
                         </div>
                         <div className={`${styleApprove.subMenu} ${electionOpen ? styleApprove.subMenuVisible : ""}`}>
-                            {elections?.map(election => (
+                            {electionOptions.map(election => (
                                 <Input.checkbox
                                     key={election._id}
                                     value={election._id}
                                     className={styleApprove.checkbox}
                                     size="medium"
-                                    checked={selectedElections.includes(election._id)}
-                                    onChange={(val) =>
-                                        handleCheckboxToggle(val, selectedElections, setSelectedElections)
-                                    }
+                                    checked={selectedElections.includes(election._id) || isAllSelected(selectedElections, true)}
+                                    onChange={(val) => handleCheckboxToggle(val, selectedElections, setSelectedElections, true)}
                                 >
                                     {election.name}
                                 </Input.checkbox>
