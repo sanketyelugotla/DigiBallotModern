@@ -178,7 +178,7 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
                                 <th>Election Name</th>
                                 <th>Party Name</th>
                                 <th>Status</th>
-                                <th>Select</th>
+                                {/* <th>Select</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -190,15 +190,21 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
                                         {/* <td>{candidate.email || "Unknown"}</td> */}
                                         <td>{candidate.electionName || "Unknown"}</td>
                                         <td>{candidate.partyName || "Unknown"}</td>
-                                        <td className={styles[candidate.status?.toLowerCase()]}>
+                                        {/* <td className={styles[candidate.status?.toLowerCase()]}>
                                             {candidate.status}
-                                        </td>
+                                        </td> */}
                                         <td>
                                             <center>
-                                                <ToggleButton
-                                                    isOn={toggleStates[candidateKey] || false}
-                                                    onToggle={() => handleToggle(candidate._id, candidate.electionId)}
-                                                />
+                                                {
+                                                    candidate.status === "pending" ? (
+                                                        <ToggleButton
+                                                            isOn={toggleStates[candidateKey] || false}
+                                                            onToggle={() => handleToggle(candidate._id, candidate.electionId)}
+                                                        />
+                                                    ) : (
+                                                        candidate.status
+                                                    )
+                                                }
                                             </center>
                                         </td>
                                     </tr>

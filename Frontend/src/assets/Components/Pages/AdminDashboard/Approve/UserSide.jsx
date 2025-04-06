@@ -167,7 +167,7 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                                 <th>User Name</th>
                                 <th>Election Name</th>
                                 <th>Status</th>
-                                <th>Select</th>
+                                {/* <th>Select</th> */}
                             </tr>
                         </thead>
                         <tbody>
@@ -177,21 +177,28 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                                     <tr key={userKey} className={styles.entry}>
                                         <td>{user.name || "Unknown"}</td>
                                         <td>{user.electionName || "Unknown"}</td>
-                                        <td className={styles[user.status?.toLowerCase()]}>
+                                        {/* <td className={styles[user.status?.toLowerCase()]}>
                                             {user.status}
-                                        </td>
+                                        </td> */}
                                         <td>
-                                            <ToggleButton
-                                                isOn={toggleStates[userKey] || false}
-                                                onToggle={() => handleToggle(user._id, user.electionId)}
-                                            />
+                                            <center>
+                                                {
+                                                    user.status === "pending" ? (
+                                                        <ToggleButton
+                                                            isOn={toggleStates[userKey] || false}
+                                                            onToggle={() => handleToggle(user._id, user.electionId)}
+                                                        />
+                                                    ) : (
+                                                        user.status
+                                                    )
+                                                }
+                                            </center>
                                         </td>
                                     </tr>
                                 );
                             })}
                         </tbody>
                     </table>
-
                     <div className={styles.actionBar}>
                         <Button
                             className={styles.approveButton}
@@ -200,11 +207,12 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                         >
                             Approve Selected
                         </Button>
-                        <span className={styles.selectionCount}>
+                        {/* <span className={styles.selectionCount}>
                             {Object.values(toggleStates).filter(state => state).length} selected
-                        </span>
+                        </span> */}
                     </div>
                 </div>
+
             )}
         </div>
     );
