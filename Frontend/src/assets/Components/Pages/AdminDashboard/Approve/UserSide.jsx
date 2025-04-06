@@ -1,81 +1,109 @@
 import React, { useContext, useEffect, useState } from "react";
 import { ToggleButton, Button } from "../../../../Hooks/index";
 import { databaseContext, loadingContext } from "../../../../Hooks/ContextProvider/ContextProvider";
+import { SelectedElectionContext, SelectedStatusContext } from "../../../../Hooks/ContextProvider/FilterContext";
 import styles from "./Approve.module.css";
 import { toast } from "react-toastify";
 
 export default function UserSide({ setExportData, setExportHeaders, active, isToggleAllActive }) {
     const { database_url } = useContext(databaseContext);
+    const { setLoading } = useContext(loadingContext);
+
+    // Properly consume both contexts
+    const { selectedStatuses = [] } = useContext(SelectedStatusContext) || {};
+    const { selectedElections = [] } = useContext(SelectedElectionContext) || {};
+
     const [users, setUsers] = useState([]);
     const [toggleStates, setToggleStates] = useState({});
     const [loading1, setloading1] = useState(true);
-    const { setLoading } = useContext(loadingContext)
 
     const headersData = [
         { label: "Name", key: "name" },
         { label: "Id", key: "_id" },
         { label: "Election ID", key: "electionId" },
+        { label: "Status", key: "status" },
+        { label: "Election Name", key: "electionName" }
     ];
 
     useEffect(() => {
-        setToggleStates((prev) => {
-            const newState = {};
-            Object.keys(prev).forEach((key) => {
-                newState[key] = isToggleAllActive; // Set all toggles to match the global toggle
-            });
-            return newState;
+        const newToggleStates = {};
+        users.forEach(user => {
+            const key = `${user._id}_${user.electionId}`;
+            newToggleStates[key] = isToggleAllActive;
         });
-    }, [isToggleAllActive]);
+        setToggleStates(newToggleStates);
+    }, [isToggleAllActive, users]);
 
-    async function fetchPendingUsers() {
+    const fetchFilteredUsers = async () => {
         try {
             setLoading(true);
             setloading1(true);
             const token = localStorage.getItem("authToken");
-            const response = await fetch(`${database_url}/admin/users`, {
+
+            // Safely handle potentially undefined filters with default empty arrays
+            const currentStatuses = Array.isArray(selectedStatuses) ? selectedStatuses : [];
+            const currentElections = Array.isArray(selectedElections) ? selectedElections : [];
+
+            const filterPayload = {
+                statuses: currentStatuses.includes("All") ? [] : currentStatuses,
+                electionIds: currentElections.includes("all") ? [] : currentElections
+            };
+
+            const response = await fetch(`${database_url}/admin/users/filter`, {
+                method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
-                }
+                },
+                body: JSON.stringify(filterPayload)
             });
 
-            const res = await response.json();
-            if (!res.success) toast.error("Failed to fetch users");
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
-            setUsers(res.users);
+            const res = await response.json();
+
+            if (!res.success) {
+                throw new Error(res.message || "Failed to fetch users");
+            }
+
+            setUsers(res.users || []);
 
             // Initialize toggle states
-            const initialStates = res.users.reduce((acc, user) => {
-                acc[`${user._id}_${user.electionId}`] = false;
-                return acc;
-            }, {});
+            const initialStates = {};
+            (res.users || []).forEach(user => {
+                initialStates[`${user._id}_${user.electionId}`] = false;
+            });
             setToggleStates(initialStates);
 
-            setExportData(res.users);
+            setExportData(res.users || []);
             setExportHeaders(headersData);
+
         } catch (error) {
-            toast.warn("Error fetching users: ", res.message)
-            console.error("Error fetching users:", error.message);
+            toast.error(error.message);
+            console.error("Error fetching users:", error);
         } finally {
             setloading1(false);
             setLoading(false);
         }
-    }
+    };
 
+    // Fetch users when filters change or component mounts
     useEffect(() => {
-        fetchPendingUsers();
-    }, []);
+        fetchFilteredUsers();
+    }, [selectedStatuses, selectedElections]);
 
     useEffect(() => {
         if (active) {
             setExportData(users);
             setExportHeaders(headersData);
         }
-    }, [active]);
+    }, [active, users]);
 
     const handleToggle = (userId, electionId) => {
         const key = `${userId}_${electionId}`;
-        setToggleStates((prev) => ({
+        setToggleStates(prev => ({
             ...prev,
             [key]: !prev[key]
         }));
@@ -84,39 +112,42 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
     const handleBulkApprove = async () => {
         try {
             setLoading(true);
+
             const usersToApprove = users
-                .filter((user) => toggleStates[`${user._id}_${user.electionId}`])
-                .map((user) => ({
+                .filter(user => toggleStates[`${user._id}_${user.electionId}`])
+                .map(user => ({
                     userId: user._id,
                     electionId: user.electionId,
+                    status: "approved"
                 }));
 
             if (usersToApprove.length === 0) {
-                toast.warn("No users selected for approval.");
+                toast.warn("No users selected for approval");
                 return;
             }
 
-            const userIds = usersToApprove.map((user) => user.userId);
-            const electionIds = usersToApprove.map((user) => user.electionId);
-
             const token = localStorage.getItem("authToken");
-            const response = await fetch(`${database_url}/admin/approve-users-bulk`, {
+            const response = await fetch(`${database_url}/admin/users/approve`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ userIds, electionIds }),
+                body: JSON.stringify({ approvals: usersToApprove })
             });
 
             const data = await response.json();
-            if (!data.success) toast.error(data.message);
+
+            if (!data.success) {
+                throw new Error(data.message || "Approval failed");
+            }
 
             toast.success(data.message);
-            fetchPendingUsers();
+            await fetchFilteredUsers();
+
         } catch (error) {
-            console.error("Error approving users:", error.message);
             toast.error(error.message);
+            console.error("Error approving users:", error);
         } finally {
             setLoading(false);
         }
@@ -125,9 +156,9 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
     return (
         <div className={styles.wholeDiv}>
             {loading1 ? (
-                <p className={styles.noData}>loading Users...</p>
+                <p className={styles.noData}>Loading Users...</p>
             ) : users.length === 0 ? (
-                <p className={styles.noData}>No users found.</p>
+                <p className={styles.noData}>No users found matching your filters</p>
             ) : (
                 <div className={styles.wholeTable}>
                     <table className={styles.tableDiv}>
@@ -135,19 +166,23 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                             <tr>
                                 <th>User Name</th>
                                 <th>Election Name</th>
+                                <th>Status</th>
                                 <th>Select</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {users.map((user) => {
+                            {users.map(user => {
                                 const userKey = `${user._id}_${user.electionId}`;
                                 return (
                                     <tr key={userKey} className={styles.entry}>
                                         <td>{user.name || "Unknown"}</td>
-                                        <td>{user.electionName}</td>
+                                        <td>{user.electionName || "Unknown"}</td>
+                                        <td className={styles[user.status?.toLowerCase()]}>
+                                            {user.status}
+                                        </td>
                                         <td>
                                             <ToggleButton
-                                                isOn={toggleStates[userKey]}
+                                                isOn={toggleStates[userKey] || false}
                                                 onToggle={() => handleToggle(user._id, user.electionId)}
                                             />
                                         </td>
@@ -156,9 +191,19 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                             })}
                         </tbody>
                     </table>
-                    <Button className={styles.approveButton} onClick={handleBulkApprove}>
-                        Approve
-                    </Button>
+
+                    <div className={styles.actionBar}>
+                        <Button
+                            className={styles.approveButton}
+                            onClick={handleBulkApprove}
+                            disabled={!Object.values(toggleStates).some(state => state)}
+                        >
+                            Approve Selected
+                        </Button>
+                        <span className={styles.selectionCount}>
+                            {Object.values(toggleStates).filter(state => state).length} selected
+                        </span>
+                    </div>
                 </div>
             )}
         </div>

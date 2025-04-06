@@ -1,167 +1,224 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { ToggleButton, Button } from '../../../../Hooks/index';
 import { databaseContext, loadingContext } from '../../../../Hooks/ContextProvider/ContextProvider';
-import styles from "./Approve.module.css"
+import { SelectedElectionContext, SelectedStatusContext } from '../../../../Hooks/ContextProvider/FilterContext';
+import styles from "./Approve.module.css";
 import { toast } from 'react-toastify';
 
 export default function CandidateSide({ setExportData, setExportHeaders, active, isToggleAllActive }) {
     const { database_url } = useContext(databaseContext);
+    const { setLoading } = useContext(loadingContext);
+
+    // Properly consume both contexts with fallbacks
+    const { selectedStatuses = [] } = useContext(SelectedStatusContext) || {};
+    const { selectedElections = [] } = useContext(SelectedElectionContext) || {};
+
     const [candidates, setCandidates] = useState([]);
     const [toggleStates, setToggleStates] = useState({});
     const [loading1, setloading1] = useState(true);
-    const { setLoading } = useContext(loadingContext)
 
     const headersData = [
         { label: "Name", key: "fullName" },
+        { label: "Email", key: "email" },
         { label: "Id", key: "_id" },
-        { label: "Election ID", key: "electionId" }
+        { label: "Election ID", key: "electionId" },
+        { label: "Status", key: "status" },
+        { label: "Election Name", key: "electionName" },
+        { label: "Party Name", key: "partyName" }
     ];
 
+    // Initialize toggle states when bulk toggle changes
     useEffect(() => {
-        setToggleStates((prev) => {
-            const newState = {};
-            Object.keys(prev).forEach((key) => {
-                newState[key] = isToggleAllActive; // Set all toggles to match the global toggle
-            });
-            return newState;
+        const newToggleStates = {};
+        candidates.forEach(candidate => {
+            const key = `${candidate._id}_${candidate.electionId}`;
+            newToggleStates[key] = isToggleAllActive;
         });
-    }, [isToggleAllActive]);
+        setToggleStates(newToggleStates);
+    }, [isToggleAllActive, candidates]);
 
-    async function fetchPendingCandidates() {
-        setloading1(true);
-        setLoading(true);
-
+    // Fetch candidates with filter criteria
+    const fetchFilteredCandidates = async () => {
         try {
+            setLoading(true);
+            setloading1(true);
             const token = localStorage.getItem("authToken");
-            const response = await fetch(`${database_url}/admin/candidates`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-            });
-            const res = await response.json();
-            if (!res.success) toast.error(res.message);
 
-            setCandidates(res.candidates);
+            // Prepare filter payload with safe defaults
+            const currentStatuses = Array.isArray(selectedStatuses) ? selectedStatuses : [];
+            const currentElections = Array.isArray(selectedElections) ? selectedElections : [];
 
-            // Initialize toggle states
-            const initialStates = res.candidates.reduce((acc, candidate) => {
-                acc[`${candidate._id}_${candidate.electionId}`] = false;
-                return acc;
-            }, {});
-            setToggleStates(initialStates);
+            const filterPayload = {
+                statuses: currentStatuses.includes("All") ? [] : currentStatuses,
+                electionIds: currentElections.includes("all") ? [] : currentElections
+            };
 
-            // Set export data dynamically
-            setExportData(res.candidates);
-            setExportHeaders(headersData);
-        } catch (error) {
-            toast.error("Error fetching candidates: ", error.message);
-            console.log("Error fetching candidates:", error);
-        } finally {
-            setloading1(false);
-            setLoading(false);
-        }
-    }
-
-    useEffect(() => {
-        fetchPendingCandidates();
-    }, []);
-
-    useEffect(() => {
-        if (active) {
-            setExportData(candidates);
-            setExportHeaders(headersData);
-        }
-    }, [active]);
-
-    const handleToggle = (candidateId, electionId) => {
-        const key = `${candidateId}_${electionId}`;
-        setToggleStates((prev) => ({
-            ...prev,
-            [key]: !prev[key],
-        }));
-    };
-
-    const handleBulkApprove = async () => {
-        setLoading(true);
-        try {
-            const candidatesToApprove = candidates
-                .filter((candidate) => toggleStates[`${candidate._id}_${candidate.electionId}`])
-                .map((candidate) => ({
-                    candidateId: candidate._id,
-                    electionId: candidate.electionId,
-                }));
-
-            if (candidatesToApprove.length === 0) {
-                toast.warn("No candidates selected for approval.");
-                return;
-            }
-
-            const candidateIds = candidatesToApprove.map((candidate) => candidate.candidateId);
-            const electionIds = candidatesToApprove.map((candidate) => candidate.electionId);
-
-            const token = localStorage.getItem("authToken");
-            const response = await fetch(`${database_url}/admin/approve-candidates-bulk`, {
+            const response = await fetch(`${database_url}/admin/candidates/filter`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 },
-                body: JSON.stringify({ candidateIds, electionIds }),
+                body: JSON.stringify(filterPayload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const res = await response.json();
+
+            if (!res.success) {
+                throw new Error(res.message || "Failed to fetch candidates");
+            }
+
+            setCandidates(res.candidates || []);
+
+            // Initialize toggle states
+            const initialStates = {};
+            (res.candidates || []).forEach(candidate => {
+                initialStates[`${candidate._id}_${candidate.electionId}`] = false;
+            });
+            setToggleStates(initialStates);
+
+            // Update export data
+            setExportData(res.candidates || []);
+            setExportHeaders(headersData);
+
+        } catch (error) {
+            toast.error(error.message);
+            console.error("Error fetching candidates:", error);
+        } finally {
+            setloading1(false);
+            setLoading(false);
+        }
+    };
+
+    // Fetch candidates when filters change or component mounts
+    useEffect(() => {
+        fetchFilteredCandidates();
+    }, [selectedStatuses, selectedElections]);
+
+    // Update export data when active tab changes
+    useEffect(() => {
+        if (active) {
+            setExportData(candidates);
+            setExportHeaders(headersData);
+        }
+    }, [active, candidates]);
+
+    const handleToggle = (candidateId, electionId) => {
+        const key = `${candidateId}_${electionId}`;
+        setToggleStates(prev => ({
+            ...prev,
+            [key]: !prev[key]
+        }));
+    };
+
+    const handleBulkApprove = async () => {
+        try {
+            setLoading(true);
+
+            // Prepare approval payload
+            const candidatesToApprove = candidates
+                .filter(candidate => toggleStates[`${candidate._id}_${candidate.electionId}`])
+                .map(candidate => ({
+                    candidateId: candidate._id,
+                    electionId: candidate.electionId,
+                    status: "approved" // Explicitly setting status
+                }));
+
+            if (candidatesToApprove.length === 0) {
+                toast.warn("No candidates selected for approval");
+                return;
+            }
+
+            const token = localStorage.getItem("authToken");
+            const response = await fetch(`${database_url}/admin/candidates/approve`, {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ approvals: candidatesToApprove })
             });
 
             const data = await response.json();
-            if (!data.success) toast.error(data.message);
+
+            if (!data.success) {
+                throw new Error(data.message || "Approval failed");
+            }
 
             toast.success(data.message);
-            fetchPendingCandidates();
+
+            // Refresh the candidate list after approval
+            await fetchFilteredCandidates();
+
         } catch (error) {
-            console.error("Error approving candidates:", error.message);
-            toast.error("Error approving candidates: ", error.message);
+            toast.error(error.message);
+            console.error("Error approving candidates:", error);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div>
+        <div className={styles.wholeDiv}>
             {loading1 ? (
-                <p className={styles.noData}>loading Candidates...</p>
+                <p className={styles.noData}>Loading Candidates...</p>
             ) : candidates.length === 0 ? (
-                <p className={styles.noData}>No candidates found.</p>
+                <p className={styles.noData}>No candidates found matching your filters</p>
             ) : (
                 <div className={styles.wholeTable}>
                     <table className={styles.tableDiv}>
                         <thead>
                             <tr>
                                 <th>Candidate Name</th>
+                                {/* <th>Email</th> */}
                                 <th>Election Name</th>
                                 <th>Party Name</th>
+                                <th>Status</th>
                                 <th>Select</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {candidates.map((candidate) => {
+                            {candidates.map(candidate => {
                                 const candidateKey = `${candidate._id}_${candidate.electionId}`;
                                 return (
                                     <tr key={candidateKey} className={styles.entry}>
                                         <td>{candidate.fullName || "Unknown"}</td>
-                                        <td>{candidate.electionName}</td>
-                                        <td>{candidate.partyName}</td>
+                                        {/* <td>{candidate.email || "Unknown"}</td> */}
+                                        <td>{candidate.electionName || "Unknown"}</td>
+                                        <td>{candidate.partyName || "Unknown"}</td>
+                                        <td className={styles[candidate.status?.toLowerCase()]}>
+                                            {candidate.status}
+                                        </td>
                                         <td>
-                                            <ToggleButton
-                                                isOn={toggleStates[candidateKey]}
-                                                onToggle={() => handleToggle(candidate._id, candidate.electionId)}
-                                            />
+                                            <center>
+                                                <ToggleButton
+                                                    isOn={toggleStates[candidateKey] || false}
+                                                    onToggle={() => handleToggle(candidate._id, candidate.electionId)}
+                                                />
+                                            </center>
                                         </td>
                                     </tr>
                                 );
                             })}
                         </tbody>
                     </table>
-                    <Button className={styles.approveButton} onClick={handleBulkApprove}>
-                        Approve
-                    </Button>
+
+                    <div className={styles.actionBar}>
+                        <Button
+                            className={styles.approveButton}
+                            onClick={handleBulkApprove}
+                            disabled={!Object.values(toggleStates).some(state => state)}
+                        >
+                            Approve Selected
+                        </Button>
+                        <span className={styles.selectionCount}>
+                            {Object.values(toggleStates).filter(state => state).length} selected
+                        </span>
+                    </div>
                 </div>
             )}
         </div>

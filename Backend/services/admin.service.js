@@ -178,7 +178,7 @@ const getFilteredUsers = async ({ statuses, electionIds }) => {
     const users = await Voter.find(query)
         .populate("userId", "name")
         .populate("elections._id", "name")
-        .populate("elections.partyId", "partyName");
+        // .populate("elections.partyId", "partyName");
 
     return users.flatMap(user =>
         user.elections
@@ -187,7 +187,11 @@ const getFilteredUsers = async ({ statuses, electionIds }) => {
                 (!electionIds?.length || electionIds.some(id => election._id.equals(id)))
             )
             .map(election => ({
-                // ... same mapping as before
+                _id: user._id, // User ID
+                name: user.userId?.name || "Unknown",
+                electionId: election._id?._id || election._id, // Ensure only the ObjectId is stored
+                electionName: election._id?.name || "Unknown", // Extract name directly
+                status: election.status
             }))
     );
 };
@@ -214,7 +218,14 @@ const getFilteredCandidates = async ({ statuses, electionIds }) => {
                 (!electionIds?.length || electionIds.some(id => election._id.equals(id)))
             )
             .map(election => ({
-                // ... same mapping as before
+                _id: candidate._id, // Candidate ID
+                fullName: candidate.fullName,
+                email: candidate.email,
+                electionId: election._id?._id || election._id, // Ensure only the ObjectId is stored
+                electionName: election._id?.name || "Unknown", // Extract election name directly
+                status: election.status,
+                partyId: election.partyId._id,
+                partyName: election.partyId?.partyName
             }))
     );
 };

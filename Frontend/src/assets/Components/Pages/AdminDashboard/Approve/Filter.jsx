@@ -17,7 +17,7 @@ export default function Filter({ handleFilter }) {
     const { selectedStatuses, setSelectedStatuses } = useContext(SelectedStatusContext);
     const { selectedElections, setSelectedElections } = useContext(SelectedElectionContext);
 
-    const statusOptions = ["All", "Approved", "Pending", "Rejected"];
+    const statusOptions = ["All", "approved", "pending", "rejected"];
     const electionOptions = elections ? [{ _id: "all", name: "All" }, ...elections] : [];
 
     const handleFilterOpen = (setFn, timeoutRef) => {
