@@ -160,38 +160,32 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
             ) : users.length === 0 ? (
                 <p className={styles.noData}>No users found matching your filters</p>
             ) : (
-                <div className={styles.wholeTable}>
+                <div className={styles.tableContainer}>
                     <table className={styles.tableDiv}>
                         <thead>
                             <tr>
                                 <th>User Name</th>
                                 <th>Election Name</th>
                                 <th>Status</th>
-                                {/* <th>Select</th> */}
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className={styles.tableBody}>
                             {users.map(user => {
                                 const userKey = `${user._id}_${user.electionId}`;
                                 return (
                                     <tr key={userKey} className={styles.entry}>
                                         <td>{user.name || "Unknown"}</td>
                                         <td>{user.electionName || "Unknown"}</td>
-                                        {/* <td className={styles[user.status?.toLowerCase()]}>
-                                            {user.status}
-                                        </td> */}
-                                        <td>
+                                        <td className={styles.captilize}>
                                             <center>
-                                                {
-                                                    user.status === "pending" ? (
-                                                        <ToggleButton
-                                                            isOn={toggleStates[userKey] || false}
-                                                            onToggle={() => handleToggle(user._id, user.electionId)}
-                                                        />
-                                                    ) : (
-                                                        user.status
-                                                    )
-                                                }
+                                                {user.status === "pending" ? (
+                                                    <ToggleButton
+                                                        isOn={toggleStates[userKey] || false}
+                                                        onToggle={() => handleToggle(user._id, user.electionId)}
+                                                    />
+                                                ) : (
+                                                    user.status
+                                                )}
                                             </center>
                                         </td>
                                     </tr>
@@ -207,12 +201,8 @@ export default function UserSide({ setExportData, setExportHeaders, active, isTo
                         >
                             Approve Selected
                         </Button>
-                        {/* <span className={styles.selectionCount}>
-                            {Object.values(toggleStates).filter(state => state).length} selected
-                        </span> */}
                     </div>
                 </div>
-
             )}
         </div>
     );

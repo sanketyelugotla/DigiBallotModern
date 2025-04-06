@@ -169,42 +169,34 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
             ) : candidates.length === 0 ? (
                 <p className={styles.noData}>No candidates found matching your filters</p>
             ) : (
-                <div className={styles.wholeTable}>
+                <div className={styles.tableContainer}>
                     <table className={styles.tableDiv}>
                         <thead>
                             <tr>
                                 <th>Candidate Name</th>
-                                {/* <th>Email</th> */}
                                 <th>Election Name</th>
                                 <th>Party Name</th>
                                 <th>Status</th>
-                                {/* <th>Select</th> */}
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody className={styles.tableBody}>
                             {candidates.map(candidate => {
                                 const candidateKey = `${candidate._id}_${candidate.electionId}`;
                                 return (
                                     <tr key={candidateKey} className={styles.entry}>
                                         <td>{candidate.fullName || "Unknown"}</td>
-                                        {/* <td>{candidate.email || "Unknown"}</td> */}
                                         <td>{candidate.electionName || "Unknown"}</td>
                                         <td>{candidate.partyName || "Unknown"}</td>
-                                        {/* <td className={styles[candidate.status?.toLowerCase()]}>
-                                            {candidate.status}
-                                        </td> */}
-                                        <td>
+                                        <td className={styles.captilize}>
                                             <center>
-                                                {
-                                                    candidate.status === "pending" ? (
-                                                        <ToggleButton
-                                                            isOn={toggleStates[candidateKey] || false}
-                                                            onToggle={() => handleToggle(candidate._id, candidate.electionId)}
-                                                        />
-                                                    ) : (
-                                                        candidate.status
-                                                    )
-                                                }
+                                                {candidate.status === "pending" ? (
+                                                    <ToggleButton
+                                                        isOn={toggleStates[candidateKey] || false}
+                                                        onToggle={() => handleToggle(candidate._id, candidate.electionId)}
+                                                    />
+                                                ) : (
+                                                    candidate.status
+                                                )}
                                             </center>
                                         </td>
                                     </tr>
@@ -212,7 +204,6 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
                             })}
                         </tbody>
                     </table>
-
                     <div className={styles.actionBar}>
                         <Button
                             className={styles.approveButton}
@@ -221,9 +212,6 @@ export default function CandidateSide({ setExportData, setExportHeaders, active,
                         >
                             Approve Selected
                         </Button>
-                        <span className={styles.selectionCount}>
-                            {Object.values(toggleStates).filter(state => state).length} selected
-                        </span>
                     </div>
                 </div>
             )}
