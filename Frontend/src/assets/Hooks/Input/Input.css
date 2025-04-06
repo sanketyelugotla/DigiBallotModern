@@ -197,7 +197,7 @@ input[type=checkbox] {
 .termsp {
     display: flex;
     align-items: center;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .termsp_theme {
@@ -209,13 +209,26 @@ input[type=checkbox] {
 }
 
 .termsp_medium {
-    font-size: 17px;
+    font-size: 16px;
 }
 
 .checkbox {
     font-weight: lighter;
-    color: var(--themeBlue);
+    /* color: var(--themeBlue); */
     margin-right: 1rem;
+    font-size: 18px;
+}
+
+.checkbox_medium {
+    font-size: 20px;
+}
+
+.checkbox_large {
+    font-size: 24px;
+}
+
+.checkbox_blue {
+    color: var(--themeBlue);
 }
 
 

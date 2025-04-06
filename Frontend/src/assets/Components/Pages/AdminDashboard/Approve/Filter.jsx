@@ -19,12 +19,6 @@ export default function Filter({ handleFilter }) {
     const statusOptions = ["All", "Approved", "Pending", "Rejected"];
     const electionOptions = elections ? [{ _id: "all", name: "All" }, ...elections] : [];
 
-    useEffect(() => {
-        console.log("Statuses:", selectedStatuses);
-        console.log("Elections:", selectedElections);
-        // You can call your filter function here with the selected values
-    }, [selectedStatuses, selectedElections]);
-
     const handleFilterOpen = (setFn, timeoutRef) => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
         setFn(true);
@@ -101,6 +95,7 @@ export default function Filter({ handleFilter }) {
                                     value={status}
                                     className={styleApprove.checkbox}
                                     size="medium"
+                                    variant="blue"
                                     checked={selectedStatuses.includes(status) || isAllSelected(selectedStatuses)}
                                     onChange={(val) => handleCheckboxToggle(val, selectedStatuses, setSelectedStatuses)}
                                 >
@@ -127,6 +122,7 @@ export default function Filter({ handleFilter }) {
                                     value={election._id}
                                     className={styleApprove.checkbox}
                                     size="medium"
+                                    variant="blue"
                                     checked={selectedElections.includes(election._id) || isAllSelected(selectedElections, true)}
                                     onChange={(val) => handleCheckboxToggle(val, selectedElections, setSelectedElections, true)}
                                 >
