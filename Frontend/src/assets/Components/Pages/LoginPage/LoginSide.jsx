@@ -27,6 +27,7 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
         const { email, password } = fomrData;
 
         try {
+            const start = performance.now();
             const response = await fetch(`${database_url}/auth/login`, {
                 method: "POST",
                 headers: {
@@ -34,6 +35,8 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
                 },
                 body: JSON.stringify({ email, password })
             });
+            const end = performance.now();
+            console.log("Response time: ", (end - start));
             const res = await response.json();
             if (res.success) {
                 toast.success("Login successfull");
