@@ -35,9 +35,9 @@ admin.post("/addParty", upload.fields([{ name: "image" }]), async (req, res) => 
 })
 
 admin.post("/addElection", upload.fields([{ name: "pic" }]), async (req, res) => {
-    const { name, startDate, endDate } = req.body;
+    const { name, startDate, endDate, dominantColor } = req.body;
     try {
-        const election = await adminService.addElection(name, startDate, endDate, req.user._id, req.files);
+        const election = await adminService.addElection(name, startDate, endDate, dominantColor, req.user._id, req.files);
         res.status(201).json({ success: true, message: "Election created successfully", election })
     } catch (error) {
         return res.status(500).json({ success: false, message: error.message })

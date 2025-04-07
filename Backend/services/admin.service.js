@@ -72,7 +72,7 @@ const createParty = async () => {
 
 }
 
-const addElection = async (name, startDate, endDate, userId, files) => {
+const addElection = async (name, startDate, endDate, color, userId, files) => {
     try {
         const existing = await Election.findOne({ name });
         if (existing) throw new Error("Election already exists");
@@ -88,6 +88,7 @@ const addElection = async (name, startDate, endDate, userId, files) => {
             name,
             startDate: new Date(startDate),
             endDate: new Date(endDate),
+            color,
             adminId,
             image: imageId
         });
