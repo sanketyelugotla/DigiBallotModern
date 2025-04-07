@@ -29,7 +29,7 @@ export default function SelectResultElection() {
 
             const res = await response.json();
             if (res.success) {
-                setElections(res.elections); // each election will include .candidates array
+                setElections(res.elections);
             } else {
                 toast.warn("Failed to load elections: " + res.message);
             }
@@ -55,7 +55,7 @@ export default function SelectResultElection() {
         <div className={styleElection.main}>
             {elections.length > 0 ? (
                 elections.map((item, index) => (
-                    <div key={index} className={styleElection.electionItem}>
+                    <div key={index} style={{ backgroundColor: item.color || '#6c757d' }} className={styleElection.electionItem}>
                         <p className={styleElection.name}>{item.name}</p>
                         <div className={styleElection.top}>
                             <p className={styleElection.para}>Candidates Registered</p>

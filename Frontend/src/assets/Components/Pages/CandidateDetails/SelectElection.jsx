@@ -55,7 +55,7 @@ export default function SelectElection() {
         <div className={styleElection.main}>
             {elections && elections.length > 0 ? (
                 elections.map((election, index) => (
-                    <div key={index} className={styleElection.electionItem}>
+                    <div key={index} style={{ backgroundColor: election.color || '#6c757d' }} className={styleElection.electionItem}>
                         <p className={styleElection.name}>{election.name}</p>
                         <div className={styleElection.top}>
                             <p className={styleElection.para}>Candidates Registered</p>
