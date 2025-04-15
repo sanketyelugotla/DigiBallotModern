@@ -30,7 +30,7 @@ app.get("/", (req, res) => {
     res.send("Voting System API is running...");
 });
 
-// Routes
+// Routes 
 app.use("/auth", auth);
 app.use("/image", image);
 app.use(authenticate);  // Apply the authenticate middleware globally
