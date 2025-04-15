@@ -102,7 +102,7 @@ export default function Header({ onLoginClick }) {
 
     return (
         <header className="header">
-            <span className="logo">DigiBallot</span>
+            <span className="logo">Fucking DigiBallot</span>
             <ul className="nav-list">
                 <li
                     id="home"
