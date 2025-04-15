@@ -54,7 +54,7 @@ export default function Register() {
         <div className={styleElection.main}>
             {elections.length > 0 ? (
                 elections.map((election, index) => (
-                    <div key={index} className={styleElection.electionItem}>
+                    <div key={index} className={styleElection.electionItem} style={{ backgroundColor: election.color || '#6c757d' }}>
                         <p className={styleElection.name}>{election.name}</p>
                         <div className={styleElection.top}>
                             <p className={styleElection.para}>Candidates Registered</p>
