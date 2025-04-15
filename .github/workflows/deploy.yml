@@ -28,3 +28,11 @@ jobs:
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/digiballot-backend:latest ./Backend
           docker push ${{ secrets.DOCKER_USERNAME }}/digiballot-backend:latest
+
+      - name: Trigger Render Deploy (Frontend)
+        run: |
+          curl -X POST ${{ secrets.RENDER_HOOK_FRONTEND }}
+
+      - name: Trigger Render Deploy (Backend)
+        run: |
+          curl -X POST ${{ secrets.RENDER_HOOK_BACKEND }}
