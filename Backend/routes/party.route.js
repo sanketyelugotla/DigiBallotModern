@@ -12,7 +12,6 @@ router.get("/", async (req, res) => {
         console.log("Unable to get parties", error.message);
         res.status(500).json({ message: error.message })
     }
-
 })
 
 router.get("/:partyId", async (req, res) => {
@@ -25,16 +24,26 @@ router.get("/:partyId", async (req, res) => {
     }
 })
 
-// 📌 POST: Add a Party with Image
-router.post("/addParty", upload.fields([{ name: "image" }]), async (req, res) => {
-    const { party } = req.body;
-
+router.get("/election/:electionId", async (req, res) => {
     try {
-        const createdParty = await partyService.addParty(party, req.files?.image?.[0]);
-        return res.status(200).json({ message: "Party created successfully", createdParty });
+        const party = await partyService.getPartyByElectionId(req.params.electionId);
+        return res.status(200).json({ success: true, message: "Paties fetched successfully", party: party });
+    } catch (error) {
+        console.error("Error fetching parties:", error);
+        return res.status(400).json({ success: false, message: error.message });
+    }
+})
+
+// 📌 POST: Add a Party with Image
+router.post("/addParty", upload.fields([{ name: "partyImage" }]), async (req, res) => {
+    const { partyName, state, adminId, electionId } = req.body;
+    console.log(req.body)
+    try {
+        const createdParty = await partyService.addParty(electionId, adminId, state, partyName, req.files?.partyImage?.[0]);
+        return res.status(200).json({ success: true, message: "Party created successfully", createdParty });
     } catch (error) {
         console.error("Error creating party:", error);
-        return res.status(400).json({ message: error.message });
+        return res.status(400).json({ success: false, message: error.message });
     }
 });
 

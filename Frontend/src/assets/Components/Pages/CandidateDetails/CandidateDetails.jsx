@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./MemberCarousel.css";
-import { databaseContext, electionDetails } from "../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, electionDetails, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
 import CandidateTable from "./CandidateTable";
 import CandidateCarousel from "./CandidateCarousel";
+import { toast } from "react-toastify";
 
 export default function CandidateDetails() {
     const [selectedIndex, setSelectedIndex] = useState(0);
@@ -12,6 +13,7 @@ export default function CandidateDetails() {
     const { selectedElection, setSelectedElection } = useContext(electionDetails);
     const [party, setParty] = useState(null);
     const token = localStorage.getItem("authToken");
+    const { setLoading } = useContext(loadingContext)
 
     const handleShift = (direction) => {
         setSelectedIndex((prevIndex) => {
@@ -23,33 +25,21 @@ export default function CandidateDetails() {
 
     async function fetchCandidates() {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/candidates/${selectedElection._id}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            // console.log("Fetched candidates:", res);
-            setCandidatesData(res);
+            if (res.success) {
+                setCandidatesData(res.candidates);
+            } else {
+                toast.warn("Error fetching candidates");
+            }
         } catch (error) {
+            toast.error("Error fetching candidates", error.message);
             console.error("Error fetching candidates:", error);
-        }
-    }
-
-    async function fetchParty(partyId) {
-        if (!partyId) {
-            console.warn("fetchParty called with null partyId");
-            return;
-        }
-
-        try {
-            // console.log(`Fetching party for partyId: ${partyId}`);
-            const response = await fetch(`${database_url}/party/${partyId}`, {
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            const res = await response.json();
-            // console.log("Fetched party:", res);
-            setParty(res);
-        } catch (error) {
-            console.error("Error fetching party:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -63,18 +53,9 @@ export default function CandidateDetails() {
             if (candidatesData.length === 3) ind += 1;
             else if (candidatesData.length > 3) ind += 2;
             let selected = candidatesData[(ind) % candidatesData.length];
-            // console.log("Selected candidate:", selected);
             setSelectedData(selected);
         }
     }, [selectedIndex, candidatesData]);
-
-    useEffect(() => {
-        if (selectedData && selectedData.partyId) { 
-            fetchParty(selectedData.partyId);
-        } else {
-            console.warn("No partyId found in selectedData");
-        }
-    }, [selectedData]);
 
     function check(position) {
         if (position === 1 || position === 0) {
@@ -96,8 +77,8 @@ export default function CandidateDetails() {
                         selectedData={selectedData}
                         check={check}
                     />
-                    {selectedData && party ? (
-                        <CandidateTable selectedData={selectedData} party={party} />
+                    {selectedData ? (
+                        <CandidateTable selectedData={selectedData} />
                     ) : (
                         <p>Loading candidate details...</p>
                     )}

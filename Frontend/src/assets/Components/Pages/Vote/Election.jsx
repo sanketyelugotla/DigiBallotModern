@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { databaseContext, electionDetails } from '../../../Hooks/ContextProvider/ContextProvider'
+import { databaseContext, electionDetails, loadingContext } from '../../../Hooks/ContextProvider/ContextProvider'
 import styleVote from "./Vote.module.css"
 import { Button, HoverDiv } from '../../../Hooks';
+import { toast } from "react-toastify";
 
 import styleElection from "./Election.module.css"
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ export default function Election() {
     const { selectedElection, setSelectedElection } = useContext(electionDetails);
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const token = localStorage.getItem("authToken");
+    const { setLoading } = useContext(loadingContext)
 
     function onClose() {
         setIsConfirmOpen(!isConfirmOpen);
@@ -19,13 +21,17 @@ export default function Election() {
 
     async function fetchElections() {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/election`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setElections(res.elections);
+            if (res.success) setElections(res.elections);
+            else toast.error(res.message)
         } catch (error) {
-            console.log(error)
+            toast.error(error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -45,15 +51,35 @@ export default function Election() {
         else onClose();
     }
 
-
-    function handleChange() {
-        navigate("/userDashboard/vote")
+    async function handleChange() {
+        try {
+            setLoading(true);
+            const response = await fetch(`${database_url}/voter/isEligible`, {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${token}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ electionId: selectedElection._id })
+            });
+            const res = await response.json();
+            if (res.success) {
+                navigate("/userDashboard/vote");
+            } else {
+                toast.warning(res.message);
+                setIsConfirmOpen(false);
+            }
+        } catch (error) {
+            toast.error(error);
+        } finally {
+            setLoading(false);
+        }
     }
 
 
     return (
         <div className={styleElection.main}>
-            <h2>Active Elections</h2>
+            <h2 className={styleVote.head}>Active Elections</h2>
             <table className={styleVote.table} id={styleElection.table} border={1}>
                 <thead>
                     <tr className={styleVote.row}>
@@ -84,7 +110,7 @@ export default function Election() {
                     })}
                 </tbody>
             </table>
-            <Button onClick={handleClick}>Proceed</Button>
+            <Button size="lg" onClick={handleClick}>Proceed</Button>
             {isConfirmOpen &&
                 <HoverDiv onClose={onClose} variant="voteBox">
                     {({ handleClose }) => (

@@ -19,7 +19,8 @@ import Register from "./assets/Components/Pages/UserDashboard/Register";
 import AdminProfile from "./assets/Components/Pages/AdminDashboard/AdminProfile/AdminProfile";
 
 import { HoverDiv } from "./assets/Hooks";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route, Link } from "react-router-dom"
 
 export default function App() {
@@ -30,6 +31,7 @@ export default function App() {
     return (
         <HoverDiv.Main open={isLoginOpen} >
             <Header onLoginClick={toggleLoginModal} />
+            <ToastContainer />
             <div className="space">
                 <Routes>
                     <Route path="/" element={<Home {...{ isLoginOpen, toggleLoginModal }} />} />

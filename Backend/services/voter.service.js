@@ -22,7 +22,7 @@ const voteCandidate = async (voterId, candidateId, electionId) => {
 
         const { isElectionActive } = require("./election.service");
         const election = await isElectionActive(electionId);
-        if (!election.status) throw new Error("Election is not active.");
+        if (!election) throw new Error("Election is not active.");
 
         const voter = await Voter.findById(voterId);
         if (!voter) throw new Error("Voter not found.");
@@ -44,7 +44,14 @@ const voteCandidate = async (voterId, candidateId, electionId) => {
         await vote.save();
 
         // Update voter elections list
-        voter.elections.push({ electionId, status: "cast" });
+        const index = voter.elections.findIndex(e => e._id.toString() === electionId);
+
+        if (index !== -1) {
+            voter.elections[index].status = "cast";
+        } else {
+            voter.elections.push({ _id: electionId, status: "cast" });
+        }
+
         await voter.save();
 
         return { message: "Vote successfully cast" };
@@ -75,12 +82,54 @@ const getVotes = async (electionId) => {
     }
 };
 
+const getVotesWithCandidateDetails = async (req) => {
+    const { electionId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(electionId)) {
+        throw new Error("Invalid electionId");
+    }
+
+    const election = await Election.findById(electionId);
+    if (!election) {
+        throw new Error("Election not found");
+    }
+
+    // Aggregate votes and join with candidate data
+    const result = await Vote.aggregate([
+        { $match: { electionId: new mongoose.Types.ObjectId(electionId) } },
+        {
+            $group: {
+                _id: "$candidateId",
+                votes: { $sum: 1 },
+            }
+        },
+        {
+            $lookup: {
+                from: "candidates",
+                localField: "_id",
+                foreignField: "_id",
+                as: "candidate"
+            }
+        },
+        { $unwind: "$candidate" },
+        {
+            $project: {
+                _id: 0,
+                candidateId: "$_id",
+                name: "$candidate.fullName",
+                votes: 1
+            }
+        },
+        { $sort: { votes: -1 } }
+    ]);
+
+    return result; // simply return result here
+};
+
 const registerForElection = async (userId, electionId) => {
     try {
         const voter = await Voter.findOne({ userId });
         if (!voter) throw new Error("Voter not found");
-
-        console.log(voter)
 
         const { electionService } = require("./index.js");
 
@@ -95,16 +144,17 @@ const registerForElection = async (userId, electionId) => {
         // Check if voter is already registered
         const existingRegistration = voter.elections.find(
             (e) => {
-                console.log(e)
                 return e._id.toString() === electionId
             }
         );
-        console.log(existingRegistration)
         if (existingRegistration?.status === "approved") {
             throw new Error("You are already registered for this election");
         }
         if (existingRegistration?.status === "pending") {
             throw new Error("Please wait for admin approval");
+        }
+        if (existingRegistration?.status === "cast") {
+            throw new Error("Already cast an vote in this election");
         }
 
         // Push new election registration
@@ -140,11 +190,33 @@ const getRegisteredElections = async (userId) => {
     }
 };
 
+const isRegistered = async (userId, electionId) => {
+    try {
+        const voter = await Voter.findOne({ userId });
+
+        if (!voter) return { status: false, message: "Voter not found" };
+        if (!voter.elections || voter.elections.length === 0)
+            return { status: false, message: "You are not registered for this election" };
+
+        const election = voter.elections.find(e => e._id.toString() === electionId);
+        if (!election) return { status: false, message: "You are not registered for this election" };
+        if (election.status === "pending") return { status: false, message: "Approval pending from Admin" };
+        if (election.status === "cast") return { status: false, message: "You already casted your vote in this election" };
+
+        return { success: true, message: "Eligible to vote" };
+    } catch (error) {
+        return { success: false, message: error };
+    }
+};
+
+
 
 module.exports = {
     voteCandidate,
     getVotes,
     getVoterIdFromUserId,
     registerForElection,
-    getRegisteredElections
+    getRegisteredElections,
+    isRegistered,
+    getVotesWithCandidateDetails
 };

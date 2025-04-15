@@ -23,7 +23,6 @@ const updateDetails = async (fullname, dob, email, gender, number, password, req
             adminUpdate,
             { new: true, runValidators: true }
         );
-
         const userUpdate = { name: fullname, email };
         if (hashedPassword) userUpdate.password = hashedPassword;
 
@@ -54,7 +53,7 @@ const getDetails = async (req) => {
         return {
             success: true,
             data: {
-                _id : id,
+                _id: id,
                 name: user.name,
                 email: user.email,
                 dob: admin.dob,
@@ -73,7 +72,7 @@ const createParty = async () => {
 
 }
 
-const addElection = async (name, startDate, endDate, userId, files) => {
+const addElection = async (name, startDate, endDate, color, userId, files) => {
     try {
         const existing = await Election.findOne({ name });
         if (existing) throw new Error("Election already exists");
@@ -89,6 +88,7 @@ const addElection = async (name, startDate, endDate, userId, files) => {
             name,
             startDate: new Date(startDate),
             endDate: new Date(endDate),
+            color,
             adminId,
             image: imageId
         });
@@ -111,7 +111,8 @@ const getPendingCandidates = async () => {
         const candidates = await Candidate.find({
             "elections.status": "pending"
         })
-        .populate("elections._id", "name"); // Fetch election name from Election schema
+            .populate("elections._id", "name")
+            .populate("elections.partyId", "partyName"); // Fetch election name from Election schema
 
         // Flatten candidates so that each candidate-election pair is separate
         const expandedCandidates = candidates.flatMap(candidate =>
@@ -123,7 +124,9 @@ const getPendingCandidates = async () => {
                     email: candidate.email,
                     electionId: election._id?._id || election._id, // Ensure only the ObjectId is stored
                     electionName: election._id?.name || "Unknown", // Extract election name directly
-                    status: election.status
+                    status: election.status,
+                    partyId: election.partyId._id,
+                    partyName: election.partyId?.partyName
                 }))
         );
 
@@ -159,6 +162,72 @@ const getPendingUsers = async () => {
     } catch (error) {
         throw new Error(error.message || "Failed to fetch pending users");
     }
+};
+
+const getFilteredUsers = async ({ statuses, electionIds }) => {
+    const query = {};
+
+    if (statuses?.length) {
+        query["elections.status"] = { $in: statuses };
+    }
+
+    if (electionIds?.length) {
+        query["elections._id"] = { $in: electionIds };
+    }
+
+    const users = await Voter.find(query)
+        .populate("userId", "name")
+        .populate("elections._id", "name")
+        // .populate("elections.partyId", "partyName");
+
+    return users.flatMap(user =>
+        user.elections
+            .filter(election =>
+                (!statuses?.length || statuses.includes(election.status)) &&
+                (!electionIds?.length || electionIds.some(id => election._id.equals(id)))
+            )
+            .map(election => ({
+                _id: user._id, // User ID
+                name: user.userId?.name || "Unknown",
+                electionId: election._id?._id || election._id, // Ensure only the ObjectId is stored
+                electionName: election._id?.name || "Unknown", // Extract name directly
+                status: election.status
+            }))
+    );
+};
+
+const getFilteredCandidates = async ({ statuses, electionIds }) => {
+    const query = {};
+
+    if (statuses?.length) {
+        query["elections.status"] = { $in: statuses };
+    }
+
+    if (electionIds?.length) {
+        query["elections._id"] = { $in: electionIds };
+    }
+
+    const candidates = await Candidate.find(query)
+        .populate("elections._id", "name")
+        .populate("elections.partyId", "partyName");
+
+    return candidates.flatMap(candidate =>
+        candidate.elections
+            .filter(election =>
+                (!statuses?.length || statuses.includes(election.status)) &&
+                (!electionIds?.length || electionIds.some(id => election._id.equals(id)))
+            )
+            .map(election => ({
+                _id: candidate._id, // Candidate ID
+                fullName: candidate.fullName,
+                email: candidate.email,
+                electionId: election._id?._id || election._id, // Ensure only the ObjectId is stored
+                electionName: election._id?.name || "Unknown", // Extract election name directly
+                status: election.status,
+                partyId: election.partyId._id,
+                partyName: election.partyId?.partyName
+            }))
+    );
 };
 
 const approveVoter = async (voterId, electionId) => {
@@ -347,4 +416,6 @@ module.exports = {
     approveCandidatesBulk,
     approveVoter,
     approveVotersBulk,
+    getFilteredUsers,
+    getFilteredCandidates
 };

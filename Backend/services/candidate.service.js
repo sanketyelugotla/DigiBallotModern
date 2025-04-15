@@ -4,28 +4,35 @@ const { uploadFile, getFileStream } = require("../utils/uploadUtils.js");
 
 // 📌 Update Candidate Details
 const updateCandidateDetails = async (userId, files, details) => {
-    if (!files.image || !files.manifesto) throw new Error("Both image and manifesto files are required");
-
-    const imageId = await uploadFile(files.image[0]);
-    const manifestoId = await uploadFile(files.manifesto[0]);
-
-    console.log("Upload Finished: Image ID:", imageId, "Manifesto ID:", manifestoId);
-
-    const updatedCandidate = await Candidate.findOneAndUpdate(
-        { userId },
-        {
-            ...details,
-            self_profession: details.profession,
-            image: imageId,
-            manifesto: manifestoId,
-        },
-        { new: true, runValidators: true }
-    );
-    if (!updatedCandidate) throw new Error("Candidate not found");
-    return {
-        candidate: updatedCandidate,
-        fileIds: { image: imageId, manifesto: manifestoId },
-    };
+    // if (!files.image || !files.manifesto) throw new Error("Both image and manifesto files are required");
+    try {
+        let imageId;
+        let manifestoId;
+    
+        if (files.image) imageId = await uploadFile(files.image[0]);
+        if (files.manifesto) manifestoId = await uploadFile(files.manifesto[0]);
+    
+        // console.log("Upload Finished: Image ID:", imageId, "Manifesto ID:", manifestoId);
+    
+        const updatedCandidate = await Candidate.findOneAndUpdate(
+            { userId },
+            {
+                ...details,
+                ...(details.profession && { self_profession: details.profession }),
+                ...(imageId && { image: imageId }),
+                ...(manifestoId && { manifesto: manifestoId }),
+            },
+            { new: true, runValidators: true }
+        );
+        if (!updatedCandidate) throw new Error("Candidate not found");
+        return {
+            candidate: updatedCandidate,
+            fileIds: { image: imageId, manifesto: manifestoId },
+        };
+    } catch (error) {
+        console.log(error);
+        throw new Error(error.message);
+    }
 };
 
 const getCandidates = async () => {
@@ -37,10 +44,21 @@ const getApprovedCandidates = async (electionId) => {
     const candidates = await Candidate.find({
         "elections._id": electionId,
         "elections.status": "approved"
-    }).lean();
+    })
+        .populate("elections._id", "name")
+        .populate("elections.partyId", "partyName partyImage")
+        .lean();
 
-    return candidates.length ? candidates : [];
+    return candidates.map(candidate => {
+        const selectedElection = candidate.elections.find(e => e._id._id.toString() === electionId);
+        console.log(selectedElection)
+        return {
+            ...candidate,
+            election: selectedElection
+        };
+    });
 };
+
 
 const getCandidateDetails = async (candidateId) => {
     if (!mongoose.Types.ObjectId.isValid(candidateId)) throw new Error("Invalid candidateId");
@@ -51,7 +69,16 @@ const getCandidateDetails = async (candidateId) => {
 
 const getCandidateDetailsByUserId = async (userId) => {
     if (!mongoose.Types.ObjectId.isValid(userId)) throw new Error("Invalid user ID");
+    const candidate = await Candidate.findOne({ userId }).populate("elections._id").populate("elections.partyId")
+    // console.log(candidate.elections)
+    if (!candidate) throw new Error("Candidate not found");
+    return candidate;
+};
+
+const getCandidateDetailsByuserId = async (userId) => {
+    if (!mongoose.Types.ObjectId.isValid(userId)) throw new Error("Invalid user ID");
     const candidate = await Candidate.findOne({ userId });
+    // console.log(candidate.elections)
     if (!candidate) throw new Error("Candidate not found");
     return candidate;
 };
@@ -76,17 +103,18 @@ const getCandidateImage = async (imageId) => {
 
 const registerForElection = async (user, electionId, partyId) => {
     try {
-        const candidate = await getCandidateDetailsByUserId(user._id);
+        const candidate = await getCandidateDetailsByuserId(user._id);
         if (!candidate) throw new Error("Candidate not found");
 
         const { electionService } = require("./index.js");
         const election = await electionService.getElectionById(electionId);
         if (!election) throw new Error("No election found");
-
         // Check if the candidate is already registered for this election
         const isAlreadyRegistered = candidate.elections.filter(e => e._id.toString() === electionId.toString());
-        if (isAlreadyRegistered[0].status === "pending") throw new Error("Please wait for admin approval");
-        else if (isAlreadyRegistered[0].status === "approved") throw new Error("Already registered for this election");
+        if (isAlreadyRegistered.length > 0) {
+            if (isAlreadyRegistered[0].status === "pending") throw new Error("Please wait for admin approval");
+            else if (isAlreadyRegistered[0].status === "approved") throw new Error("Already registered for this election");
+        }
 
         // Add election registration entry
         candidate.elections.push({
@@ -107,8 +135,10 @@ const isCandidateRegistered = async (candidateId, electionId) => {
     try {
         const candidate = await Candidate.findById(candidateId);
         if (!candidate) throw new Error("Candidate not found");
-
-        const isRegistered = candidate.elections.some(e => e.electionId.toString() === electionId.toString() && e.status === "approved");
+        console.log(candidate)
+        console.log(electionId)
+        const isRegistered = candidate.elections.some(e => e._id.toString() === electionId.toString() && e.status === "approved");
+        console.log(isRegistered)
 
         return { candidate, status: isRegistered };
     } catch (error) {
@@ -125,6 +155,7 @@ module.exports = {
     getCandidateDetails,
     registerForElection,
     getCandidateDetailsByUserId,
+    getCandidateDetailsByuserId,
     getCandidateImageByUserId,
     isCandidateRegistered
 };

@@ -1,10 +1,9 @@
-import React, { useContext, useState } from 'react'
-import styleNav from "./Leftnav.module.css"
-import { ImProfile } from "react-icons/im";
+import React, { useContext } from 'react';
 import { FaRegAddressCard } from "react-icons/fa";
+import { ImProfile } from "react-icons/im";
 import { TbListDetails } from "react-icons/tb";
 import { sectionsContext } from '../SectionsContextProvider';
-import { CiCircleCheck } from "react-icons/ci";
+import styleNav from "./Leftnav.module.css";
 
 export default function LeftNav({ handleSelectionChange }) {
     const { sections, setSections } = useContext(sectionsContext);
@@ -37,13 +36,13 @@ export default function LeftNav({ handleSelectionChange }) {
                 <TbListDetails className={styleNav.icon} />
                 Other details
             </p>
-            <p id='declaration'
+            {/* <p id='declaration'
                 className={`${styleNav.para} ${sections === "declaration" && styleNav.highlight}`}
                 onClick={handleClick}
             >
                 <CiCircleCheck className={styleNav.icon} />
                 Declaration
-            </p>
+            </p> */}
         </div>
     )
 }

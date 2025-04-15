@@ -7,10 +7,8 @@ import StyleProf from "./CandidateProfile.module.css"
 export default function CandidateProfile() {
     return (
         <div className={StyleProf.prof}>
-            <SectionsContextProvider>
-                <LeftNav />
-                <CandidateForm />
-            </SectionsContextProvider>
+            <LeftNav />
+            <CandidateForm />
         </div>
     )
 }

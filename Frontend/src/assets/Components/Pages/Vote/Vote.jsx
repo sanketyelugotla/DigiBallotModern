@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styleVote from "./Vote.module.css"
 import { Button } from '../../../Hooks/index'
-import { partiesContext, databaseContext, electionDetails } from '../../../Hooks/ContextProvider/ContextProvider'
+import { partiesContext, databaseContext, electionDetails, loadingContext } from '../../../Hooks/ContextProvider/ContextProvider'
 import ConfirmVote from './ConfirmVote'
 import VotingTable from './VotingTable'
+import { toast } from 'react-toastify'
 
 export default function Vote() {
     const { selectedParty, setSelectedParty } = useContext(partiesContext);
@@ -12,13 +13,23 @@ export default function Vote() {
     const { database_url } = useContext(databaseContext);
     const { selectedElection } = useContext(electionDetails);
     const token = localStorage.getItem("authToken");
+    const { setLoading } = useContext(loadingContext)
 
     async function fetchCandidates() {
-        const response = await fetch(`${database_url}/candidates/${selectedElection._id}`, {
-            headers: { "Authorization": `Bearer ${token}` }
-        });
-        const res = await response.json();
-        setCandidateDetails(res);
+        try {
+            setLoading(true);
+            const response = await fetch(`${database_url}/candidates/${selectedElection._id}`, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            const res = await response.json();
+            if (res.success) setCandidateDetails(res);
+            else toast.warn("Error fetching candidates", res.message);
+        } catch (error) {
+            toast.warn("Error fetching candidates", error.message);
+            console.error(error)
+        } finally {
+            setLoading(false);
+        }
     }
 
     useEffect(() => {
@@ -26,9 +37,10 @@ export default function Vote() {
         fetchCandidates();
     }, [databaseContext])
 
-    function selectButton(event, item, party) {
+    function selectButton(event, item) {
         const { fullName } = event.target;
-        if (selectedParty.name != item.fullName) setSelectedParty({ name: item.fullName, candidateId: item._id, party: party.partyName, partyId: party._id });
+        const { partyName, _id } = item.election.partyId
+        if (selectedParty.name != item.fullName) setSelectedParty({ name: item.fullName, candidateId: item._id, party: partyName, partyId: _id });
         else setSelectedParty("");
     }
 

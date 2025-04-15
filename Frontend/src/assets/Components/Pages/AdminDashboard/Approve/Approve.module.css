@@ -1,6 +1,6 @@
 .main {
-    height: 70vh;
-    width: 45vw;
+    height: 80vh;
+    width: 50vw;
     border-radius: 10px;
     background-color: white;
 }
@@ -15,12 +15,6 @@
 .link {
     cursor: pointer;
     font-size: large;
-}
-
-.filter {
-    background-color: black;
-    height: 10vh;
-    width: 10vw;
 }
 
 .buttonsDiv {
@@ -46,49 +40,99 @@
     font-size: 15px;
 }
 
-/* Table  */
-.wholeTable {
+/* Table Styles */
+/* Table Container */
+.tableContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    height: 100%;
+    width: 100%;
 }
 
+/* Table Styles */
 .tableDiv {
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
     background-color: #ffffff;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
-    overflow: hidden;
+    table-layout: fixed;
+    /* Ensures consistent column widths */
 }
 
-.tableDiv th, .tableDiv td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    white-space: nowrap;  /* Prevents text from breaking */
+/* Table Header */
+.tableDiv thead {
+    display: table;
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #1e3a8a;
+    color: white;
 }
 
 .tableDiv th {
-    background-color: #1e3a8a;
-    color: white;
+    padding: 12px 15px;
+    text-align: center;
     font-weight: bold;
     text-transform: uppercase;
+    font-family: Volkhov;
 }
 
+/* Table Body with Scroll */
+.tableBody {
+    display: block;
+    max-height: 50vh;
+    overflow-y: auto;
+    width: 100%;
+}
+
+.tableBody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+    /* Match the table layout */
+}
+
+/* Table Cells */
+.tableDiv td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    font-size: 15px;
+}
+
+/* Hover Effect */
 .tableDiv tbody tr:hover {
     background-color: #f1f5f9;
 }
 
-.entry td {
-    font-size: 14px;
-    color: #333;
+/* Action Bar */
+.actionBar {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 10px;
 }
 
-.entry:last-child td {
-    border-bottom: none;
+.approveButton {
+    background-color: #1e3a8a;
+    color: white;
+    padding: 8px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.approveButton:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.noData {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
 }
 
 .approveButton {
@@ -108,4 +152,112 @@
 
 .approveButton:hover {
     background-color: #162d6b;
+}
+
+.wholeDiv {
+    width: 100%;
+}
+
+.noData {
+    width: 100%;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+.captilize {
+    text-transform: capitalize;
+}
+
+
+
+/* Filter */
+
+.filter {
+    position: relative;
+    /* 👈 Add this */
+    background-color: white;
+    height: fit-content;
+    width: fit-content;
+}
+
+.subMenu {
+    width: auto;
+    position: absolute;
+    top: 0;
+    left: 100%;
+    transform: translateX(-50%);
+    /* Start slightly left */
+    padding: 9px 18px;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 999;
+    white-space: nowrap;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.subMenuVisible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.mainFilter {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 4px 0;
+}
+
+
+.borderBottom {
+    border-bottom: 1px solid #ddd;
+}
+
+.indFilterWrapper {
+    position: relative;
+    width: 100%;
+}
+
+.indFilter {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 8px 18px;
+
+    p {
+        font-size: 18px;
+    }
+}
+
+.icon {
+    padding-left: 4px;
+    font-size: 25px;
+}
+
+.highlight {
+    background-color: #ddddddda;
+}
+
+.subMenuVisible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
+}
+
+.checkbox {
+    margin: 8px 0;
+}
+
+.insideDiv {
+    font-size: 20px;
 }

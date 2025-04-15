@@ -1,7 +1,8 @@
 import { useContext, useState } from "react"
 import { Input } from "../../../Hooks/index"
 import { replace, useNavigate } from "react-router-dom";
-import { databaseContext } from "../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider";
+import { toast } from "react-toastify";
 
 export default function LoginSide({ changeSide, handleClose, fetchUserDetails }) {
     const { database_url } = useContext(databaseContext);
@@ -10,6 +11,7 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
         password: ""
     });
     const [isWrong, setIsWrong] = useState(false);
+    const { setLoading } = useContext(loadingContext);
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -19,11 +21,13 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
     const navigate = useNavigate();
 
     async function handleSubmit(event) {
+        setLoading(true);
         event.preventDefault();
 
         const { email, password } = fomrData;
 
         try {
+            const start = performance.now();
             const response = await fetch(`${database_url}/auth/login`, {
                 method: "POST",
                 headers: {
@@ -31,13 +35,13 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
                 },
                 body: JSON.stringify({ email, password })
             });
-
+            const end = performance.now();
+            console.log("Response time: ", (end - start));
             const res = await response.json();
-
-            if (response.ok) {
+            if (res.success) {
+                toast.success("Login successfull");
                 localStorage.setItem("authToken", res.token);
                 fetchUserDetails();
-
 
                 handleClose();
                 switch (res.role) {
@@ -57,10 +61,14 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
                 }
             } else {
                 setIsWrong(true);
+                toast.error(res.message)
                 console.error("Login failed:", res.message);
             }
         } catch (error) {
+            toast.error("Error logging in:", error);
             console.error("Error logging in:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -77,7 +85,7 @@ export default function LoginSide({ changeSide, handleClose, fetchUserDetails })
                     <div className="link">
                         <a href="#">Forgot password?</a>
                     </div>
-                    <Input.Danger on={isWrong}>Incorrect VoterId or Password</Input.Danger>
+                    {/* <Input.Danger on={isWrong}>Incorrect VoterId or Password</Input.Danger> */}
                     <Input.Submit variant="formbtn" onClick={handleSubmit}>Login</Input.Submit>
                 </Input.Form>
             </ Input.Div>

@@ -1,14 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import styleForm from "./CandidateForm.module.css";
 import { sectionsContext } from "./SectionsContextProvider";
-import { databaseContext, userContext } from "../../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, userContext, loadingContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import { Personel, Party, Other, Declaration } from "../Forms";
+import { toast } from "react-toastify";
 
 export default function CandidateForm() {
     const { sections } = useContext(sectionsContext);
     const { database_url } = useContext(databaseContext);
     const { user } = useContext(userContext);
     const token = localStorage.getItem("authToken");
+    const [completeData, setCompleteData] = useState();
+    const { setLoading } = useContext(loadingContext)
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -30,44 +33,47 @@ export default function CandidateForm() {
     });
 
     async function fetchDetails() {
+        setLoading(true);
         try {
-            const response = await fetch(`${database_url}/candidates/get/user/${user._id}`, {
+            const response = await fetch(`${database_url}/candidates/get/user`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
-            const res = await response.json();
-
-            console.log(res);
-
-            if (res) {
-                setFormData((prev) => ({
-                    ...prev,
-                    fullName: res.fullName || "",
-                    email: res.email || "",
-                    mobile: res.mobile || "",
-                    education: res.education || "",
-                    password: res.password,
-                    dob: res.dob || "",
-                    gender: res.gender || "",
-                    otp: "",
-                    profession: res.profession || "",
-                    image: res.image || null,
-                    party: res.party || "",
-                    state: res.state || "",
-                    manifesto: res.manifesto || null,
-                    spouse: res.spouse || "",
-                    spouse_profession: res.spouse_profession || "",
-                    liabilities: res.liabilities || "",
-                    assets: res.assets || "",
-                }));
+            const data = await response.json();
+            if (data.success) {
+                const res = data.candidates
+                setCompleteData(res);
+                if (res) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        fullName: res.fullName || "",
+                        email: res.email || "",
+                        mobile: res.mobile || "",
+                        education: res.education || "",
+                        password: res.password,
+                        dob: res.dob.slice(0, 10) || "",
+                        gender: res.gender || "",
+                        otp: "",
+                        profession: res.self_profession || "",
+                        image: res.image || null,
+                        manifesto: res.manifesto || null,
+                        spouse: res.spouse || "",
+                        spouse_profession: res.spouse_profession || "",
+                        liabilities: res.liabilities || "",
+                        assets: res.assets || "",
+                    }));
+                } else {
+                    toast.warn("Error fetching candidate details")
+                }
             } else {
                 console.error("Error fetching details:", res.message);
             }
 
         } catch (error) {
             console.error("Fetch error:", error);
+        } finally {
+            setLoading(false);
         }
     }
-
 
     useEffect(() => {
         fetchDetails();
@@ -81,15 +87,13 @@ export default function CandidateForm() {
 
     // Handle file selection dynamically
     const handleFileSelect = (file, name) => {
-        console.log(file)
-        console.log(name)
         setFormData((prev) => ({ ...prev, [name]: file }));
     };
 
     // Handle form submission
     const handleSubmit = async (e) => {
+        setLoading(true);
         e.preventDefault();
-        console.log(formData)
         const formDataObj = new FormData();
 
         Object.keys(formData).forEach((key) => {
@@ -97,23 +101,23 @@ export default function CandidateForm() {
                 formDataObj.append(key, formData[key]); // Append all fields dynamically
             }
         });
-
-        // console.log("Sending FormData:", [...formDataObj.entries()]);
-
         try {
-            const response = await fetch(`${database_url}/candidates/details`, {
-                method: "POST",
+            const response = await fetch(`${database_url}/candidates/updatecandidate`, {
+                method: "PUT",
                 headers: { "Authorization": `Bearer ${token}` },
                 body: formDataObj,
             });
-
-            if (response.ok) {
-                alert("Candidate registered successfully!");
+            const res = await response.json();
+            if (res.success) {
+                toast.success("Candidate details updated successfully!");
             } else {
-                alert("Submission failed!");
+                toast.warn("Submission failed!");
             }
         } catch (error) {
+            toast.error("Error submitting form:", error);
             console.error("Error submitting form:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -121,16 +125,16 @@ export default function CandidateForm() {
         <div className={styleForm.full}>
             <form onSubmit={handleSubmit} encType="multipart/form-data">
                 {/* Personal Information */}
-                <Personel {...{ handleFormChange, handleFileSelect, formData }} />
+                <Personel {...{ handleFormChange, handleFileSelect, formData, handleSubmit }} />
 
                 {/* Party Information */}
-                <Party {...{ handleFormChange, handleFileSelect, formData }} />
+                <Party {...{ handleFormChange, handleFileSelect, completeData, fetchDetails }} />
 
                 {/* Other Information */}
-                <Other {...{ handleFormChange, handleFileSelect, formData }} />
+                <Other {...{ handleFormChange, handleFileSelect, formData, handleSubmit }} />
 
                 {/* Declaration */}
-                <Declaration {...{ handleFormChange, handleFileSelect, handleSubmit, formData }} />
+                {/* <Declaration {...{ handleFormChange, handleFileSelect, handleSubmit, formData }} /> */}
 
             </form>
         </div>

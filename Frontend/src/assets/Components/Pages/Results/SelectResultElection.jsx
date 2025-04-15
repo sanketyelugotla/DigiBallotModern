@@ -1,80 +1,80 @@
 import React, { useContext, useEffect, useState } from "react";
-import { databaseContext, electionDetails } from "../../../Hooks/ContextProvider/ContextProvider";
+import {
+    databaseContext,
+    electionDetails,
+    loadingContext,
+} from "../../../Hooks/ContextProvider/ContextProvider";
 import styleElection from "../CandidateDetails/Election.module.css";
 import { Button } from "../../../Hooks";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function SelectResultElection() {
     const { selectedElection, setSelectedElection } = useContext(electionDetails);
     const { database_url } = useContext(databaseContext);
+    const { setLoading } = useContext(loadingContext);
+
     const [elections, setElections] = useState([]);
-    const [candidates, setCandidates] = useState({});
     const token = localStorage.getItem("authToken");
+    const navigate = useNavigate();
 
-    async function fetchElections() {
+    const fetchElectionsWithCandidates = async () => {
         try {
-            const response = await fetch(`${database_url}/election/all`, {
-                headers: { "Authorization": `Bearer ${token}` }
+            setLoading(true);
+            const response = await fetch(`${database_url}/election/allDetails`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
             });
-            const res = await response.json();
-            setElections(res);
-        } catch (error) {
-            console.error("Error fetching elections:", error);
-        }
-    }
 
-    async function fetchCandidates(electionId) {
-        try {
-            const response = await fetch(`${database_url}/candidates/${electionId}`, {
-                headers: { "Authorization": `Bearer ${token}` }
-            });
             const res = await response.json();
-            setCandidates((prev) => ({
-                ...prev,
-                [electionId]: res,
-            }));
+            if (res.success) {
+                setElections(res.elections);
+            } else {
+                toast.warn("Failed to load elections: " + res.message);
+            }
         } catch (error) {
-            console.error("Error fetching candidates:", error);
+            toast.error("Error fetching elections: " + error.message);
+            console.error("Error:", error);
+        } finally {
+            setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         setSelectedElection([]);
-        fetchElections();
+        fetchElectionsWithCandidates();
     }, []);
 
-    useEffect(() => {
-        elections.forEach((election) => {
-            fetchCandidates(election._id);
-        });
-    }, [elections]);
-
-    const navigate = useNavigate();
-    function handleClick(item) {
+    const handleClick = (item) => {
         setSelectedElection(item);
-        navigate('/results');
-    }
+        navigate("/results");
+    };
 
     return (
         <div className={styleElection.main}>
             {elections.length > 0 ? (
                 elections.map((item, index) => (
-                    <div key={index} className={styleElection.electionItem}>
+                    <div key={index} style={{ backgroundColor: item.color || '#6c757d' }} className={styleElection.electionItem}>
                         <p className={styleElection.name}>{item.name}</p>
                         <div className={styleElection.top}>
                             <p className={styleElection.para}>Candidates Registered</p>
                             <p className={styleElection.number}>
-                                {candidates[item._id] ? candidates[item._id].length : "Loading..."}
+                                {item.candidates ? item.candidates.length : "Loading..."}
                             </p>
                         </div>
                         <div className={styleElection.details}>
                             <div className={styleElection.candidates}>
-                                {candidates[item._id] ? (
-                                    candidates[item._id].map((candidate, i) => (
-                                        <p key={i} className={styleElection.candidateName}>{candidate.fullName}</p>
+                                {item.candidates && item.candidates.length > 0 ? (
+                                    item.candidates.map((candidate, i) => (
+                                        <p key={i} className={styleElection.candidateName}>
+                                            {candidate.fullName}
+                                        </p>
                                     ))
                                 ) : (
-                                    <p>Loading candidates...</p>
+                                    <p className={styleElection.candidateName}>
+                                        No candidates registered yet
+                                    </p>
                                 )}
                             </div>
                             <Button
@@ -85,7 +85,6 @@ export default function SelectResultElection() {
                                 See Results
                             </Button>
                         </div>
-
                     </div>
                 ))
             ) : (

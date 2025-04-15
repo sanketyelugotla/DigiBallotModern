@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { databaseContext, electionDetails, userContext } from "../../../../Hooks/ContextProvider/ContextProvider";
+import { databaseContext, electionDetails, userContext, loadingContext } from "../../../../Hooks/ContextProvider/ContextProvider";
 import styleElection from "../../CandidateDetails/Election.module.css";
 import { Button } from "../../../../Hooks";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function RegisterElection() {
     const { user } = useContext(userContext);
@@ -11,31 +12,45 @@ export default function RegisterElection() {
     const [elections, setElections] = useState([]);
     const [candidates, setCandidates] = useState({});
     const token = localStorage.getItem("authToken");
+    const { setLoading } = useContext(loadingContext)
 
     async function fetchElections() {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/election/all`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setElections(res);
+            if (res.success) setElections(res.elections);
+            else {
+                toast.warn(res.message)
+            }
         } catch (error) {
+            toast.error(error.message);;
             console.error("Error fetching elections:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
     async function fetchCandidates(electionId) {
         try {
+            setLoading(true);
             const response = await fetch(`${database_url}/candidates/${electionId}`, {
                 headers: { "Authorization": `Bearer ${token}` }
             });
             const res = await response.json();
-            setCandidates((prev) => ({
-                ...prev,
-                [electionId]: res,
-            }));
+            if (!res.success) toast.warn(res.message)
+            else {
+                setCandidates((prev) => ({
+                    ...prev,
+                    [electionId]: res.candidates,
+                }));
+            }
         } catch (error) {
             console.error("Error fetching candidates:", error);
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -59,6 +74,7 @@ export default function RegisterElection() {
 
     async function registerForElection(item) {
         try {
+            setLoading(true);
             const token = localStorage.getItem("authToken");
             console.log(item)
             const response = await fetch(`${database_url}/candidates/register`, {
@@ -76,13 +92,15 @@ export default function RegisterElection() {
             else window.alert(res.message)
         } catch (error) {
             console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
 
 
     return (
         <div className={styleElection.main}>
-            {elections.length > 0 ? (
+            {elections && elections.length > 0 ? (
                 elections.map((item, index) => (
                     <div key={index} className={styleElection.electionItem}>
                         <p className={styleElection.name}>{item.name}</p>

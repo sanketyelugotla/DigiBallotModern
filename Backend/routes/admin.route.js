@@ -3,29 +3,29 @@ const { adminService } = require("../services")
 const { upload } = require("../config/multerConfig.js");
 const admin = express.Router();
 
-admin.post("/update", upload.fields([{ name: "image" }]), async(req, res) => {
-    const {fullname, dob, email, gender, number, password} = req.body;
+admin.post("/update", upload.fields([{ name: "image" }]), async (req, res) => {
+    const { name, dob, email, gender, number, password } = req.body;
     try {
-        const admin = await adminService.updateDetails(fullname, dob, email, gender, number, password, req);
-        res.status(201).json({ message: "Details updated successfully", admin })
+        const admin = await adminService.updateDetails(name, dob, email, gender, number, password, req);
+        res.status(201).json({ success: true, message: "Details updated successfully", admin })
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: error.message })
+        return res.status(500).json({ success: false, message: error.message })
     }
 })
 
-admin.get("/details", async(req, res) => {
+admin.get("/details", async (req, res) => {
     try {
         const admin = await adminService.getDetails(req);
-        res.status(200).json({ message: "Fetched successfully", user: admin.data })
+        res.status(200).json({ success: true, message: "Fetched successfully", user: admin.data })
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: error.message })
+        return res.status(500).json({ success: false, message: error.message })
     }
 })
 
-admin.post("/addParty", upload.fields([{ name: "image" }]), async(req, res) => {
-        try {
+admin.post("/addParty", upload.fields([{ name: "image" }]), async (req, res) => {
+    try {
         const admin = await adminService.createParty(req);
         res.status(200).json({ message: "Party created successfully", user: admin.data })
     } catch (error) {
@@ -35,13 +35,12 @@ admin.post("/addParty", upload.fields([{ name: "image" }]), async(req, res) => {
 })
 
 admin.post("/addElection", upload.fields([{ name: "pic" }]), async (req, res) => {
-    const { name, startDate, endDate } = req.body;
+    const { name, startDate, endDate, dominantColor } = req.body;
     try {
-        const election = await adminService.addElection(name, startDate, endDate, req.user._id, req.files);
-        res.status(201).json({ message: "Election created successfully", election })
+        const election = await adminService.addElection(name, startDate, endDate, dominantColor, req.user._id, req.files);
+        res.status(201).json({ success: true, message: "Election created successfully", election })
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ message: error.message })
+        return res.status(500).json({ success: false, message: error.message })
     }
 })
 
@@ -70,10 +69,7 @@ admin.post("/approveCandidate/:candidateId", async (req, res) => {
 admin.post("/approve-candidates-bulk", async (req, res) => {
     try {
         const { candidateIds, electionIds } = req.body;
-
-        // Call the bulk approval service
         const result = await adminService.approveCandidatesBulk(candidateIds, electionIds);
-
         res.status(200).json(result);
     } catch (error) {
         console.log(error);
@@ -81,23 +77,62 @@ admin.post("/approve-candidates-bulk", async (req, res) => {
     }
 });
 
+// Updated Admin Routes
+admin.post('/users/filter', async (req, res) => {
+    try {
+        const { statuses, electionIds } = req.body;
+
+        const users = await adminService.getFilteredUsers({ statuses, electionIds });
+        return res.status(200).json({
+            success: true,
+            message: "Users fetched successfully",
+            users
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Failed to fetch users"
+        });
+    }
+});
+
+admin.post('/candidates/filter', async (req, res) => {
+    try {
+        const { statuses, electionIds } = req.body;
+
+        const candidates = await adminService.getFilteredCandidates({ statuses, electionIds });
+        return res.status(200).json({
+            success: true,
+            message: "Candidates fetched successfully",
+            candidates
+        });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            message: error.message || "Failed to fetch candidates"
+        });
+    }
+});
+
 admin.get("/candidates", async (req, res) => {
     try {
         const candidates = await adminService.getPendingCandidates();
-        return res.status(200).json(candidates);
+        return res.status(200).json({ success: true, message: "Candidates fetched successfully", candidates });
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: error.message })
+        return res.status(500).json({ success: false, message: error.message })
     }
 })
 
 admin.get("/users", async (req, res) => {
     try {
         const users = await adminService.getPendingUsers();
-        return res.status(200).json(users);
+        return res.status(200).json({ success: true, message: "Fetched users successfully", users: users });
     } catch (error) {
         console.log(error)
-        return res.status(500).json({ message: error.message });
+        return res.status(500).json({ success: false, message: error.message });
     }
 })
 

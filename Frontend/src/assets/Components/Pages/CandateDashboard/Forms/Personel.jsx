@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
-import { FadeDiv, Input } from '../../../../Hooks/index'
+import { Button, FadeDiv, Input } from '../../../../Hooks/index'
 import { sectionsContext } from "../CandidateProfile/SectionsContextProvider";
 import styleForm from "../CandidateProfile/CandidateForm.module.css";
 
-export default function Personel({ handleFileSelect, handleFormChange, formData }) {
+export default function Personel({ handleFileSelect, handleFormChange, formData, handleSubmit }) {
     const { sections } = useContext(sectionsContext)
     return (
         <FadeDiv fade_in={sections === "personel"} fade_out={sections !== "personel"} className={styleForm.form} variant="form">
@@ -26,6 +26,7 @@ export default function Personel({ handleFileSelect, handleFormChange, formData 
 
             {/* File Upload */}
             <Input.File title="Upload your photo here" name="image" type="image" label="Max photo size: 5MB" onFileSelect={handleFileSelect} />
+            <Button size="lg" onClick={handleSubmit}>Save</Button>
         </FadeDiv>
     )
 }

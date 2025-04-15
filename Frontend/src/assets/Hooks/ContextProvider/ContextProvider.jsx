@@ -8,6 +8,7 @@ const loginColors = createContext();
 const databaseContext = createContext();
 const electionDetails = createContext();
 const userContext = createContext();
+const loadingContext = createContext();
 
 export default function ContextProvider({ children }) {
     const [isLogged, setIsLogged] = useState(false);
@@ -41,6 +42,8 @@ export default function ContextProvider({ children }) {
         "admin": "#0A8F6A"
     }
 
+    const [loading, setLoading] = useState(false);
+
     // const database_url = "http://localhost:5000"
     const database_url = "https://digi-ballot-modern.vercel.app"
 
@@ -54,7 +57,9 @@ export default function ContextProvider({ children }) {
                                 <databaseContext.Provider value={{ database_url }} >
                                     <electionDetails.Provider value={{ selectedElection, setSelectedElection }}>
                                         <userContext.Provider value={{ user, setUser }} >
-                                            {children}
+                                            <loadingContext.Provider value={{ loading, setLoading }}>
+                                                {children}
+                                            </loadingContext.Provider>
                                         </userContext.Provider>
                                     </electionDetails.Provider>
                                 </databaseContext.Provider>
@@ -76,5 +81,6 @@ export {
     loginColorState,
     databaseContext,
     electionDetails,
-    userContext
+    userContext,
+    loadingContext
 }

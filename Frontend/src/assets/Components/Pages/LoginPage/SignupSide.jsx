@@ -1,7 +1,8 @@
 import { Input } from "../../../Hooks/index"
 import { useContext, useState } from "react"
-import { databaseContext, userTypeContext } from "../../../Hooks/ContextProvider/ContextProvider"
+import { databaseContext, userTypeContext, loadingContext } from "../../../Hooks/ContextProvider/ContextProvider"
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export default function SignupSide({ changeSide, handleLogin, handleClose, fetchUserDetails }) {
     const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function SignupSide({ changeSide, handleLogin, handleClose, fetch
     })
     const { userType } = useContext(userTypeContext);
     const { database_url } = useContext(databaseContext);
+    const { setLoading } = useContext(loadingContext)
 
     function handleChange(event) {
         const { name, value } = event.target;
@@ -21,6 +23,7 @@ export default function SignupSide({ changeSide, handleLogin, handleClose, fetch
     const navigate = useNavigate();
 
     async function handleSubmit(event) {
+        setLoading(true);
         event.preventDefault();
         const { name, email, number, password } = formData;
         try {
@@ -31,9 +34,10 @@ export default function SignupSide({ changeSide, handleLogin, handleClose, fetch
             })
             const res = await response.json();
 
-            if (response.ok) {
+            if (res.success) {
                 // window.alert("Please login to continue");
                 // changeSide();
+                toast.success("Signup successfully");
                 localStorage.setItem("authToken", res.token);
                 fetchUserDetails();
                 handleClose();
@@ -52,14 +56,16 @@ export default function SignupSide({ changeSide, handleLogin, handleClose, fetch
                         navigate("/", replace);
                         break;
                 }
-
             } else {
                 // setIsWrong(true);
+                toast.warn("SignUp failed:", res.message);
                 console.error("SignUp failed:", res.message);
             }
-
         } catch (error) {
+            toast.error("SignUp failed:", res.message);
             console.log("Signup failed ", error);
+        } finally {
+            setLoading(false);
         }
     }
 

@@ -78,6 +78,12 @@
         align-items: center;
         cursor: pointer;
 
+        .username {
+            text-transform: capitalize;
+            font-family: Volkhov;
+            width: fit-content;
+        }
+
         .icon {
             font-size: 30px;
             color: var(--themeBlue);

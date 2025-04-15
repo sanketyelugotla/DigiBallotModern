@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styleVote from "../Vote/Vote.module.css"
 import { Button } from "../../../Hooks/index"
 
-export default function CandidateTable({ selectedData, party }) {
+export default function CandidateTable({ selectedData }) {
 
     function calculate_age(dobString) {
         var dob = new Date(dobString);
@@ -25,7 +25,7 @@ export default function CandidateTable({ selectedData, party }) {
                 <tbody>
                     <tr className={styleVote.row}>
                         <td className={styleVote.col}>Party</td>
-                        <td className={styleVote.col}>{party.partyName}</td>
+                        <td className={styleVote.col}>{selectedData.election.partyId.partyName}</td>
                     </tr>
                     <tr className={styleVote.row}>
                         <td className={styleVote.col}>S/O | D/O | W/O</td>
