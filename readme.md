@@ -18,9 +18,6 @@ DigiBallot is a secure, real-time digital voting platform built using the **MERN
 - [Getting Started](#-getting-started)
   - [Option 1: Run with Docker](#option-1-run-with-docker)
   - [Option 2: Run Frontend and Backend Individually](#option-2-run-frontend-and-backend-individually)
-- [Environment Variables](#-environment-variables)
-- [Contributors](#-contributors)
-- [License](#-license)
 
 ---
 
@@ -78,11 +75,120 @@ DigiBallot is a secure, real-time digital voting platform built using the **MERN
 
 - [Docker](https://www.docker.com/)
 - [MongoDB Atlas Account](https://www.mongodb.com/atlas/database)
+- **Node.js**: [Download Node.js](https://nodejs.org/) (If not using docker)
+- **npm** (comes with Node.js): For managing dependencies. (If not using docker)
 
 #### 🛠️ Setup
 
-```bash
-git clone https://github.com/yourusername/DigiBallot.git
-cd DigiBallot
-docker-compose up --build
-```
+1. **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/sanketyelugotla/DigiBallotModern.git
+    cd DigiBallot
+    ```
+
+2. **Setup environment variable for backend**
+
+    Rename example-env to .env
+
+    ```bash
+    mv ./Backend/example-env ./Backend/.env
+    ```
+
+    - Replace `<your-mongodb-connection-string>` with your MongoDB URI. If using MongoDB Atlas, you can find this in your Atlas dashboard.
+    - Replace `secret-key` with your jwt secret.
+    - The `PORT` variable specifies the port on which the backend server will run (default is 5000).
+
+3. **Build docker images using docker compose**
+
+    ```bash
+    docker-compose up --build
+    ```
+
+    It will take some time to build the images and start the container
+
+4. After both the container starts you can open the app in your browser at [http://localhost:80](http://localhost:80).
+
+### ✅ Option 2: Run Frontend and Backend Individually
+
+## Frontend Installation
+
+1. **Clone the repository:**
+
+    ```bash
+    git clone https://github.com/sanketyelugotla/DigiBallotModern.git
+    cd Frontend
+    ```
+
+2. **Install dependencies:**
+    Install the required dependencies by running the following command in the frontend directory:
+
+    ```bash
+    npm install
+    ```
+
+3. **Start the development server:**
+
+    ```bash
+    npm run dev
+    ```
+
+4. After the server starts, you can open the app in your browser at [http://localhost:5173](http://localhost:5173).
+
+    - The project should automatically open in your default web browser.
+    - If it does not, manually open the browser and go to [http://localhost:5173](http://localhost:5173).
+
+---
+
+## Backend Installation
+
+1. **Clone the repository (Backend folder):**
+
+    ```bash
+    git clone https://github.com/sanketyelugotla/skygeni
+    cd Backend
+    ```
+
+2. **Install dependencies:**
+    Install the required dependencies by running the following command in the backend directory:
+
+    ```bash
+    npm install
+    ```
+
+3. **Set up the database:**
+    - If using **MongoDB**, ensure the database is set up and running locally or use a cloud database provider like [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+    - Ensure the connection string is configured properly in the backend.
+
+4. **Setup environment variable for backend**
+
+    Rename example-env to .env
+
+    ```bash
+    mv ./Backend/example-env ./Backend/.env
+    ```
+
+    - Replace `<your-mongodb-connection-string>` with your MongoDB URI. If using MongoDB Atlas, you can find this in your Atlas dashboard.
+        - Replace `secret-key` with your jwt secret.
+    - The `PORT` variable specifies the port on which the backend server will run (default is 5000).
+
+5. **Run the backend server:**
+
+    ```bash
+    npm run dev
+    ```
+
+    This will start the backend server on [http://localhost:5000](http://localhost:5000) (or the port specified in your `.env` file).
+
+---
+
+## Running the Project
+
+Once both the **frontend** and **backend** are running, follow these steps:
+
+1. **Frontend:** Should be running on [http://localhost:5173](http://localhost:5173).
+2. **Backend:** Should be running on [http://localhost:5000](http://localhost:5000) or the configured port.
+
+The frontend will make API requests to the backend, fetch the data, and render it in charts and statistics.
+
+---
