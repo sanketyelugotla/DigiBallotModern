@@ -6,8 +6,7 @@ DigiBallot is a secure, real-time digital voting platform built using the **MERN
 
 ## 🌐 Live Demo
 
-[🔗 View Live Site](https://your-vercel-link.vercel.app)  
-[📦 Backend API on Vercel](https://your-backend-api-link.vercel.app)
+[🔗 View Live Site](https://digiballot-frontend.onrender.com/)
 
 ---
 
@@ -15,9 +14,11 @@ DigiBallot is a secure, real-time digital voting platform built using the **MERN
 
 - [Features](#-features)
 - [Technologies Used](#️-technologies-used)
+- [Project Setup](#project-setup)
 - [Getting Started](#-getting-started)
-  - [Option 1: Run with Docker](#option-1-run-with-docker)
-  - [Option 2: Run Frontend and Backend Individually](#option-2-run-frontend-and-backend-individually)
+  - [Option 1: Run with Docker](#-option-1-run-with-docker)
+  - [Option 2: Run Frontend and Backend Individually](#-option-2-run-frontend-and-backend-individually)
+- [Running the project](#running-the-project)
 
 ---
 
@@ -67,16 +68,18 @@ DigiBallot is a secure, real-time digital voting platform built using the **MERN
 
 ---
 
+## Project Setup
+
+Before you begin, ensure you have the following installed for both the **frontend** and **backend**:
+
+- **npm** (comes with Node.js): For managing dependencies.
+- **Node.js**: [Download Node.js](https://nodejs.org/)
+- [MongoDB Atlas Account](https://www.mongodb.com/atlas/database)
+- [Docker](https://www.docker.com/) )(If using docker)
+
 ## 🚀 Getting Started
 
 ### ✅ Option 1: Run with Docker
-
-#### 📦 Prerequisites
-
-- [Docker](https://www.docker.com/)
-- [MongoDB Atlas Account](https://www.mongodb.com/atlas/database)
-- **Node.js**: [Download Node.js](https://nodejs.org/) (If not using docker)
-- **npm** (comes with Node.js): For managing dependencies. (If not using docker)
 
 #### 🛠️ Setup
 
@@ -111,7 +114,7 @@ DigiBallot is a secure, real-time digital voting platform built using the **MERN
 
 ### ✅ Option 2: Run Frontend and Backend Individually
 
-## Frontend Installation
+#### Frontend Installation
 
 1. **Clone the repository:**
 
@@ -140,7 +143,7 @@ DigiBallot is a secure, real-time digital voting platform built using the **MERN
 
 ---
 
-## Backend Installation
+#### Backend Installation
 
 1. **Clone the repository (Backend folder):**
 
@@ -186,7 +189,7 @@ DigiBallot is a secure, real-time digital voting platform built using the **MERN
 
 Once both the **frontend** and **backend** are running, follow these steps:
 
-1. **Frontend:** Should be running on [http://localhost:5173](http://localhost:5173).
+1. **Frontend:** Should be running on [http://localhost:80](http://localhost:80) (If using docker) else [http://localhost:5173](http://localhost:5173) (If not using docker).
 2. **Backend:** Should be running on [http://localhost:5000](http://localhost:5000) or the configured port.
 
 The frontend will make API requests to the backend, fetch the data, and render it in charts and statistics.
