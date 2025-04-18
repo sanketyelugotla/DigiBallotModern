@@ -68,6 +68,8 @@ DigiBallot is a secure, real-time digital voting platform built using the **MERN
 
 ---
 
+
+
 ## Project Setup
 
 Before you begin, ensure you have the following installed for both the **frontend** and **backend**:
@@ -75,7 +77,7 @@ Before you begin, ensure you have the following installed for both the **fronten
 - **npm** (comes with Node.js): For managing dependencies.
 - **Node.js**: [Download Node.js](https://nodejs.org/)
 - [MongoDB Atlas Account](https://www.mongodb.com/atlas/database)
-- [Docker](https://www.docker.com/) )(If using docker)
+- [Docker](https://www.docker.com/) (If using docker)
 
 ## 🚀 Getting Started
 
