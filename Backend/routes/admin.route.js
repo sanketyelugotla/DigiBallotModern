@@ -66,10 +66,10 @@ admin.post("/approveCandidate/:candidateId", async (req, res) => {
     }
 })
 
-admin.post("/approve-candidates-bulk", async (req, res) => {
+admin.post("/candidates/approve", async (req, res) => {
     try {
-        const { candidateIds, electionIds } = req.body;
-        const result = await adminService.approveCandidatesBulk(candidateIds, electionIds);
+        const { approvals } = req.body;
+        const result = await adminService.approveCandidatesBulk(approvals);
         res.status(200).json(result);
     } catch (error) {
         console.log(error);
@@ -147,12 +147,11 @@ admin.post("/approveUser/:userId", async (req, res) => {
     }
 })
 
-admin.post("/approve-users-bulk", async (req, res) => {
+admin.post("/users/approve", async (req, res) => {
     try {
-        const { userIds, electionIds } = req.body;
-
+        const { approvals } = req.body;
         // Call the bulk approval service
-        const result = await adminService.approveVotersBulk(userIds, electionIds);
+        const result = await adminService.approveVotersBulk(approvals);
 
         res.status(200).json(result);
     } catch (error) {

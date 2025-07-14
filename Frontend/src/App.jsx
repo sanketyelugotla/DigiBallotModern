@@ -29,7 +29,7 @@ export default function App() {
     const toggleLoginModal = () => setLoginOpen(!isLoginOpen);
 
     return (
-        <HoverDiv.Main open={isLoginOpen} >
+        <HoverDiv.Main open={isLoginOpen}>
             <Header onLoginClick={toggleLoginModal} />
             <ToastContainer />
             <div className="space">

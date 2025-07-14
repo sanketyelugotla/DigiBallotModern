@@ -178,7 +178,7 @@ const getFilteredUsers = async ({ statuses, electionIds }) => {
     const users = await Voter.find(query)
         .populate("userId", "name")
         .populate("elections._id", "name")
-        // .populate("elections.partyId", "partyName");
+    // .populate("elections.partyId", "partyName");
 
     return users.flatMap(user =>
         user.elections
@@ -245,58 +245,58 @@ const approveVoter = async (voterId, electionId) => {
 
         return voter;
     } catch (error) {
+        console.log(error)
         throw new Error(error.message);
     }
 };
 
-const approveVotersBulk = async (voterIds, electionIds) => {
+const approveVotersBulk = async (approvals) => {
     try {
         // Validate input
-        if (!voterIds || !Array.isArray(voterIds)) {
-            throw new Error("Invalid voter IDs");
-        }
-        if (!electionIds || !Array.isArray(electionIds)) {
-            throw new Error("Invalid election IDs");
-        }
-        if (voterIds.length !== electionIds.length) {
-            throw new Error("Voter IDs and Election IDs must have the same length");
+        if (!approvals || !Array.isArray(approvals)) {
+            throw new Error("Invalid approvals payload");
         }
 
-        // Iterate through each voter and approve them for their respective election
         const results = [];
-        for (let i = 0; i < voterIds.length; i++) {
-            const voterId = voterIds[i];
-            const electionId = electionIds[i];
 
-            // Validate IDs
-            if (!mongoose.Types.ObjectId.isValid(voterId)) {
-                throw new Error(`Invalid voter ID: ${voterId}`);
+        for (const approval of approvals) {
+            const { userId, electionId, status } = approval;
+
+            if (!mongoose.Types.ObjectId.isValid(userId)) {
+                throw new Error(`Invalid voter ID: ${userId}`);
             }
             if (!mongoose.Types.ObjectId.isValid(electionId)) {
                 throw new Error(`Invalid election ID: ${electionId}`);
             }
+            if (!["approved", "pending", "rejected"].includes(status)) {
+                throw new Error(`Invalid status for user ${userId}`);
+            }
 
-            // Update the voter's election status
             const voter = await Voter.findOneAndUpdate(
                 {
-                    _id: voterId,
+                    _id: userId,
                     "elections._id": electionId
                 },
                 {
-                    $set: { "elections.$.status": "approved" }
+                    $set: { "elections.$.status": status }
                 },
                 { new: true }
             );
 
             if (!voter) {
-                throw new Error(`Voter or election not found for voterId: ${voterId}`);
+                throw new Error(`Voter or election not found for voterId: ${userId}`);
             }
 
             results.push(voter);
         }
 
-        return { success: true, message: `${results.length} voters approved`, results };
+        return {
+            success: true,
+            message: `${results.length} voters updated`,
+            results
+        };
     } catch (error) {
+        console.error("Bulk approval error:", error);
         throw new Error(error.message);
     }
 };
@@ -321,31 +321,27 @@ const approveCandidate = async (candidateId, electionId) => {
     }
 };
 
-const approveCandidatesBulk = async (candidateIds, electionIds) => {
+const approveCandidatesBulk = async (approvals) => {
+    console.log(approvals)
     try {
         // Validate input
-        if (!candidateIds || !Array.isArray(candidateIds)) {
-            throw new Error("Invalid candidate IDs");
-        }
-        if (!electionIds || !Array.isArray(electionIds)) {
-            throw new Error("Invalid election IDs");
-        }
-        if (candidateIds.length !== electionIds.length) {
-            throw new Error("Candidate IDs and Election IDs must have the same length");
+        if (!approvals || !Array.isArray(approvals)) {
+            throw new Error("Invalid approvals payload");
         }
 
-        // Iterate through each candidate and approve them for their respective election
         const results = [];
-        for (let i = 0; i < candidateIds.length; i++) {
-            const candidateId = candidateIds[i];
-            const electionId = electionIds[i];
 
-            // Validate IDs
+        for (const approval of approvals) {
+            const { candidateId, electionId, status } = approval;
+
             if (!mongoose.Types.ObjectId.isValid(candidateId)) {
                 throw new Error(`Invalid candidate ID: ${candidateId}`);
             }
             if (!mongoose.Types.ObjectId.isValid(electionId)) {
                 throw new Error(`Invalid election ID: ${electionId}`);
+            }
+            if (!["approved", "pending", "rejected"].includes(status)) {
+                throw new Error(`Invalid status for candidate ${candidateId}`);
             }
 
             // Update the candidate's election status
@@ -355,22 +351,25 @@ const approveCandidatesBulk = async (candidateIds, electionIds) => {
                     "elections._id": electionId
                 },
                 {
-                    $set: { "elections.$.status": "approved" }
+                    $set: { "elections.$.status": status }
                 },
                 { new: true }
             );
 
-            const cand = await Candidate.findOne({ _id: candidateId, "elections.electionId": electionId });
-
             if (!candidate) {
-                throw new Error(`Candidate or election not found for candidateId: ${candidateId}`);
+                throw new Error(`Candidate or election not found for candidateId: ${userId}`);
             }
 
             results.push(candidate);
         }
 
-        return { success: true, message: `${results.length} candidates approved`, results };
+        return {
+            success: true,
+            message: `${results.length} candidates updated`,
+            results
+        };
     } catch (error) {
+        console.error("Bulk candidate approval error:", error);
         throw new Error(error.message);
     }
 };
